@@ -5,7 +5,7 @@ package com.d2s2.message.tokenize;
  */
 public class MessageTokenizerImpl implements MessageTokenizer {
     @Override
-    public void tokenizeMessage() {
-
+    public void tokenizeMessage(String message) {
+        System.out.println(message);
     }
 }

@@ -5,6 +5,6 @@ package com.d2s2.message.tokenize;
  */
 public interface MessageTokenizer {
 
-    void tokenizeMessage();
+    void tokenizeMessage(String message);
 
 }
