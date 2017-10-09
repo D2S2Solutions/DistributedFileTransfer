@@ -28,12 +28,12 @@ public class UDPConnectorImpl implements UdpConnector{
         byte[] bufferIncoming = new byte[100];
         DatagramPacket incomingPacket = new DatagramPacket(bufferIncoming, bufferIncoming.length);
         socket.receive(incomingPacket);
-        String incomingMessage = new String(bufferIncoming, "UTF-8");
+        String incomingMessage = new String(bufferIncoming);
         ExecutorService executorService = Executors.newFixedThreadPool(10);
         executorService.execute(() -> {
             MessageTokenizerImpl tokenizer =  new MessageTokenizerImpl();
             tokenizer.tokenizeMessage(incomingMessage);
         });
-//        executorService.shutdown();
+        executorService.shutdown(); // To keep the client alive comment out this line when necessary
     }
 }
