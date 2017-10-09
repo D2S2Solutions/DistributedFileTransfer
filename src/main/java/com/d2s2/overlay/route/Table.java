@@ -7,7 +7,9 @@ package com.d2s2.overlay.route;
 public interface Table {
 
     void insert();
+
     void remove();
+
     void search();
 
 }

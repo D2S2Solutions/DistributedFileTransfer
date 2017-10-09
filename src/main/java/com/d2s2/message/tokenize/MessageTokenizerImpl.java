@@ -8,14 +8,14 @@ import java.util.StringTokenizer;
 public class MessageTokenizerImpl implements MessageTokenizer {
     @Override
     public void tokenizeMessage(String message) {
-        message = message.substring(0,Integer.parseInt(message.substring(0,4)));
+        message = message.substring(0, Integer.parseInt(message.substring(0, 4)));
         System.out.println(message);
-        StringTokenizer stringTokenizer =  new StringTokenizer(message," ");
-        int length =  Integer.parseInt(stringTokenizer.nextToken());
+        StringTokenizer stringTokenizer = new StringTokenizer(message, " ");
+        int length = Integer.parseInt(stringTokenizer.nextToken());
         String response = stringTokenizer.nextToken();
-        if ("REGOK".equals(response)){
+        if ("REGOK".equals(response)) {
             int nodes = Integer.parseInt(stringTokenizer.nextToken());
-            switch (nodes){
+            switch (nodes) {
                 case 0:
                     System.out.println("request is successful, no nodes in the system");
                     break;
@@ -33,7 +33,7 @@ public class MessageTokenizerImpl implements MessageTokenizer {
                     break;
                 case 1:
                     String ip = stringTokenizer.nextToken();
-                    String port =  stringTokenizer.nextToken();
+                    String port = stringTokenizer.nextToken();
                     System.out.println(ip);
                     System.out.println(port);
                     break;

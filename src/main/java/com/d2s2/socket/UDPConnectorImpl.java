@@ -1,18 +1,23 @@
 package com.d2s2.socket;
 
+import com.d2s2.message.tokenize.MessageTokenizerImpl;
+import com.d2s2.models.RegistrationRequestModel;
+
 import java.io.IOException;
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import com.d2s2.message.tokenize.MessageTokenizerImpl;
+
 /**
  * Created by Heshan Sandamal on 10/6/2017.
  */
-public class UDPConnectorImpl implements UdpConnector{
+public class UDPConnectorImpl implements UdpConnector {
 
     @Override
-    public void send(String message, DatagramSocket datagramSocket) throws IOException {
-        byte[] buffer = message.getBytes();
+    public void send(RegistrationRequestModel message, DatagramSocket datagramSocket) throws IOException {
+        byte[] buffer = message.toString().getBytes();
         InetAddress receiverAddress = InetAddress.getLocalHost();
         DatagramPacket packet = new DatagramPacket(
                 buffer, buffer.length, receiverAddress, 55555);
@@ -31,7 +36,7 @@ public class UDPConnectorImpl implements UdpConnector{
         String incomingMessage = new String(bufferIncoming);
         ExecutorService executorService = Executors.newFixedThreadPool(10);
         executorService.execute(() -> {
-            MessageTokenizerImpl tokenizer =  new MessageTokenizerImpl();
+            MessageTokenizerImpl tokenizer = new MessageTokenizerImpl();
             tokenizer.tokenizeMessage(incomingMessage);
         });
         executorService.shutdown(); // To keep the client alive comment out this line when necessary

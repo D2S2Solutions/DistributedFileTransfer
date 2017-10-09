@@ -1,8 +1,6 @@
 package com.d2s2.message.build;
 
-import com.d2s2.overlay.request.Request;
-
-import java.util.StringTokenizer;
+import com.d2s2.models.RegistrationRequestModel;
 
 /**
  * Created by Heshan Sandamal on 10/6/2017.
@@ -58,10 +56,8 @@ public class MessageBuilderImpl implements MessageBuilder {
             return this;
         }
 
-        public String build() { // todo -- Change the return type from String to an object of type Request
-            int length = ip.length() + port.length() + userName.length() + 4;
-            final String requestFinalLength = String.format("%04d",length);
-            return requestFinalLength + " REG " + ip + " " + port + " " +userName;
+        public RegistrationRequestModel build() { // todo -- Change the return type from String to an object of type Request
+            return new RegistrationRequestModel(ip, port, userName);
         }
     }
 }

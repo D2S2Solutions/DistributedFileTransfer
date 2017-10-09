@@ -6,9 +6,13 @@ package com.d2s2.message.build;
 public interface MessageBuilder {
 
     String buildRegisterRequestMessage();
+
     String buildUnregisterRequestMessage();
+
     String buildJoinMessage();
+
     String buildLeaveMessage();
+
     String buildSearchMessage(String fileName);
 
 }

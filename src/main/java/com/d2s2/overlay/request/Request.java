@@ -6,13 +6,14 @@ package com.d2s2.overlay.request;
 public interface Request {
 
     void registerRequestToBS();
+
     void unregisterToBS();
 
-    void  join();
+    void join();
+
     void leave();
 
     void searchFile();
-
 
 
 }

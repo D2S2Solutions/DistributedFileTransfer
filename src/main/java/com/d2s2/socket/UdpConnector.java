@@ -1,5 +1,7 @@
 package com.d2s2.socket;
 
+import com.d2s2.models.RegistrationRequestModel;
+
 import java.io.IOException;
 import java.net.DatagramSocket;
 
@@ -8,7 +10,8 @@ import java.net.DatagramSocket;
  */
 public interface UdpConnector {
 
-    void send(String message, DatagramSocket datagramSocket) throws IOException;
+    void send(RegistrationRequestModel message, DatagramSocket datagramSocket) throws IOException;
+
     void receive(DatagramSocket socket) throws IOException;
 
 }

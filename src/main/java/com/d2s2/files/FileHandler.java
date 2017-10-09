@@ -6,6 +6,7 @@ package com.d2s2.files;
 public interface FileHandler {
 
     void initiateFiles();
+
     void searchFile(String query);
 
 }
