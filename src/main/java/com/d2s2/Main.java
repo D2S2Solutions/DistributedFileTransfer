@@ -16,7 +16,7 @@ public class Main {
         try {
             ProgressBar pb = new ProgressBar("Registering in BS server||", 100);
             pb.start();
-            pb.stepTo(25);
+            pb.stepTo(35);
 
             DatagramSocket socket = new DatagramSocket();
             UDPConnectorImpl udpConnector = new UDPConnectorImpl();
@@ -31,6 +31,6 @@ public class Main {
             pb.stop();
         } catch (IOException e) {
             e.printStackTrace();
-        } 
+        }
     }
 }

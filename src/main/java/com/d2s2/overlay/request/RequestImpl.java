@@ -1,7 +1,5 @@
 package com.d2s2.overlay.request;
 
-import sun.plugin2.message.Message;
-
 /**
  * Created by Heshan Sandamal on 10/6/2017.
  */
