@@ -1,6 +1,6 @@
 package com.d2s2.models;
 
-public class RegistrationRequestModel {
+public class RegistrationRequestModel extends Model {
     private String ip;
     private String port;
     private String userName;

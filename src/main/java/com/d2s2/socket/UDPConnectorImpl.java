@@ -1,27 +1,40 @@
 package com.d2s2.socket;
 
 import com.d2s2.message.tokenize.MessageTokenizerImpl;
-import com.d2s2.models.RegistrationRequestModel;
+import com.d2s2.models.Model;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketException;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * Created by Heshan Sandamal on 10/6/2017.
  */
 public class UDPConnectorImpl implements UdpConnector {
 
+    private static DatagramSocket socket;
+
+    static {
+        try {
+            socket = new DatagramSocket();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
-    public void send(RegistrationRequestModel message, DatagramSocket datagramSocket) throws IOException {
+    public void send(Model message) throws IOException {
         byte[] buffer = message.toString().getBytes();
         InetAddress receiverAddress = InetAddress.getLocalHost();
         DatagramPacket packet = new DatagramPacket(
                 buffer, buffer.length, receiverAddress, 55555);
-        datagramSocket.send(packet);
+        socket.send(packet);
     }
 
     /*
@@ -29,16 +42,21 @@ public class UDPConnectorImpl implements UdpConnector {
     via the executor service.
      */
     @Override
-    public void receive(DatagramSocket socket) throws IOException {
+    public Future<String> receive() throws IOException {
         byte[] bufferIncoming = new byte[100];
         DatagramPacket incomingPacket = new DatagramPacket(bufferIncoming, bufferIncoming.length);
         socket.receive(incomingPacket);
         String incomingMessage = new String(bufferIncoming);
         ExecutorService executorService = Executors.newFixedThreadPool(10);
-        executorService.execute(() -> {
+//        executorService.execute(() -> {
+//            MessageTokenizerImpl tokenizer = new MessageTokenizerImpl();
+//            tokenizer.tokenizeMessage(incomingMessage);
+//        });
+        return executorService.submit(() -> {
             MessageTokenizerImpl tokenizer = new MessageTokenizerImpl();
             tokenizer.tokenizeMessage(incomingMessage);
+            return "DONE";
         });
-        executorService.shutdown(); // To keep the client alive comment out this line when necessary
+//        executorService.shutdown(); // To keep the client alive comment out this line when necessary
     }
 }
