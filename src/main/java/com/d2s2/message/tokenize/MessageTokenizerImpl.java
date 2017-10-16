@@ -23,7 +23,7 @@ public class MessageTokenizerImpl implements MessageTokenizer {
                     System.out.println("request is successful, no nodes in the system");
                     break;
                 case 9996:
-                    System.out.println(" failed, can’t register. BS full.");
+                    System.out.println("failed, can’t register. BS full.");
                     break;
                 case 9997:
                     System.out.println("failed, registered to another user, try a different IP and port");

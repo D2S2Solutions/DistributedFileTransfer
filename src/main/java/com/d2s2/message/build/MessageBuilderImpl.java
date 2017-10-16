@@ -1,6 +1,8 @@
 package com.d2s2.message.build;
 
+import com.d2s2.models.GracefulLeaveRequestModel;
 import com.d2s2.models.RegistrationRequestModel;
+import com.d2s2.models.UnregistrationRequestModel;
 
 /**
  * Created by Heshan Sandamal on 10/6/2017.
@@ -58,6 +60,56 @@ public class MessageBuilderImpl implements MessageBuilder {
 
         public RegistrationRequestModel build() { // todo -- Change the return type from String to an object of type Request
             return new RegistrationRequestModel(ip, port, userName);
+        }
+    }
+
+    public static class GracefulLeaveRequestMessageBuilder {
+        private String ip;
+        private String port;
+        private String userName;
+
+        public GracefulLeaveRequestMessageBuilder setIp(String ip) {
+            this.ip = ip;
+            return this;
+        }
+
+        public GracefulLeaveRequestMessageBuilder setPort(int port) {
+            this.port = String.valueOf(port);
+            return this;
+        }
+
+        public GracefulLeaveRequestMessageBuilder setUserName(String userName) {
+            this.userName = userName;
+            return this;
+        }
+
+        public GracefulLeaveRequestModel build() { // todo -- Change the return type from String to an object of type Request
+            return new GracefulLeaveRequestModel(ip, port, userName);
+        }
+    }
+
+    public static class UnregisterRequestMessageBuilder {
+        private String ip;
+        private String port;
+        private String userName;
+
+        public UnregisterRequestMessageBuilder setIp(String ip) {
+            this.ip = ip;
+            return this;
+        }
+
+        public UnregisterRequestMessageBuilder setPort(int port) {
+            this.port = String.valueOf(port);
+            return this;
+        }
+
+        public UnregisterRequestMessageBuilder setUserName(String userName) {
+            this.userName = userName;
+            return this;
+        }
+
+        public UnregistrationRequestModel build() { // todo -- Change the return type from String to an object of type Request
+            return new UnregistrationRequestModel(ip, port, userName);
         }
     }
 }

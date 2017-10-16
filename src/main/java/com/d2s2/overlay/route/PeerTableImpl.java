@@ -33,4 +33,8 @@ public class PeerTableImpl implements Table {
     public void search() {
 
     }
+
+    public ArrayList<Node> getPeerNodeList() {
+        return peerNodeList;
+    }
 }
