@@ -1,17 +1,17 @@
 package com.d2s2.socket;
 
-import com.d2s2.models.RegistrationRequestModel;
+import com.d2s2.models.Model;
 
 import java.io.IOException;
-import java.net.DatagramSocket;
+import java.util.concurrent.Future;
 
 /**
  * Created by Heshan Sandamal on 10/6/2017.
  */
 public interface UdpConnector {
 
-    void send(RegistrationRequestModel message, DatagramSocket datagramSocket) throws IOException;
+    void send(Model message) throws IOException;
 
-    void receive(DatagramSocket socket) throws IOException;
+    Future<String> receive() throws IOException;
 
 }

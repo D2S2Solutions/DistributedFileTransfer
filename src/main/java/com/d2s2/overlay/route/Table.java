@@ -1,12 +1,14 @@
 package com.d2s2.overlay.route;
 
+import com.d2s2.models.Node;
+
 /**
  * Created by Heshan Sandamal on 10/6/2017.
  */
 
 public interface Table {
 
-    void insert();
+    void insert(Node node);
 
     void remove();
 
