@@ -18,7 +18,6 @@ import java.util.concurrent.Future;
 public class UDPConnectorImpl implements UdpConnector {
 
     private static DatagramSocket socket;
-    private ExecutorService executorService;
 
     static {
         try {
@@ -27,6 +26,8 @@ public class UDPConnectorImpl implements UdpConnector {
             e.printStackTrace();
         }
     }
+
+    private ExecutorService executorService;
 
     @Override
     public void send(RequestModel message) throws IOException {
@@ -64,7 +65,8 @@ public class UDPConnectorImpl implements UdpConnector {
         });
 //        executorService.shutdown(); // To keep the client alive comment out this line when necessary
     }
-    public void killExecutorService(){
+
+    public void killExecutorService() {
         executorService.shutdown();
     }
 }

@@ -73,14 +73,14 @@ public class Main {
 
         //Say goodbye to BS server
 
-        UnregistrationRequestModel unregistrationRequest =  new MessageBuilderImpl.UnregisterRequestMessageBuilder()
+        UnregistrationRequestModel unregistrationRequest = new MessageBuilderImpl.UnregisterRequestMessageBuilder()
                 .setIp("129.82.123.45")
                 .setPort(5002)
                 .setUserName("--")
                 .build();
-        udpConnector.send(unregistrationRequest,InetAddress.getLocalHost(),55555);
+        udpConnector.send(unregistrationRequest, InetAddress.getLocalHost(), 55555);
 
-        ((UDPConnectorImpl)udpConnector).killExecutorService();
+        ((UDPConnectorImpl) udpConnector).killExecutorService();
         System.exit(0);
 
 

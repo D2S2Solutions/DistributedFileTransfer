@@ -39,7 +39,7 @@ public class MessageTokenizerImpl implements MessageTokenizer {
                     String port = stringTokenizer.nextToken();
                     System.out.println(ip);
                     System.out.println(port);
-                    Node node = new Node(ip,port);
+                    Node node = new Node(ip, port);
                     PeerTableImpl.getInstance().insert(node);
                     break;
                 case 2:
@@ -51,10 +51,10 @@ public class MessageTokenizerImpl implements MessageTokenizer {
                     System.out.println(port1);
                     System.out.println(ip2);
                     System.out.println(port2);
-                    Node node1 = new Node(ip1,port1);
-                    Node node2 = new Node(ip2,port2);
+                    Node node1 = new Node(ip1, port1);
+                    Node node2 = new Node(ip2, port2);
                     PeerTableImpl.getInstance().insert(node1);
-                PeerTableImpl.getInstance().insert(node2);
+                    PeerTableImpl.getInstance().insert(node2);
             }
         }
 
