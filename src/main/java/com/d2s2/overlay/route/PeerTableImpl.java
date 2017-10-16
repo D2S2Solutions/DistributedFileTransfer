@@ -11,11 +11,12 @@ public class PeerTableImpl implements Table {
 
     private static final PeerTableImpl PEER_TABLE = new PeerTableImpl();
     private ArrayList<Node> peerNodeList;
-    private PeerTableImpl(){
+
+    private PeerTableImpl() {
         peerNodeList = new ArrayList<>(2);
     }
 
-    public static PeerTableImpl getInstance(){
+    public static PeerTableImpl getInstance() {
         return PEER_TABLE;
     }
 
@@ -32,5 +33,9 @@ public class PeerTableImpl implements Table {
     @Override
     public void search() {
 
+    }
+
+    public ArrayList<Node> getPeerNodeList() {
+        return peerNodeList;
     }
 }

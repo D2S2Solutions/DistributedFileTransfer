@@ -1,14 +1,13 @@
 package com.d2s2.socket;
 
 import com.d2s2.message.tokenize.MessageTokenizerImpl;
-import com.d2s2.models.Model;
+import com.d2s2.models.RequestModel;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -28,12 +27,19 @@ public class UDPConnectorImpl implements UdpConnector {
         }
     }
 
+    private ExecutorService executorService;
+
     @Override
-    public void send(Model message) throws IOException {
+    public void send(RequestModel message) throws IOException {
+
+    }
+
+    @Override
+    public void send(RequestModel message, InetAddress receiverAddress, int port) throws IOException {
         byte[] buffer = message.toString().getBytes();
-        InetAddress receiverAddress = InetAddress.getLocalHost();
+        receiverAddress = InetAddress.getLocalHost();
         DatagramPacket packet = new DatagramPacket(
-                buffer, buffer.length, receiverAddress, 55555);
+                buffer, buffer.length, receiverAddress, port);
         socket.send(packet);
     }
 
@@ -47,7 +53,7 @@ public class UDPConnectorImpl implements UdpConnector {
         DatagramPacket incomingPacket = new DatagramPacket(bufferIncoming, bufferIncoming.length);
         socket.receive(incomingPacket);
         String incomingMessage = new String(bufferIncoming);
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
+        executorService = Executors.newFixedThreadPool(10);
 //        executorService.execute(() -> {
 //            MessageTokenizerImpl tokenizer = new MessageTokenizerImpl();
 //            tokenizer.tokenizeMessage(incomingMessage);
@@ -58,5 +64,9 @@ public class UDPConnectorImpl implements UdpConnector {
             return "DONE";
         });
 //        executorService.shutdown(); // To keep the client alive comment out this line when necessary
+    }
+
+    public void killExecutorService() {
+        executorService.shutdown();
     }
 }
