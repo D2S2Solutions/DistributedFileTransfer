@@ -1,5 +1,8 @@
 package com.d2s2.message.tokenize;
 
+import com.d2s2.models.Node;
+import com.d2s2.overlay.route.PeerTableImpl;
+
 import java.util.StringTokenizer;
 
 /**
@@ -14,13 +17,13 @@ public class MessageTokenizerImpl implements MessageTokenizer {
         int length = Integer.parseInt(stringTokenizer.nextToken());
         String response = stringTokenizer.nextToken();
         if ("REGOK".equals(response)) {
-            int nodes = Integer.parseInt(stringTokenizer.nextToken());
-            switch (nodes) {
+            int nodeCount = Integer.parseInt(stringTokenizer.nextToken());
+            switch (nodeCount) {
                 case 0:
                     System.out.println("request is successful, no nodes in the system");
                     break;
                 case 9996:
-                    System.out.println(" failed, can’t register. BS full.");
+                    System.out.println("failed, can’t register. BS full.");
                     break;
                 case 9997:
                     System.out.println("failed, registered to another user, try a different IP and port");
@@ -36,6 +39,8 @@ public class MessageTokenizerImpl implements MessageTokenizer {
                     String port = stringTokenizer.nextToken();
                     System.out.println(ip);
                     System.out.println(port);
+                    Node node = new Node(ip, port);
+                    PeerTableImpl.getInstance().insert(node);
                     break;
                 case 2:
                     String ip1 = stringTokenizer.nextToken();
@@ -46,6 +51,10 @@ public class MessageTokenizerImpl implements MessageTokenizer {
                     System.out.println(port1);
                     System.out.println(ip2);
                     System.out.println(port2);
+                    Node node1 = new Node(ip1, port1);
+                    Node node2 = new Node(ip2, port2);
+                    PeerTableImpl.getInstance().insert(node1);
+                    PeerTableImpl.getInstance().insert(node2);
             }
         }
 
