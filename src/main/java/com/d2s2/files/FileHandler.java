@@ -1,12 +1,14 @@
 package com.d2s2.files;
 
+import java.util.List;
+
 /**
  * Created by Heshan Sandamal on 10/6/2017.
  */
 public interface FileHandler {
 
-    void initiateFiles();
+    void initializeFileStorage(String documentName);
 
-    void searchFile(String query);
+    List<String> searchLocalFileList(String query);
 
 }

@@ -6,6 +6,7 @@ import com.d2s2.models.Node;
  * Created by Heshan Sandamal on 10/6/2017.
  */
 public class StatTableImpl implements Table {
+
     @Override
     public void insert(Node node) {
 
