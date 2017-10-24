@@ -14,6 +14,6 @@ public interface Table {
 
     void remove();
 
-    ConcurrentLinkedQueue search(String query);
+    void search(String query);
 
 }

@@ -48,7 +48,7 @@ public class Main {
 //                    System.out.println(++i);
                 }
                 search("American");
-                performGracefulDeparture(udpConnector);
+//                performGracefulDeparture(udpConnector);
             }
 
 
@@ -101,33 +101,33 @@ public class Main {
         return (int)(Math.random() * range) + min;
     }
 
-    public static void performGracefulDeparture(UdpConnector udpConnector) throws IOException {
-        GracefulLeaveRequestModel gracefulLeaveRequest = new MessageBuilderImpl.GracefulLeaveRequestMessageBuilder()
-                .setIp("129.82.123.45")
-                .setPort(5002)
-                .setUserName("--")
-                .build();
-        Set<Node> peerNodeList = PeerTableImpl.getInstance().getPeerNodeList();
-        peerNodeList.forEach(node -> {
-            try {
-                udpConnector.send(gracefulLeaveRequest.toString(), InetAddress.getByAddress(node.getNodeIp().getBytes()), node.getPort());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-
-        //Say goodbye to BS server
-
-        UnregistrationRequestModel unregistrationRequest = new MessageBuilderImpl.UnregisterRequestMessageBuilder()
-                .setIp("129.82.123.45")
-                .setPort(5002)
-                .setUserName("--")
-                .build();
-        udpConnector.send(unregistrationRequest.toString(), InetAddress.getLocalHost(), 55555);
-
-        ((UDPConnectorImpl) udpConnector).killExecutorService();
-        System.exit(0);
-
-
-    }
+//    public static void performGracefulDeparture(UdpConnector udpConnector) throws IOException {
+//        GracefulLeaveRequestModel gracefulLeaveRequest = new MessageBuilderImpl.GracefulLeaveRequestMessageBuilder()
+//                .setIp("129.82.123.45")
+//                .setPort(5002)
+//                .setUserName("--")
+//                .build();
+//        Set<Node> peerNodeList = PeerTableImpl.getInstance().getPeerNodeList();
+//        peerNodeList.forEach(node -> {
+//            try {
+//                udpConnector.send(gracefulLeaveRequest.toString(), InetAddress.getByAddress(node.getNodeIp().getBytes()), node.getPort());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        });
+//
+//        //Say goodbye to BS server
+//
+//        UnregistrationRequestModel unregistrationRequest = new MessageBuilderImpl.UnregisterRequestMessageBuilder()
+//                .setIp("129.82.123.45")
+//                .setPort(5002)
+//                .setUserName("--")
+//                .build();
+//        udpConnector.send(unregistrationRequest.toString(), InetAddress.getLocalHost(), 55555);
+//
+//        ((UDPConnectorImpl) udpConnector).killExecutorService();
+//        System.exit(0);
+//
+//
+//    }
 }
