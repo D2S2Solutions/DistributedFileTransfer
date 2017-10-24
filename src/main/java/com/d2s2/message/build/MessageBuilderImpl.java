@@ -1,7 +1,9 @@
 package com.d2s2.message.build;
 
+import com.d2s2.message.MessageConstants;
 import com.d2s2.models.GracefulLeaveRequestModel;
 import com.d2s2.models.RegistrationRequestModel;
+import com.d2s2.models.SearchRequestModel;
 import com.d2s2.models.UnregistrationRequestModel;
 
 /**
@@ -15,9 +17,9 @@ public class MessageBuilderImpl implements MessageBuilder {
 
     @Override
     public String buildRegisterRequestMessage(RegistrationRequestModel model) {
-        int length = model.getIp().length() + model.getPort().length() + model.getUserName().length() + 4 +4;
+        int length = MessageConstants.REG_MESSAGE.length() + model.getIp().length() + String.valueOf(model.getPort()).length() + model.getUserName().length() + 4 + 4;
         final String requestFinalLength = String.format("%04d", length);
-        return requestFinalLength + " REG " + model.getIp() + " " + model.getPort() + " " + model.getUserName();
+        return requestFinalLength + " "+ MessageConstants.REG_MESSAGE +" " + model.getIp() + " " + model.getPort() + " " + model.getUserName();
     }
 
     @Override
@@ -36,82 +38,10 @@ public class MessageBuilderImpl implements MessageBuilder {
     }
 
     @Override
-    public String buildSearchMessage(String fileName) {
-        return null;
+    public String buildSearchRequestMessage(SearchRequestModel model) {
+        int length = MessageConstants.SER_MESSAGE.length()+ model.getIp().length() + String.valueOf(model.getPort()).length() + model.getFileName().length() + String.valueOf(model.getHops()).length()+ 5 +4;
+        final String requestFinalLength = String.format("%04d", length);
+        return requestFinalLength + " "+ MessageConstants.SER_MESSAGE +" " + model.getIp() + " " + model.getPort() + " " + model.getFileName();
     }
 
-    public static class RegisterRequestMessageBuilder {
-        private String ip;
-        private String port;
-        private String userName;
-
-        public RegisterRequestMessageBuilder setIp(String ip) {
-            this.ip = ip;
-            return this;
-        }
-
-        public RegisterRequestMessageBuilder setPort(int port) {
-            this.port = String.valueOf(port);
-            return this;
-        }
-
-        public RegisterRequestMessageBuilder setUserName(String userName) {
-            this.userName = userName;
-            return this;
-        }
-
-        public RegistrationRequestModel build() { // todo -- Change the return type from String to an object of type Request
-            return new RegistrationRequestModel(ip, port, userName);
-        }
-    }
-
-    public static class GracefulLeaveRequestMessageBuilder {
-        private String ip;
-        private String port;
-        private String userName;
-
-        public GracefulLeaveRequestMessageBuilder setIp(String ip) {
-            this.ip = ip;
-            return this;
-        }
-
-        public GracefulLeaveRequestMessageBuilder setPort(int port) {
-            this.port = String.valueOf(port);
-            return this;
-        }
-
-        public GracefulLeaveRequestMessageBuilder setUserName(String userName) {
-            this.userName = userName;
-            return this;
-        }
-
-        public GracefulLeaveRequestModel build() { // todo -- Change the return type from String to an object of type Request
-            return new GracefulLeaveRequestModel(ip, port, userName);
-        }
-    }
-
-    public static class UnregisterRequestMessageBuilder {
-        private String ip;
-        private String port;
-        private String userName;
-
-        public UnregisterRequestMessageBuilder setIp(String ip) {
-            this.ip = ip;
-            return this;
-        }
-
-        public UnregisterRequestMessageBuilder setPort(int port) {
-            this.port = String.valueOf(port);
-            return this;
-        }
-
-        public UnregisterRequestMessageBuilder setUserName(String userName) {
-            this.userName = userName;
-            return this;
-        }
-
-        public UnregistrationRequestModel build() { // todo -- Change the return type from String to an object of type Request
-            return new UnregistrationRequestModel(ip, port, userName);
-        }
-    }
 }

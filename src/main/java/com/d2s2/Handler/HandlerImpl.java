@@ -6,12 +6,14 @@ import com.d2s2.message.build.MessageBuilderImpl;
 import com.d2s2.message.tokenize.MessageTokenizer;
 import com.d2s2.message.tokenize.MessageTokenizerImpl;
 import com.d2s2.models.AbstractRequestResponseModel;
+import com.d2s2.models.Node;
 import com.d2s2.models.RegistrationRequestModel;
 import com.d2s2.models.SearchRequestModel;
 import com.d2s2.socket.UDPConnectorImpl;
 import com.d2s2.socket.UdpConnector;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.ArrayList;
 
 /**
@@ -44,16 +46,16 @@ public class HandlerImpl implements Handler {
 
     @Override
     public void searchFile(String file) {
-        SearchRequestModel searchRequestModel = new SearchRequestModel(this,ApplicationConstants.IP, ApplicationConstants.PORT, file, ApplicationConstants.HOPS);
+        SearchRequestModel searchRequestModel = new SearchRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT, file, ApplicationConstants.HOPS);
         searchRequestModel.handle();
         //forward to two picked nodes
     }
 
     @Override
-    public void sendSearchRequest(ArrayList<SearchRequestModel> searchRequestList) {
-        for(SearchRequestModel model:searchRequestList){
-//            messageBuilder.buildSearchMessage()
-//            udpConnector.send();
+    public void sendSearchRequest(SearchRequestModel model,ArrayList<Node> searchRequestList) throws IOException {
+        String searchRequestMessage = messageBuilder.buildSearchRequestMessage(model);
+        for(Node node:searchRequestList){
+            udpConnector.send(searchRequestMessage,null,node.getPort());
         }
     }
 

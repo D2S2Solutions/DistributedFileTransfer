@@ -2,11 +2,11 @@ package com.d2s2.models;
 
 public abstract class AbstractRequestModel extends AbstractRequestResponseModel {
     String ip;
-    String port;
+    int port;
 
     String type;
 
-    public AbstractRequestModel(String ip, String port) {
+    public AbstractRequestModel(String ip, int port) {
         this.ip = ip;
         this.port = port;
 //        this.userName = userName;
@@ -20,11 +20,11 @@ public abstract class AbstractRequestModel extends AbstractRequestResponseModel 
         this.ip = ip;
     }
 
-    public String getPort() {
+    public int getPort() {
         return port;
     }
 
-    public void setPort(String port) {
+    public void setPort(int port) {
         this.port = port;
     }
 
