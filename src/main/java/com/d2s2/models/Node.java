@@ -2,11 +2,11 @@ package com.d2s2.models;
 
 public class Node {
     private String nodeIp;
-    private String port;
+    private int port;
     private String id;
 
 
-    public Node(String nodeIp, String port) {
+    public Node(String nodeIp, int port) {
         this.nodeIp = nodeIp;
         this.port = port;
         this.id = nodeIp + " " + port; // Todo Find a proper Id schema
@@ -21,14 +21,26 @@ public class Node {
     }
 
     public int getPort() {
-        return Integer.parseInt(port);
+        return port;
     }
 
-    public void setPort(String port) {
+    public void setPort(int port) {
         this.port = port;
     }
 
     public String getId() {
         return id;
+    }
+
+    @Override
+    public int hashCode() {
+        return String.valueOf(this.nodeIp).concat(":").concat(String.valueOf(this.port)).hashCode();
+    }
+
+
+    @Override
+    public boolean equals(Object object) {
+        Node node= (Node) object;
+        return  ( this.nodeIp.equals(node.getNodeIp()) && this.port == node.getPort() ) ? true : false;
     }
 }

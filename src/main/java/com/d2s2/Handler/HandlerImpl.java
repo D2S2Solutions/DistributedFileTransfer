@@ -15,6 +15,8 @@ import com.d2s2.socket.UdpConnector;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Created by Heshan Sandamal on 10/24/2017.
@@ -52,10 +54,11 @@ public class HandlerImpl implements Handler {
     }
 
     @Override
-    public void sendSearchRequest(SearchRequestModel model,ArrayList<Node> searchRequestList) throws IOException {
+    public void sendSearchRequest(SearchRequestModel model,ConcurrentLinkedQueue<Node> concurrentLinkedQueue) throws IOException {
         String searchRequestMessage = messageBuilder.buildSearchRequestMessage(model);
-        for(Node node:searchRequestList){
-            udpConnector.send(searchRequestMessage,null,node.getPort());
+        Iterator<Node> iterator = concurrentLinkedQueue.iterator();
+        while(iterator.hasNext()){
+            udpConnector.send(searchRequestMessage,null,iterator.next().getPort());
         }
     }
 

@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Created by Heshan Sandamal on 10/24/2017.
@@ -48,17 +49,15 @@ public class SearchRequestModel extends AbstractRequestModel{
 
         FileHandlerImpl instance = FileHandlerImpl.getInstance();
         List<String> fileList = instance.searchLocalFileList(this.fileName);
+        System.out.println();
 
-
-
-
-        ArrayList<Node> searchRequestModels=new ArrayList<>();
+        ConcurrentLinkedQueue<Node> concurrentLinkedQueue=new ConcurrentLinkedQueue<>();
 
         this.hops--;
 
         if(hops>0){
             try {
-                handler.sendSearchRequest(this,searchRequestModels);
+                handler.sendSearchRequest(this,concurrentLinkedQueue);
             } catch (IOException e) {
                 e.printStackTrace();
             }
