@@ -21,6 +21,8 @@ public class SearchRequestModel extends AbstractRequestModel {
 
     public SearchRequestModel(String ip, int port, String fileName, int hops) {
         super(ip, port);
+        this.fileName=fileName;
+        this.hops=hops;
     }
 
     public String getFileName() {

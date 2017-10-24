@@ -28,6 +28,9 @@ public class MessageTokenizerImpl implements MessageTokenizer {
             case MessageConstants.UNREG_MESSAGE:
                 return this.getUnregisterMessageOb(stringTokenizer);
 
+//            case MessageConstants.SER_MESSAGE:
+//                return this.getSearchMessage
+
 
         }
         return null;
