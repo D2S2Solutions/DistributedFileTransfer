@@ -1,8 +1,10 @@
 package com.d2s2.message.tokenize;
 
 import com.d2s2.message.MessageConstants;
-import com.d2s2.models.*;
-import com.d2s2.overlay.route.PeerTableImpl;
+import com.d2s2.models.AbstractRequestResponseModel;
+import com.d2s2.models.Node;
+import com.d2s2.models.RegistrationResponseModel;
+import com.d2s2.models.UnregistrationResponseModel;
 
 import java.util.HashSet;
 import java.util.StringTokenizer;

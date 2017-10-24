@@ -13,7 +13,6 @@ import com.d2s2.socket.UDPConnectorImpl;
 import com.d2s2.socket.UdpConnector;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.util.ArrayList;
 
 /**
@@ -26,9 +25,9 @@ public class HandlerImpl implements Handler {
     UdpConnector udpConnector;
 
     public HandlerImpl() {
-        this.udpConnector=new UDPConnectorImpl();
+        this.udpConnector = new UDPConnectorImpl();
         this.messageTokenizer = new MessageTokenizerImpl();
-        this.messageBuilder=new MessageBuilderImpl();
+        this.messageBuilder = new MessageBuilderImpl();
     }
 
     @Override
@@ -39,7 +38,7 @@ public class HandlerImpl implements Handler {
 
     @Override
     public void registerInBS() throws IOException {
-        RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel(ApplicationConstants.IP,ApplicationConstants.PORT,ApplicationConstants.USER_NAME);
+        RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT, ApplicationConstants.USER_NAME);
         String message = messageBuilder.buildRegisterRequestMessage(registrationRequestModel);
         udpConnector.send(message, null, 55555);
     }
@@ -52,10 +51,10 @@ public class HandlerImpl implements Handler {
     }
 
     @Override
-    public void sendSearchRequest(SearchRequestModel model,ArrayList<Node> searchRequestList) throws IOException {
+    public void sendSearchRequest(SearchRequestModel model, ArrayList<Node> searchRequestList) throws IOException {
         String searchRequestMessage = messageBuilder.buildSearchRequestMessage(model);
-        for(Node node:searchRequestList){
-            udpConnector.send(searchRequestMessage,null,node.getPort());
+        for (Node node : searchRequestList) {
+            udpConnector.send(searchRequestMessage, null, node.getPort());
         }
     }
 

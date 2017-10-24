@@ -1,6 +1,5 @@
 package com.d2s2.overlay.route;
 
-import com.d2s2.files.FileHandlerImpl;
 import com.d2s2.models.Node;
 
 import java.util.Set;
@@ -13,12 +12,15 @@ public class PeerTableImpl {
 
     private static final PeerTableImpl PEER_TABLE = new PeerTableImpl();
     private static Set<Node> peerNodeList;
-    private PeerTableImpl(){}
     private volatile static PeerTableImpl peerTable;
 
-    static  {
+    static {
         peerNodeList = ConcurrentHashMap.newKeySet();
     }
+
+    private PeerTableImpl() {
+    }
+
     public static PeerTableImpl getInstance() {
         if (peerTable == null) {
             synchronized (PeerTableImpl.class) {
@@ -29,7 +31,6 @@ public class PeerTableImpl {
         }
         return peerTable;
     }
-
 
 
     public void insert(Node node) {

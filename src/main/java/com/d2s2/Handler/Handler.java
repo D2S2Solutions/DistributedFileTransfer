@@ -8,7 +8,10 @@ import java.util.ArrayList;
 
 public interface Handler {
     public void handleResponse(String message);
+
     public void registerInBS() throws IOException;
+
     public void searchFile(String file);
-    public void sendSearchRequest(SearchRequestModel model,ArrayList<Node> searchRequestList) throws IOException;
+
+    public void sendSearchRequest(SearchRequestModel model, ArrayList<Node> searchRequestList) throws IOException;
 }

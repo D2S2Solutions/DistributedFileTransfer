@@ -2,12 +2,8 @@ package com.d2s2.models;
 
 import com.d2s2.Handler.Handler;
 import com.d2s2.Handler.HandlerImpl;
-import com.d2s2.files.FileHandler;
 import com.d2s2.files.FileHandlerImpl;
-import com.d2s2.overlay.route.StatTableImpl;
-import com.d2s2.socket.UdpConnector;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +11,7 @@ import java.util.List;
 /**
  * Created by Heshan Sandamal on 10/24/2017.
  */
-public class SearchRequestModel extends AbstractRequestModel{
+public class SearchRequestModel extends AbstractRequestModel {
 
     private static Handler handler = new HandlerImpl();
     private String fileName;
@@ -50,15 +46,13 @@ public class SearchRequestModel extends AbstractRequestModel{
         List<String> fileList = instance.searchLocalFileList(this.fileName);
 
 
-
-
-        ArrayList<Node> searchRequestModels=new ArrayList<>();
+        ArrayList<Node> searchRequestModels = new ArrayList<>();
 
         this.hops--;
 
-        if(hops>0){
+        if (hops > 0) {
             try {
-                handler.sendSearchRequest(this,searchRequestModels);
+                handler.sendSearchRequest(this, searchRequestModels);
             } catch (IOException e) {
                 e.printStackTrace();
             }
