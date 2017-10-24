@@ -22,8 +22,8 @@ public class MessageTokenizerImpl implements MessageTokenizer {
             case MessageConstants.REGOK_MESSAGE:
                 return this.getRegisterResponseMessageOb(stringTokenizer);
 
-            case MessageConstants.UNREG_MESSAGE:
-                return this.getUnregisterMessageOb(stringTokenizer);
+            case MessageConstants.UNROK_MESSAGE:
+                return this.getUnregisterResponseMessageOb(stringTokenizer);
 
             case MessageConstants.SER_MESSAGE:
                 return this.getSearchMessageOb(stringTokenizer);
@@ -63,7 +63,7 @@ public class MessageTokenizerImpl implements MessageTokenizer {
         return new SearchRequestModel(ip,port,fileName,hops);
     }
 
-    private AbstractRequestResponseModel getUnregisterMessageOb(StringTokenizer stringTokenizer) {
+    private AbstractRequestResponseModel getUnregisterResponseMessageOb(StringTokenizer stringTokenizer) {
         String token = stringTokenizer.nextToken();
         if (token != null) {
             return new UnregistrationResponseModel(Integer.parseInt(token));
@@ -101,7 +101,6 @@ public class MessageTokenizerImpl implements MessageTokenizer {
                     nodeset.add(new Node(ip, Integer.parseInt(port)));
 
                 }
-                System.out.println("nodeeeeeeeeeeeeeeeeeeeeeeeeee");
                 return new RegistrationResponseModel(nodeCount, nodeset);
         }
 

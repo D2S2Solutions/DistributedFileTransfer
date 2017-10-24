@@ -1,5 +1,6 @@
 package com.d2s2.models;
 
+import com.d2s2.overlay.route.PeerTableImpl;
 import com.d2s2.overlay.route.StatTableImpl;
 
 import java.util.ArrayList;
@@ -27,13 +28,18 @@ public class SearchResponseModel extends AbstractRequestResponseModel {
 
     @Override
     public void handle() {
-        final StatTableImpl instance = StatTableImpl.getInstance();
+        final StatTableImpl statTable = StatTableImpl.getInstance();
+        final PeerTableImpl peerTable = PeerTableImpl.getInstance();
 
         fileList.forEach((fileName)->{
 
-            ConcurrentLinkedQueue<Node> concurrentLinkedQueue = instance.get(fileName);
-            concurrentLinkedQueue.add(new Node(this.ip,this.port));
+            ConcurrentLinkedQueue<Node> concurrentLinkedQueue = statTable.get(fileName);
+            Node node = new Node(this.ip, this.port);
+            concurrentLinkedQueue.add(node);
+            peerTable.insert(node);
 
         });
+
+
     }
 }
