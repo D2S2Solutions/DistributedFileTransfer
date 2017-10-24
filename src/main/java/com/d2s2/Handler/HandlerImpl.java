@@ -56,28 +56,31 @@ public class HandlerImpl implements Handler {
     }
 
     @Override
-    public void sendSearchRequest(SearchRequestModel model,ConcurrentLinkedQueue<Node> concurrentLinkedQueue) throws IOException {
+    public void sendSearchRequest(SearchRequestModel model, ConcurrentLinkedQueue<Node> concurrentLinkedQueue) throws IOException {
         String searchRequestMessage = messageBuilder.buildSearchRequestMessage(model);
         Iterator<Node> iterator = concurrentLinkedQueue.iterator();
-        while(iterator.hasNext()){
+        while (iterator.hasNext()) {
             Node next = iterator.next();
-            udpConnector.send(searchRequestMessage,null,next.getPort());
+            udpConnector.send(searchRequestMessage, null, next.getPort());
         }
 
         final Set<Node> peerNodeList = PeerTableImpl.getInstance().getPeerNodeList();
         Random random = new Random();
-        final int item1 = random.nextInt(peerNodeList.size());
-        final int item2 = random.nextInt(peerNodeList.size());
 
-        int i=0;
-        Iterator<Node> nodeIterator = peerNodeList.iterator();
-        while(nodeIterator.hasNext()){
+        if (peerNodeList.size() > 0) {
+            final int item1 = random.nextInt(peerNodeList.size());
+            final int item2 = random.nextInt(peerNodeList.size());
 
-            if((item1==i || item2==i)  && !concurrentLinkedQueue.contains(item1)){
-                udpConnector.send(searchRequestMessage,null,nodeIterator.next().getPort());
+            int i = 0;
+            Iterator<Node> nodeIterator = peerNodeList.iterator();
+            while (nodeIterator.hasNext()) {
+
+                if ((item1 == i || item2 == i) && !concurrentLinkedQueue.contains(item1)) {
+                    udpConnector.send(searchRequestMessage, null, nodeIterator.next().getPort());
+                }
+
+                i++;
             }
-
-            i++;
         }
 
 

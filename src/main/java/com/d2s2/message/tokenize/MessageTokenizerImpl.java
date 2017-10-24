@@ -1,10 +1,7 @@
 package com.d2s2.message.tokenize;
 
 import com.d2s2.message.MessageConstants;
-import com.d2s2.models.AbstractRequestResponseModel;
-import com.d2s2.models.Node;
-import com.d2s2.models.RegistrationResponseModel;
-import com.d2s2.models.UnregistrationResponseModel;
+import com.d2s2.models.*;
 
 import java.util.HashSet;
 import java.util.StringTokenizer;
@@ -28,14 +25,22 @@ public class MessageTokenizerImpl implements MessageTokenizer {
             case MessageConstants.UNREG_MESSAGE:
                 return this.getUnregisterMessageOb(stringTokenizer);
 
-//            case MessageConstants.SER_MESSAGE:
-//                return this.getSearchMessage
+            case MessageConstants.SER_MESSAGE:
+                return this.getSearchMessageOb(stringTokenizer);
 
 
         }
         return null;
 
 
+    }
+
+    private AbstractRequestResponseModel getSearchMessageOb(StringTokenizer stringTokenizer) {
+        String ip = stringTokenizer.nextToken();
+        int port = Integer.parseInt(stringTokenizer.nextToken());
+        String fileName=stringTokenizer.nextToken();
+        int hops= Integer.parseInt(stringTokenizer.nextToken());
+        return new SearchRequestModel(ip,port,fileName,hops);
     }
 
     private AbstractRequestResponseModel getUnregisterMessageOb(StringTokenizer stringTokenizer) {
