@@ -68,7 +68,6 @@ public class MessageTokenizerImpl implements MessageTokenizer {
                 for (int i = 0; i < nodeCount; i++) {
                     String ip = stringTokenizer.nextToken();
                     String port = stringTokenizer.nextToken();
-
                     nodeset.add(new Node(ip, port));
 
                 }

@@ -11,6 +11,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * Created by Heshan Sandamal on 10/6/2017.
@@ -47,25 +48,18 @@ public class UDPConnectorImpl implements UdpConnector {
         socket.send(packet);
     }
 
-    /*
-    Each request that comes to the node will be handed off to a separate async thread
-    via the executor service.
-     */
     @Override
-    public String receive() throws IOException {
-        byte[] bufferIncoming = new byte[100];
+    public Future<String> receive() throws IOException {
+        byte[] bufferIncoming = new byte[1000];
         DatagramPacket incomingPacket = new DatagramPacket(bufferIncoming, bufferIncoming.length);
         socket.receive(incomingPacket);
         String incomingMessage = new String(bufferIncoming);
 
-        ExecutorService executorService= Executors.newFixedThreadPool(10);
+        executorService = Executors.newFixedThreadPool(10);
 
-        executorService.submit(()-> {
-            handler.handleResponse(incomingMessage);
-        });
+        Future<String> future = (Future<String>) executorService.submit(() -> handler.handleResponse(incomingMessage));
 
-        return incomingMessage;
-//        executorService.shutdown(); // To keep the client alive comment out this line when necessary
+        return future;
     }
 
     public void killExecutorService() {
