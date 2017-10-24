@@ -3,10 +3,14 @@ package com.d2s2.models;
 import com.d2s2.Handler.Handler;
 import com.d2s2.Handler.HandlerImpl;
 import com.d2s2.files.FileHandler;
+import com.d2s2.files.FileHandlerImpl;
+import com.d2s2.overlay.route.StatTableImpl;
 import com.d2s2.socket.UdpConnector;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Heshan Sandamal on 10/24/2017.
@@ -42,7 +46,13 @@ public class SearchRequestModel extends AbstractRequestModel{
         //search from stat table    List<String,NOde>
         //create searchRequestModels
 
-        ArrayList<SearchRequestModel> searchRequestModels=new ArrayList<>();
+        FileHandlerImpl instance = FileHandlerImpl.getInstance();
+        List<String> fileList = instance.searchLocalFileList(this.fileName);
+
+
+
+
+        ArrayList<Node> searchRequestModels=new ArrayList<>();
 
         this.hops--;
 
