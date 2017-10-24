@@ -1,7 +1,5 @@
 package com.d2s2.socket;
 
-import com.d2s2.models.AbstractRequestModel;
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.concurrent.Future;

@@ -9,13 +9,15 @@ import com.d2s2.models.AbstractRequestResponseModel;
 import com.d2s2.models.Node;
 import com.d2s2.models.RegistrationRequestModel;
 import com.d2s2.models.SearchRequestModel;
+import com.d2s2.overlay.route.PeerTableImpl;
 import com.d2s2.socket.UDPConnectorImpl;
 import com.d2s2.socket.UdpConnector;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -28,9 +30,9 @@ public class HandlerImpl implements Handler {
     UdpConnector udpConnector;
 
     public HandlerImpl() {
-        this.udpConnector=new UDPConnectorImpl();
+        this.udpConnector = new UDPConnectorImpl();
         this.messageTokenizer = new MessageTokenizerImpl();
-        this.messageBuilder=new MessageBuilderImpl();
+        this.messageBuilder = new MessageBuilderImpl();
     }
 
     @Override
@@ -41,7 +43,7 @@ public class HandlerImpl implements Handler {
 
     @Override
     public void registerInBS() throws IOException {
-        RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel(ApplicationConstants.IP,ApplicationConstants.PORT,ApplicationConstants.USER_NAME);
+        RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT, ApplicationConstants.USER_NAME);
         String message = messageBuilder.buildRegisterRequestMessage(registrationRequestModel);
         udpConnector.send(message, null, 55555);
     }
@@ -58,8 +60,27 @@ public class HandlerImpl implements Handler {
         String searchRequestMessage = messageBuilder.buildSearchRequestMessage(model);
         Iterator<Node> iterator = concurrentLinkedQueue.iterator();
         while(iterator.hasNext()){
-            udpConnector.send(searchRequestMessage,null,iterator.next().getPort());
+            Node next = iterator.next();
+            udpConnector.send(searchRequestMessage,null,next.getPort());
         }
+
+        final Set<Node> peerNodeList = PeerTableImpl.getInstance().getPeerNodeList();
+        Random random = new Random();
+        final int item1 = random.nextInt(peerNodeList.size());
+        final int item2 = random.nextInt(peerNodeList.size());
+
+        int i=0;
+        Iterator<Node> nodeIterator = peerNodeList.iterator();
+        while(nodeIterator.hasNext()){
+
+            if((item1==i || item2==i)  && !concurrentLinkedQueue.contains(item1)){
+                udpConnector.send(searchRequestMessage,null,nodeIterator.next().getPort());
+            }
+
+            i++;
+        }
+
+
     }
 
 

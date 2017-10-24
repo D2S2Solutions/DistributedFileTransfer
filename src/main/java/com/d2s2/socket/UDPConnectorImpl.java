@@ -2,7 +2,6 @@ package com.d2s2.socket;
 
 import com.d2s2.Handler.Handler;
 import com.d2s2.Handler.HandlerImpl;
-import com.d2s2.models.AbstractRequestModel;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -27,11 +26,10 @@ public class UDPConnectorImpl implements UdpConnector {
         } catch (SocketException e) {
             e.printStackTrace();
         }
-        handler=new HandlerImpl();
+        handler = new HandlerImpl();
     }
 
     private ExecutorService executorService;
-
 
 
 //    @Override

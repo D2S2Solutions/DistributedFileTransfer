@@ -4,20 +4,13 @@ import com.d2s2.Handler.Handler;
 import com.d2s2.Handler.HandlerImpl;
 import com.d2s2.files.FileHandler;
 import com.d2s2.files.FileHandlerImpl;
-import com.d2s2.message.build.MessageBuilderImpl;
-import com.d2s2.models.GracefulLeaveRequestModel;
-import com.d2s2.models.Node;
-import com.d2s2.models.UnregistrationRequestModel;
-import com.d2s2.overlay.route.PeerTableImpl;
 import com.d2s2.socket.UDPConnectorImpl;
 import com.d2s2.socket.UdpConnector;
 import me.tongfei.progressbar.ProgressBar;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -90,15 +83,14 @@ public class Main {
                 "American Idol",
                 "Hacking for Dummies"
         };
-        Arrays.stream(fullLocalFileArray).filter(s -> (s.length() > randomWithRange(5,20) ))
+        Arrays.stream(fullLocalFileArray).filter(s -> (s.length() > randomWithRange(5, 20)))
                 .forEach(fileHandler::initializeFileStorage);
 
     }
 
-    private static int randomWithRange(int min, int max)
-    {
+    private static int randomWithRange(int min, int max) {
         int range = (max - min) + 1;
-        return (int)(Math.random() * range) + min;
+        return (int) (Math.random() * range) + min;
     }
 
 //    public static void performGracefulDeparture(UdpConnector udpConnector) throws IOException {
