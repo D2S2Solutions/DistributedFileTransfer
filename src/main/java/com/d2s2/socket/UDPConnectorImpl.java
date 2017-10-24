@@ -33,10 +33,10 @@ public class UDPConnectorImpl implements UdpConnector {
 
 
 
-    @Override
-    public void send(AbstractRequestModel message) throws IOException {
-
-    }
+//    @Override
+//    public void send(AbstractRequestModel message) throws IOException {
+//
+//    }
 
     @Override
     public void send(String message, InetAddress receiverAddress, int port) throws IOException {
