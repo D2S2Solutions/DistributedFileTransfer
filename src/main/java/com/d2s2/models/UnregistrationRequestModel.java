@@ -2,9 +2,10 @@ package com.d2s2.models;
 
 public class UnregistrationRequestModel extends AbstractRequestModel {
 
+    String userName;
 
     public UnregistrationRequestModel(String ip, String port, String userName) {
-        super(ip, port, userName);
+        super(ip, port);
     }
 
     @Override

@@ -2,9 +2,10 @@ package com.d2s2.models;
 
 public class RegistrationRequestModel extends AbstractRequestModel {
 
+    String userName;
 
     public RegistrationRequestModel(String ip, String port, String userName) {
-        super(ip, port, userName);
+        super(ip, port);
     }
 
     @Override
@@ -17,5 +18,13 @@ public class RegistrationRequestModel extends AbstractRequestModel {
     @Override
     public void handle() {
 
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

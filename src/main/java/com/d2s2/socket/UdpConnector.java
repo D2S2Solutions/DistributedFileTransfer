@@ -11,7 +11,7 @@ import java.util.concurrent.Future;
  */
 public interface UdpConnector {
 
-    void send(AbstractRequestModel message) throws IOException;
+//    void send(AbstractRequestModel message) throws IOException;
 
     void send(String message, InetAddress receiverAddress, int port) throws IOException;
 

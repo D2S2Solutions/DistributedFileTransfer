@@ -15,7 +15,7 @@ public class MessageBuilderImpl implements MessageBuilder {
 
     @Override
     public String buildRegisterRequestMessage(RegistrationRequestModel model) {
-        int length = model.getIp().length() + model.getPort().length() + model.getUserName().length() + 4;
+        int length = model.getIp().length() + model.getPort().length() + model.getUserName().length() + 4 +4;
         final String requestFinalLength = String.format("%04d", length);
         return requestFinalLength + " REG " + model.getIp() + " " + model.getPort() + " " + model.getUserName();
     }
