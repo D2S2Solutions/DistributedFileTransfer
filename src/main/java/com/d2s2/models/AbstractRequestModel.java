@@ -1,11 +1,12 @@
 package com.d2s2.models;
 
-public class RequestModel {
+public abstract class AbstractRequestModel extends AbstractRequestResponseModel {
     String ip;
     String port;
     String userName;
+    String type;
 
-    public RequestModel(String ip, String port, String userName) {
+    public AbstractRequestModel(String ip, String port, String userName) {
         this.ip = ip;
         this.port = port;
         this.userName = userName;
