@@ -36,7 +36,6 @@ public class StatTableImpl {
         objects.add(new Node("7",5005));
         statTable.put("FIRST",objects);
         statTable.put("SECOND",nodes);
-
     }
 
 
@@ -44,6 +43,9 @@ public class StatTableImpl {
 
     }
 
+    public ConcurrentLinkedQueue<Node> get(String fileName){
+        return this.statTable.get(fileName);
+    }
 
     public ConcurrentLinkedQueue search(String query) {
         ConcurrentLinkedQueue concurrentLinkedQueues = new ConcurrentLinkedQueue();
