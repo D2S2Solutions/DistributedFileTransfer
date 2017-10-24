@@ -2,11 +2,12 @@ package com.d2s2.models;
 
 import com.d2s2.Handler.Handler;
 import com.d2s2.Handler.HandlerImpl;
+import com.d2s2.constants.ApplicationConstants;
 import com.d2s2.files.FileHandlerImpl;
 import com.d2s2.overlay.route.StatTableImpl;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -21,8 +22,8 @@ public class SearchRequestModel extends AbstractRequestModel {
 
     public SearchRequestModel(String ip, int port, String fileName, int hops) {
         super(ip, port);
-        this.fileName=fileName;
-        this.hops=hops;
+        this.fileName = fileName;
+        this.hops = hops;
     }
 
     public String getFileName() {
@@ -48,22 +49,27 @@ public class SearchRequestModel extends AbstractRequestModel {
 
         FileHandlerImpl instance = FileHandlerImpl.getInstance();
         List<String> fileList = instance.searchLocalFileList(this.fileName);
-        System.out.println(fileList);
-
+        System.out.println("LOCAL SEARCH " + fileList);
+        if (fileList.size() > 0) {
+            SearchResponseModel searchResponseModel = new SearchResponseModel(ApplicationConstants.IP, ApplicationConstants.PORT, hops, fileList.size(), new HashSet<>(fileList));
+            try {
+                handler.sendLocalSearchToSource(searchResponseModel, fileList);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         this.hops--;
-
         if (hops > 0) {
             ConcurrentLinkedQueue linkedQueue = StatTableImpl.getInstance().search(this.fileName);
             System.out.println(linkedQueue);
 
             try {
-                handler.sendSearchRequest(this,linkedQueue);
+                handler.sendSearchRequest(this, linkedQueue);
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
-
     }
+
 }

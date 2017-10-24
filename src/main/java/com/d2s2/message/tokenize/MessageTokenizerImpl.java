@@ -40,10 +40,10 @@ public class MessageTokenizerImpl implements MessageTokenizer {
 
     private AbstractRequestResponseModel getSearchResponseOb(StringTokenizer stringTokenizer) {
 
-        int noOfFiles=Integer.valueOf(stringTokenizer.nextToken());
+        int noOfFiles = Integer.valueOf(stringTokenizer.nextToken());
         String ip = stringTokenizer.nextToken();
         int port = Integer.parseInt(stringTokenizer.nextToken());
-        int hops= Integer.parseInt(stringTokenizer.nextToken());
+        int hops = Integer.parseInt(stringTokenizer.nextToken());
 
         HashSet<String> fileSet = new HashSet<>();
 
@@ -51,16 +51,16 @@ public class MessageTokenizerImpl implements MessageTokenizer {
             fileSet.add(stringTokenizer.nextToken());
         }
 
-        return new SearchResponseModel(ip,port,hops,noOfFiles,fileSet);
+        return new SearchResponseModel(ip, port, hops, noOfFiles, fileSet);
 
     }
 
     private AbstractRequestResponseModel getSearchMessageOb(StringTokenizer stringTokenizer) {
         String ip = stringTokenizer.nextToken();
         int port = Integer.parseInt(stringTokenizer.nextToken());
-        String fileName=stringTokenizer.nextToken();
-        int hops= Integer.parseInt(stringTokenizer.nextToken());
-        return new SearchRequestModel(ip,port,fileName,hops);
+        String fileName = stringTokenizer.nextToken();
+        int hops = Integer.parseInt(stringTokenizer.nextToken());
+        return new SearchRequestModel(ip, port, fileName, hops);
     }
 
     private AbstractRequestResponseModel getUnregisterMessageOb(StringTokenizer stringTokenizer) {

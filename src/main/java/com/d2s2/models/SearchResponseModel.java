@@ -2,7 +2,6 @@ package com.d2s2.models;
 
 import com.d2s2.overlay.route.StatTableImpl;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -17,22 +16,42 @@ public class SearchResponseModel extends AbstractRequestResponseModel {
     private int noOfFiles;
     private HashSet<String> fileList;
 
-    public SearchResponseModel(String ip,int port, int hops, int noOfFiles, HashSet<String> fileList) {
-        this.ip=ip;
-        this.port=port;
+    public SearchResponseModel(String ip, int port, int hops, int noOfFiles, HashSet<String> fileList) {
+        this.ip = ip;
+        this.port = port;
         this.hops = hops;
         this.noOfFiles = noOfFiles;
         this.fileList = fileList;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public int getHops() {
+        return hops;
+    }
+
+    public int getNoOfFiles() {
+        return noOfFiles;
+    }
+
+    public HashSet<String> getFileList() {
+        return fileList;
     }
 
     @Override
     public void handle() {
         final StatTableImpl instance = StatTableImpl.getInstance();
 
-        fileList.forEach((fileName)->{
+        fileList.forEach((fileName) -> {
 
             ConcurrentLinkedQueue<Node> concurrentLinkedQueue = instance.get(fileName);
-            concurrentLinkedQueue.add(new Node(this.ip,this.port));
+            concurrentLinkedQueue.add(new Node(this.ip, this.port));
 
         });
     }
