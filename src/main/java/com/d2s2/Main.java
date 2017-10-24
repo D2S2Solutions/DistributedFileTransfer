@@ -84,7 +84,10 @@ public class Main {
                 "Hacking for Dummies"
         };
         Arrays.stream(fullLocalFileArray).filter(s -> (s.length() > randomWithRange(5, 20)))
-                .forEach(fileHandler::initializeFileStorage);
+                .forEach(s -> {
+                    String saltedName = s.replace(" ", "@");
+                    fileHandler.initializeFileStorage(saltedName);
+                });
 
     }
 
