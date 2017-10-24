@@ -1,6 +1,6 @@
 package com.d2s2.models;
 
-public class UnregistrationRequestModel extends RequestModel {
+public class UnregistrationRequestModel extends AbstractRequestModel {
 
 
     public UnregistrationRequestModel(String ip, String port, String userName) {
@@ -12,5 +12,10 @@ public class UnregistrationRequestModel extends RequestModel {
         int length = ip.length() + port.length() + userName.length() + 4;
         final String requestFinalLength = String.format("%04d", length);
         return requestFinalLength + " UNREG " + ip + " " + port + " " + userName;
+    }
+
+    @Override
+    public void handle() {
+
     }
 }

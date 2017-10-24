@@ -1,6 +1,7 @@
 package com.d2s2.message.tokenize;
 
 import com.d2s2.models.Node;
+import com.d2s2.models.AbstractRequestResponseModel;
 import com.d2s2.overlay.route.PeerTableImpl;
 
 import java.util.StringTokenizer;
@@ -10,7 +11,7 @@ import java.util.StringTokenizer;
  */
 public class MessageTokenizerImpl implements MessageTokenizer {
     @Override
-    public void tokenizeMessage(String message) {
+    public AbstractRequestResponseModel tokenizeMessage(String message) {
         message = message.substring(0, Integer.parseInt(message.substring(0, 4)));
         System.out.println(message);
         StringTokenizer stringTokenizer = new StringTokenizer(message, " ");
@@ -56,6 +57,7 @@ public class MessageTokenizerImpl implements MessageTokenizer {
                     PeerTableImpl.getInstance().insert(node1);
                     PeerTableImpl.getInstance().insert(node2);
             }
+//            return new
         }
 
     }

@@ -1,7 +1,8 @@
 package com.d2s2.socket;
 
-import com.d2s2.message.tokenize.MessageTokenizerImpl;
-import com.d2s2.models.RequestModel;
+import com.d2s2.Handler.Handler;
+import com.d2s2.Handler.HandlerImpl;
+import com.d2s2.models.AbstractRequestModel;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -9,8 +10,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 /**
  * Created by Heshan Sandamal on 10/6/2017.
@@ -18,6 +17,7 @@ import java.util.concurrent.Future;
 public class UDPConnectorImpl implements UdpConnector {
 
     private static DatagramSocket socket;
+    private static Handler handler;
 
     static {
         try {
@@ -25,17 +25,20 @@ public class UDPConnectorImpl implements UdpConnector {
         } catch (SocketException e) {
             e.printStackTrace();
         }
+        handler=new HandlerImpl();
     }
 
     private ExecutorService executorService;
 
+
+
     @Override
-    public void send(RequestModel message) throws IOException {
+    public void send(AbstractRequestModel message) throws IOException {
 
     }
 
     @Override
-    public void send(RequestModel message, InetAddress receiverAddress, int port) throws IOException {
+    public void send(AbstractRequestModel message, InetAddress receiverAddress, int port) throws IOException {
         byte[] buffer = message.toString().getBytes();
         receiverAddress = InetAddress.getLocalHost();
         DatagramPacket packet = new DatagramPacket(
@@ -48,21 +51,13 @@ public class UDPConnectorImpl implements UdpConnector {
     via the executor service.
      */
     @Override
-    public Future<String> receive() throws IOException {
+    public String receive() throws IOException {
         byte[] bufferIncoming = new byte[100];
         DatagramPacket incomingPacket = new DatagramPacket(bufferIncoming, bufferIncoming.length);
         socket.receive(incomingPacket);
         String incomingMessage = new String(bufferIncoming);
-        executorService = Executors.newFixedThreadPool(10);
-//        executorService.execute(() -> {
-//            MessageTokenizerImpl tokenizer = new MessageTokenizerImpl();
-//            tokenizer.tokenizeMessage(incomingMessage);
-//        });
-        return executorService.submit(() -> {
-            MessageTokenizerImpl tokenizer = new MessageTokenizerImpl();
-            tokenizer.tokenizeMessage(incomingMessage);
-            return "DONE";
-        });
+        handler.Handle(incomingMessage);
+        return incomingMessage;
 //        executorService.shutdown(); // To keep the client alive comment out this line when necessary
     }
 

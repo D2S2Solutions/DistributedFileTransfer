@@ -13,8 +13,8 @@ import me.tongfei.progressbar.ProgressBar;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by Heshan Sandamal on 10/6/2017.
@@ -37,19 +37,27 @@ public class Main {
                     .setUserName("sineth")
                     .build();
             udpConnector.send(registerMessage, null, 55555);
-            while (true) {
-                System.out.println("WAITING");
-                Future<String> stringFuture = udpConnector.receive();
-                int i = 0;
 
-                try {
-                    System.out.println(stringFuture.get());
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
+
+            ExecutorService executorService=Executors.newFixedThreadPool(10);
+
+            executorService.submit(()->{
+                while (true) {
+                    System.out.println("WAITING");
+                    String stringFuture = udpConnector.receive();
+                    int i = 0;
+                    System.out.println(stringFuture);
+//                    try {
+//                        System.out.println(stringFuture);
+//                    } catch (InterruptedException | ExecutionException e) {
+//                        e.printStackTrace();
+//                    }
+
+                    performGracefulDeparture(udpConnector);
                 }
 
-                performGracefulDeparture(udpConnector);
-            }
+            });
+
 
         } catch (IOException e) {
             e.printStackTrace();

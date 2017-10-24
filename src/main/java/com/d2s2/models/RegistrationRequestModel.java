@@ -1,6 +1,6 @@
 package com.d2s2.models;
 
-public class RegistrationRequestModel extends RequestModel {
+public class RegistrationRequestModel extends AbstractRequestModel {
 
 
     public RegistrationRequestModel(String ip, String port, String userName) {
@@ -12,5 +12,10 @@ public class RegistrationRequestModel extends RequestModel {
         int length = ip.length() + port.length() + userName.length() + 4;
         final String requestFinalLength = String.format("%04d", length);
         return requestFinalLength + " REG " + ip + " " + port + " " + userName;
+    }
+
+    @Override
+    public void handle() {
+
     }
 }
