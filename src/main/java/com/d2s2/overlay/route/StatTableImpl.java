@@ -11,7 +11,19 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class StatTableImpl {
 
     private static ConcurrentHashMap<String, ConcurrentLinkedQueue<Node>> statTable = new ConcurrentHashMap();
+    private StatTableImpl(){}
+    private volatile static StatTableImpl statTableImpl;
 
+    public static StatTableImpl getInstance() {
+        if (statTableImpl == null) {
+            synchronized (StatTableImpl.class) {
+                if (statTableImpl == null) {
+                    statTableImpl = new StatTableImpl();
+                }
+            }
+        }
+        return statTableImpl;
+    }
 
     public void insert(Node node) {
 
