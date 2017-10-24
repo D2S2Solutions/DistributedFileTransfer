@@ -66,10 +66,10 @@ public class HandlerImpl implements Handler {
 
         final Set<Node> peerNodeList = PeerTableImpl.getInstance().getPeerNodeList();
         Random random = new Random();
-
-        if (peerNodeList.size() > 0) {
-            final int item1 = random.nextInt(peerNodeList.size());
-            final int item2 = random.nextInt(peerNodeList.size());
+        final int size = peerNodeList.size();
+        if (size > 0) {
+            final int item1 = random.nextInt(size);
+            final int item2 = random.nextInt(size);
 
             int i = 0;
             Iterator<Node> nodeIterator = peerNodeList.iterator();

@@ -19,8 +19,8 @@ public class MessageTokenizerImpl implements MessageTokenizer {
         String response = stringTokenizer.nextToken();
 
         switch (response) {
-            case MessageConstants.REG_MESSAGE:
-                return this.getRegisterMessageOb(stringTokenizer);
+            case MessageConstants.REGOK_MESSAGE:
+                return this.getRegisterResponseMessageOb(stringTokenizer);
 
             case MessageConstants.UNREG_MESSAGE:
                 return this.getUnregisterMessageOb(stringTokenizer);
@@ -53,7 +53,7 @@ public class MessageTokenizerImpl implements MessageTokenizer {
 
     }
 
-    private AbstractRequestResponseModel getRegisterMessageOb(StringTokenizer stringTokenizer) {
+    private AbstractRequestResponseModel getRegisterResponseMessageOb(StringTokenizer stringTokenizer) {
         int nodeCount = Integer.parseInt(stringTokenizer.nextToken());
         switch (nodeCount) {
             case 0:
