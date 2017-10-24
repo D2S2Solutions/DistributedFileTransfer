@@ -2,6 +2,7 @@ package com.d2s2.socket;
 
 import com.d2s2.Handler.Handler;
 import com.d2s2.Handler.HandlerImpl;
+import com.d2s2.constants.ApplicationConstants;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -22,7 +23,7 @@ public class UDPConnectorImpl implements UdpConnector {
 
     static {
         try {
-            socket = new DatagramSocket();
+            socket = new DatagramSocket(ApplicationConstants.PORT);
         } catch (SocketException e) {
             e.printStackTrace();
         }

@@ -21,11 +21,11 @@ public class RegistrationResponseModel extends AbstractRequestResponseModel {
     public void handle() {
 
         nodeset.forEach((node) -> {
-            PeerTableImpl.getInstance().insert(node);
+            PeerTableImpl instance = PeerTableImpl.getInstance();
         });
 
         PeerTableImpl.getInstance().getPeerNodeList().forEach((node) -> {
-            System.out.println(node.getId());
+            System.out.println("PEER TABLE CONTENT " + node.getId());
         });
 
     }
