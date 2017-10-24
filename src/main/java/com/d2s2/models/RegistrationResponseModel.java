@@ -22,6 +22,7 @@ public class RegistrationResponseModel extends AbstractRequestResponseModel {
 
         nodeset.forEach((node) -> {
             PeerTableImpl instance = PeerTableImpl.getInstance();
+            instance.insert(node);
         });
 
         PeerTableImpl.getInstance().getPeerNodeList().forEach((node) -> {
