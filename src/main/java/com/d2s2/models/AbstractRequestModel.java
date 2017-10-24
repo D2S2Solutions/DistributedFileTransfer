@@ -4,6 +4,7 @@ public abstract class AbstractRequestModel extends AbstractRequestResponseModel 
     String ip;
     String port;
     String userName;
+    String type;
 
     public AbstractRequestModel(String ip, String port, String userName) {
         this.ip = ip;

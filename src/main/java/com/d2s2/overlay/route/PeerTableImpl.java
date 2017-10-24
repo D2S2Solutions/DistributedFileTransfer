@@ -2,7 +2,8 @@ package com.d2s2.overlay.route;
 
 import com.d2s2.models.Node;
 
-import java.util.ArrayList;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by Heshan Sandamal on 10/6/2017.
@@ -10,10 +11,10 @@ import java.util.ArrayList;
 public class PeerTableImpl implements Table {
 
     private static final PeerTableImpl PEER_TABLE = new PeerTableImpl();
-    private ArrayList<Node> peerNodeList;
+    private static Set<Node> peerNodeList;
 
-    private PeerTableImpl() {
-        peerNodeList = new ArrayList<>(2);
+    static  {
+        peerNodeList = ConcurrentHashMap.newKeySet();
     }
 
     public static PeerTableImpl getInstance() {
@@ -35,7 +36,7 @@ public class PeerTableImpl implements Table {
 
     }
 
-    public ArrayList<Node> getPeerNodeList() {
+    public Set<Node> getPeerNodeList() {
         return peerNodeList;
     }
 }

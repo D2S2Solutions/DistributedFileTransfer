@@ -10,6 +10,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by Heshan Sandamal on 10/6/2017.
@@ -38,7 +39,7 @@ public class UDPConnectorImpl implements UdpConnector {
     }
 
     @Override
-    public void send(AbstractRequestModel message, InetAddress receiverAddress, int port) throws IOException {
+    public void send(String message, InetAddress receiverAddress, int port) throws IOException {
         byte[] buffer = message.toString().getBytes();
         receiverAddress = InetAddress.getLocalHost();
         DatagramPacket packet = new DatagramPacket(
@@ -56,7 +57,13 @@ public class UDPConnectorImpl implements UdpConnector {
         DatagramPacket incomingPacket = new DatagramPacket(bufferIncoming, bufferIncoming.length);
         socket.receive(incomingPacket);
         String incomingMessage = new String(bufferIncoming);
-        handler.Handle(incomingMessage);
+
+        ExecutorService executorService= Executors.newFixedThreadPool(10);
+
+        executorService.submit(()-> {
+            handler.handleResponse(incomingMessage);
+        });
+
         return incomingMessage;
 //        executorService.shutdown(); // To keep the client alive comment out this line when necessary
     }
