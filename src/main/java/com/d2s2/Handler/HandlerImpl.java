@@ -38,7 +38,9 @@ public class HandlerImpl implements Handler {
     @Override
     public void handleResponse(String message) {
         AbstractRequestResponseModel abstractRequestResponseModel = messageTokenizer.tokenizeMessage(message);
-        abstractRequestResponseModel.handle();
+        if(abstractRequestResponseModel!=null) {
+            abstractRequestResponseModel.handle();
+        }
     }
 
     @Override
