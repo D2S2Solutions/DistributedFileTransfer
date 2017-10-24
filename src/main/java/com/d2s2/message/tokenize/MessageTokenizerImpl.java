@@ -81,7 +81,7 @@ public class MessageTokenizerImpl implements MessageTokenizer {
                     nodeset.add(new Node(ip, port));
 
                 }
-
+                System.out.println("nodeeeeeeeeeeeeeeeeeeeeeeeeee");
                 return new RegistrationResponseModel(nodeCount, nodeset);
         }
 
