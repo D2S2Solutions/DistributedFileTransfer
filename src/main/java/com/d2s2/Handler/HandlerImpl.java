@@ -5,17 +5,14 @@ import com.d2s2.message.build.MessageBuilder;
 import com.d2s2.message.build.MessageBuilderImpl;
 import com.d2s2.message.tokenize.MessageTokenizer;
 import com.d2s2.message.tokenize.MessageTokenizerImpl;
-import com.d2s2.models.AbstractRequestResponseModel;
-import com.d2s2.models.Node;
-import com.d2s2.models.RegistrationRequestModel;
-import com.d2s2.models.SearchRequestModel;
+import com.d2s2.models.*;
 import com.d2s2.overlay.route.PeerTableImpl;
 import com.d2s2.socket.UDPConnectorImpl;
 import com.d2s2.socket.UdpConnector;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -38,7 +35,7 @@ public class HandlerImpl implements Handler {
     @Override
     public void handleResponse(String message) {
         AbstractRequestResponseModel abstractRequestResponseModel = messageTokenizer.tokenizeMessage(message);
-        if(abstractRequestResponseModel!=null) {
+        if (abstractRequestResponseModel != null) {
             abstractRequestResponseModel.handle();
         }
     }
@@ -80,12 +77,18 @@ public class HandlerImpl implements Handler {
                 if ((item1 == i || item2 == i) && !concurrentLinkedQueue.contains(item1)) {
                     udpConnector.send(searchRequestMessage, null, nodeIterator.next().getPort());
                 }
-
                 i++;
             }
         }
 
 
+    }
+
+    @Override
+    public void sendLocalSearchToSource(SearchResponseModel searchResponseModel, List<String> list) throws IOException {
+        String searchResponseToSourceMessage = messageBuilder.buildSearchResponseToSourceMessage(searchResponseModel);
+        System.out.println(" Local port is " + searchResponseModel.getPort());
+        udpConnector.send(searchResponseToSourceMessage, null, searchResponseModel.getPort());
     }
 
 

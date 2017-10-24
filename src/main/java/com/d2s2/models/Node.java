@@ -40,7 +40,7 @@ public class Node {
 
     @Override
     public boolean equals(Object object) {
-        Node node= (Node) object;
-        return  ( this.nodeIp.equals(node.getNodeIp()) && this.port == node.getPort() ) ? true : false;
+        Node node = (Node) object;
+        return (this.nodeIp.equals(node.getNodeIp()) && this.port == node.getPort()) ? true : false;
     }
 }

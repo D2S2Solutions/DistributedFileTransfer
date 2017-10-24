@@ -29,13 +29,13 @@ public class StatTableImpl {
 
     public void insert() {
         ConcurrentLinkedQueue<Node> objects = new ConcurrentLinkedQueue<>();
-        objects.add(new Node("1",5000));
-        objects.add(new Node("2",5005));
+        objects.add(new Node("1", 5000));
+        objects.add(new Node("2", 5005));
         ConcurrentLinkedQueue<Node> nodes = new ConcurrentLinkedQueue<>();
-        objects.add(new Node("5",5000));
-        objects.add(new Node("7",5005));
-        statTable.put("FIRST",objects);
-        statTable.put("SECOND",nodes);
+        objects.add(new Node("5", 5000));
+        objects.add(new Node("7", 5005));
+        statTable.put("FIRST", objects);
+        statTable.put("SECOND", nodes);
     }
 
 
@@ -43,7 +43,7 @@ public class StatTableImpl {
 
     }
 
-    public ConcurrentLinkedQueue<Node> get(String fileName){
+    public ConcurrentLinkedQueue<Node> get(String fileName) {
         return this.statTable.get(fileName);
     }
 
