@@ -8,21 +8,21 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 /**
  * Created by Heshan Sandamal on 10/6/2017.
  */
-public class StatTableImpl implements Table {
+public class StatTableImpl {
 
-    private static ConcurrentHashMap<String,ConcurrentLinkedQueue<Node>> statTable = new ConcurrentHashMap();
+    private static ConcurrentHashMap<String, ConcurrentLinkedQueue<Node>> statTable = new ConcurrentHashMap();
 
-    @Override
+
     public void insert(Node node) {
 
     }
 
-    @Override
+
     public void remove() {
 
     }
 
-    @Override
+
     public ConcurrentLinkedQueue search(String query) {
         ConcurrentLinkedQueue concurrentLinkedQueues = new ConcurrentLinkedQueue();
         statTable.keySet().stream().filter(s -> s.contains(query)).forEach(s -> concurrentLinkedQueues.add(statTable.get(s)));

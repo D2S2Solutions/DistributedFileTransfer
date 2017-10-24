@@ -6,6 +6,7 @@ public class RegistrationRequestModel extends AbstractRequestModel {
 
     public RegistrationRequestModel(String ip, int port, String userName) {
         super(ip, port);
+        this.userName = userName;
     }
 
     @Override

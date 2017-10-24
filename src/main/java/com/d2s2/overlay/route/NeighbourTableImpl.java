@@ -17,7 +17,7 @@ public class NeighbourTableImpl implements Table {
     }
 
     @Override
-    public void search() {
+    public void search(String query) {
 
     }
 }

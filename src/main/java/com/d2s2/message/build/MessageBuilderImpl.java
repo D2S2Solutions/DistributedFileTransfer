@@ -23,7 +23,7 @@ public class MessageBuilderImpl implements MessageBuilder {
     }
 
     @Override
-    public String buildUnregisterRequestMessage() {
+    public String buildUnregisterRequestMessage( ) {
         return null;
     }
 
