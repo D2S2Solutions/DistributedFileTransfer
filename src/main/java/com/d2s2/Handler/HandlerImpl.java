@@ -51,6 +51,7 @@ public class HandlerImpl implements Handler {
     @Override
     public void searchFile(String file) {
         SearchRequestModel searchRequestModel = new SearchRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT, file, ApplicationConstants.HOPS);
+        searchRequestModel.setFileName("Fir");
         searchRequestModel.handle();
         //forward to two picked nodes
     }

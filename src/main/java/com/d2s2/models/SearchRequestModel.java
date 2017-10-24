@@ -48,11 +48,12 @@ public class SearchRequestModel extends AbstractRequestModel {
         List<String> fileList = instance.searchLocalFileList(this.fileName);
         System.out.println(fileList);
 
-        ConcurrentLinkedQueue linkedQueue = StatTableImpl.getInstance().search(this.fileName);
-
         this.hops--;
 
         if (hops > 0) {
+            ConcurrentLinkedQueue linkedQueue = StatTableImpl.getInstance().search(this.fileName);
+            System.out.println(linkedQueue);
+
             try {
                 handler.sendSearchRequest(this,linkedQueue);
 

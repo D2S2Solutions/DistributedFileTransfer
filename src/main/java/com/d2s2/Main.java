@@ -40,7 +40,8 @@ public class Main {
                 while (!stringFuture.isDone()) {
 //                    System.out.println(++i);
                 }
-                search("American");
+//                search("American");
+                handler.searchFile("American");
 //                performGracefulDeparture(udpConnector);
             }
 
