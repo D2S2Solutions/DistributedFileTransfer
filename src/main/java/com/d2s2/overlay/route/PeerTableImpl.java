@@ -37,6 +37,9 @@ public class PeerTableImpl {
         peerNodeList.add(node); // todo limit the number of node to 2
     }
 
+    public Set<Node> getPeerNodeList() {
+        return peerNodeList;
+    }
 
     public void remove() {
 
@@ -44,9 +47,5 @@ public class PeerTableImpl {
 
     public void search() {
 
-    }
-
-    public Set<Node> getPeerNodeList() {
-        return peerNodeList;
     }
 }

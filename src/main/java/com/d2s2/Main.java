@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import static com.d2s2.constants.ApplicationConstants.randomWithRange;
+
 /**
  * Created by Heshan Sandamal on 10/6/2017.
  */
@@ -92,10 +94,7 @@ public class Main {
 
     }
 
-    private static int randomWithRange(int min, int max) {
-        int range = (max - min) + 1;
-        return (int) (Math.random() * range) + min;
-    }
+
 
 //    public static void performGracefulDeparture(UdpConnector udpConnector) throws IOException {
 //        GracefulLeaveRequestModel gracefulLeaveRequest = new MessageBuilderImpl.GracefulLeaveRequestMessageBuilder()
