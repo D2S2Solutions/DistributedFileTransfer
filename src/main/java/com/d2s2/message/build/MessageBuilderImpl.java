@@ -50,7 +50,7 @@ public class MessageBuilderImpl implements MessageBuilder {
         if (model.getFileList() != null) {
             for (String s : model.getFileList()) {
                 stringBuilder.append(s);
-                stringBuilder.append("\\s");
+                stringBuilder.append(" ");
             }
             stringBuilder.deleteCharAt(stringBuilder.length() - 1); // to remove the trailing space.
         }
@@ -59,7 +59,7 @@ public class MessageBuilderImpl implements MessageBuilder {
                 + String.valueOf(model.getHops()).length() + stringBuilder.length() + 6 + 4 + model.getNoOfFiles() - 1;
         final String requestFinalLength = String.format("%04d", length);
         String s = requestFinalLength + " " + MessageConstants.SEROK_MESSAGE + " " + model.getNoOfFiles() + " " + model.getIp()
-                + " " + model.getPort() + " " + model.getPort() + " " + model.getHops();
+                + " " + model.getPort() + " " + model.getHops();
 
         if (model.getFileList() != null) {
             s += " " + stringBuilder;
