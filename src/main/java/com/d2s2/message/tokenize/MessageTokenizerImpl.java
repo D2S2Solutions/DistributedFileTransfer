@@ -2,6 +2,7 @@ package com.d2s2.message.tokenize;
 
 import com.d2s2.message.MessageConstants;
 import com.d2s2.models.*;
+import com.d2s2.overlay.route.NeighbourTableImpl;
 
 import java.util.HashSet;
 import java.util.StringTokenizer;
@@ -30,6 +31,10 @@ public class MessageTokenizerImpl implements MessageTokenizer {
 
             case MessageConstants.SEROK_MESSAGE:
                 return this.getSearchResponseOb(stringTokenizer);
+
+            case MessageConstants.NEIGHBOUR_MESSAGE:
+
+                return this.getNeighbourResponseMessageOb(stringTokenizer);
 
 
         }
@@ -104,6 +109,21 @@ public class MessageTokenizerImpl implements MessageTokenizer {
                 }
                 return new RegistrationResponseModel(nodeCount, nodeset);
         }
+
+    }
+
+    private AbstractRequestResponseModel getNeighbourResponseMessageOb(StringTokenizer stringTokenizer) {
+
+        String ip =stringTokenizer.nextToken();
+        String portST = stringTokenizer.nextToken();
+        int port=Integer.parseInt(portST.substring(0,portST.length()-1));
+
+
+
+
+        return new NotifyNeighbourRequestModel(ip,port);
+
+
 
     }
 }

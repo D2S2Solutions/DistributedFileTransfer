@@ -19,6 +19,7 @@ public class RegistrationRequestModel extends AbstractRequestModel {
     @Override
     public void handle() {
 
+
     }
 
     public String getUserName() {

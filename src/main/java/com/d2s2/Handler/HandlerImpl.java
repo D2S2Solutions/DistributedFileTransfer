@@ -41,6 +41,7 @@ public class HandlerImpl implements Handler {
         if (abstractRequestResponseModel != null) {
             abstractRequestResponseModel.handle();
         }
+
     }
 
     @Override
@@ -101,7 +102,6 @@ public class HandlerImpl implements Handler {
     }
 
     public void notifyNeighbours(String ip, int port) throws IOException{
-        System.out.println("IP "+ip+" PORT "+port);
         NotifyNeighbourRequestModel notifyNeighbourRequestModel = new NotifyNeighbourRequestModel(ApplicationConstants.IP,ApplicationConstants.PORT);
         String message = messageBuilder.buildNeighbourJoinMessage(notifyNeighbourRequestModel);
         //System.out.println(message);

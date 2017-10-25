@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class PeerTableImpl {
 
-    private static final PeerTableImpl PEER_TABLE = new PeerTableImpl();
+
     private static Set<Node> peerNodeList;
     private volatile static PeerTableImpl peerTable;
 
