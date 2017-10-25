@@ -41,7 +41,7 @@ public class MessageBuilderImpl implements MessageBuilder {
     public String buildSearchRequestMessage(SearchRequestModel model) {
         int length = MessageConstants.SER_MESSAGE.length() + model.getIp().length() + String.valueOf(model.getPort()).length() + model.getFileName().length() + String.valueOf(model.getHops()).length() + 5 + 4;
         final String requestFinalLength = String.format("%04d", length);
-        return requestFinalLength + " " + MessageConstants.SER_MESSAGE + " " + model.getIp() + " " + model.getPort() + " " + model.getFileName();
+        return requestFinalLength + " " + MessageConstants.SER_MESSAGE + " " + model.getIp() + " " + model.getPort() + " " + model.getFileName() + " " +model.getHops();
     }
 
     @Override

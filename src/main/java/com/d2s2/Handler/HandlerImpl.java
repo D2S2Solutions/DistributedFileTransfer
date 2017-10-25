@@ -57,6 +57,7 @@ public class HandlerImpl implements Handler {
     @Override
     public void sendSearchRequest(SearchRequestModel model, ConcurrentLinkedQueue<Node> concurrentLinkedQueue) throws IOException {
         String searchRequestMessage = messageBuilder.buildSearchRequestMessage(model);
+        System.out.println("SEARCH REQUEST " +searchRequestMessage);
         Iterator<Node> iterator = concurrentLinkedQueue.iterator();
         while (iterator.hasNext()) {
             Node next = iterator.next();
@@ -87,7 +88,7 @@ public class HandlerImpl implements Handler {
     @Override
     public void sendLocalSearchToSource(SearchResponseModel searchResponseModel, List<String> list) throws IOException {
         String searchResponseToSourceMessage = messageBuilder.buildSearchResponseToSourceMessage(searchResponseModel);
-        System.out.println(" Local port is " + searchResponseModel.getPort());
+        System.out.println(" LOCAL SEARCH RESPONSE " + searchResponseToSourceMessage);
         udpConnector.send(searchResponseToSourceMessage, null, searchResponseModel.getPort());
     }
 

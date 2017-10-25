@@ -60,6 +60,7 @@ public class MessageTokenizerImpl implements MessageTokenizer {
         int port = Integer.parseInt(stringTokenizer.nextToken());
         String fileName = stringTokenizer.nextToken();
         int hops = Integer.parseInt(stringTokenizer.nextToken());
+        System.out.println("HOPS COUNT " + hops);
         return new SearchRequestModel(ip, port, fileName, hops);
     }
 
