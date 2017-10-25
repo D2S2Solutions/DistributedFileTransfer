@@ -1,5 +1,7 @@
 package com.d2s2.models;
 
+import com.d2s2.heartbeater.HeartBeaterImpl;
+
 /**
  * Created by Tharindu Diluksha on 10/25/2017.
  */
@@ -19,6 +21,8 @@ public class HeartBeatSignalModel extends AbstractRequestResponseModel {
     public void handle() {
         //todo handle when response received
         System.out.println("Heart Beat received from "+getIp()+" "+ String.valueOf(getPort()));
+        Node beatedNode = new Node(this.ip,this.port);
+        HeartBeaterImpl.getInstance().handleBeat(beatedNode);
     }
 
     public String getIp() {

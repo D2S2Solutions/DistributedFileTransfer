@@ -42,8 +42,8 @@ public class StatTableImpl {
         this.statTable.put(fileName,queue);
     }
 
-    public void remove() {
-
+    public void remove(Node node) {
+        //statTable.remove()
     }
 
     public ConcurrentLinkedQueue<Node> get(String fileName) {

@@ -39,8 +39,12 @@ public class NeighbourTableImpl implements Table {
     }
 
     @Override
-    public void remove() {
+    public void remove(Node node) {
+        neighbourNodeList.remove(node);
+    }
 
+    public Set<Node> getNeighbourNodeList() {
+        return neighbourNodeList;
     }
 
     @Override
