@@ -10,6 +10,8 @@ public class ApplicationConstants {
     public static final String USER_NAME = "vin";
     public static final int HOPS = 10;
 
+    public static final int HEART_BEAT_THRESHOLD = 10;
+
     public static int randomWithRange(int min, int max) {
         int range = (max - min) + 1;
         return (int) (Math.random() * range) + min;
