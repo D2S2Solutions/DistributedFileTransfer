@@ -46,11 +46,11 @@ public class SearchRequestModel extends AbstractRequestModel {
     public void handle() {
         //search from stat table    List<String,NOde>
         //create searchRequestModels
-        this.hops--;
+        --this.hops;
         if (this.hops > 0) {
             FileHandlerImpl instance = FileHandlerImpl.getInstance();
             List<String> fileList = instance.searchLocalFileList(this.fileName);
-            System.out.println("LOCAL SEARCH " + this.hops);
+
             if (fileList.size() > 0) {
                 SearchResponseModel searchResponseModel = new SearchResponseModel(ApplicationConstants.IP, ApplicationConstants.PORT, this.hops, fileList.size(), new HashSet<>(fileList));
                 try {
