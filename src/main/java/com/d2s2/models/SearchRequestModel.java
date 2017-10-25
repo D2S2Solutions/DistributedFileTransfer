@@ -60,11 +60,11 @@ public class SearchRequestModel extends AbstractRequestModel {
                 }
             }
 
-            ConcurrentLinkedQueue linkedQueue = StatTableImpl.getInstance().search(this.fileName);
-            System.out.println(linkedQueue);
+            ConcurrentLinkedQueue statTablePeers = StatTableImpl.getInstance().search(this.fileName);
+            System.out.println(statTablePeers);
 
             try {
-                handler.sendSearchRequest(this, linkedQueue);
+                handler.sendSearchRequest(this, statTablePeers);
 
             } catch (IOException e) {
                 e.printStackTrace();

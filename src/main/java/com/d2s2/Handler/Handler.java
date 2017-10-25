@@ -15,7 +15,7 @@ public interface Handler {
 
     public void searchFile(String file);
 
-    public void sendSearchRequest(SearchRequestModel model, ConcurrentLinkedQueue<Node> concurrentLinkedQueue) throws IOException;
+    public void sendSearchRequest(SearchRequestModel model, ConcurrentLinkedQueue<Node> statTablePeers) throws IOException;
 
     public void sendLocalSearchToSource(SearchResponseModel searchResponseModel, List<String> list) throws IOException;
 }

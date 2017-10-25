@@ -11,10 +11,7 @@ import com.d2s2.socket.UDPConnectorImpl;
 import com.d2s2.socket.UdpConnector;
 
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -55,31 +52,36 @@ public class HandlerImpl implements Handler {
     }
 
     @Override
-    public void sendSearchRequest(SearchRequestModel model, ConcurrentLinkedQueue<Node> concurrentLinkedQueue) throws IOException {
+    public void sendSearchRequest(SearchRequestModel model, ConcurrentLinkedQueue<Node> statTablePeers) throws IOException {
         String searchRequestMessage = messageBuilder.buildSearchRequestMessage(model);
         System.out.println("SEARCH REQUEST " +searchRequestMessage);
-        Iterator<Node> iterator = concurrentLinkedQueue.iterator();
+        Iterator<Node> iterator = statTablePeers.iterator();
         while (iterator.hasNext()) {
             Node next = iterator.next();
-            udpConnector.send(searchRequestMessage, null, next.getPort());
+            if(!isRequestingNode(model, next)){
+                udpConnector.send(searchRequestMessage, null, next.getPort());
+            }
         }
 
         final Set<Node> peerNodeList = PeerTableImpl.getInstance().getPeerNodeList();
+
+        final ArrayList<Node> peerNodeListToSend = new ArrayList<>();
+
+        peerNodeList.forEach((node)->{
+            if( (!statTablePeers.contains(node)) && (!isRequestingNode(model,node))){
+                peerNodeListToSend.add(node);
+            }
+        });
+
         Random random = new Random();
-        final int size = peerNodeList.size();
+        final int size = peerNodeListToSend.size();
         if (size > 0) {
             final int item1 = random.nextInt(size);
             final int item2 = random.nextInt(size);
 
-            int i = 0;
-            Iterator<Node> nodeIterator = peerNodeList.iterator();
-            while (nodeIterator.hasNext()) {
+            udpConnector.send(searchRequestMessage, null, peerNodeListToSend.get(item1).getPort());
+            udpConnector.send(searchRequestMessage, null, peerNodeListToSend.get(item2).getPort());
 
-                if ((item1 == i || item2 == i) && !concurrentLinkedQueue.contains(item1)) {
-                    udpConnector.send(searchRequestMessage, null, nodeIterator.next().getPort());
-                }
-                i++;
-            }
         }
 
 
@@ -90,6 +92,17 @@ public class HandlerImpl implements Handler {
         String searchResponseToSourceMessage = messageBuilder.buildSearchResponseToSourceMessage(searchResponseModel);
         System.out.println(" LOCAL SEARCH RESPONSE " + searchResponseToSourceMessage);
         udpConnector.send(searchResponseToSourceMessage, null, searchResponseModel.getPort());
+    }
+
+//check whether the stat table entry equals to the node which request the file
+    private boolean isRequestingNode(SearchRequestModel searchRequestModel, Node node){
+
+        if(searchRequestModel.getFileName().equals(node.getNodeIp()) && searchRequestModel.getPort() == node.getPort()){
+            return true;
+        }else{
+            return false;
+        }
+
     }
 
 
