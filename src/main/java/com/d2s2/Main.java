@@ -43,7 +43,8 @@ public class Main {
 //                    System.out.println(++i);
                 }
 //                search("American");
-                handler.searchFile("American");
+//                handler.searchFile("American");
+                handler.sendHeartBeatSignal();
 //                performGracefulDeparture(udpConnector);
             }
 

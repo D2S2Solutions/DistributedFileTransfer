@@ -11,6 +11,7 @@ import com.d2s2.socket.UDPConnectorImpl;
 import com.d2s2.socket.UdpConnector;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -45,6 +46,24 @@ public class HandlerImpl implements Handler {
         RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT, ApplicationConstants.USER_NAME);
         String message = messageBuilder.buildRegisterRequestMessage(registrationRequestModel);
         udpConnector.send(message, null, 55555);
+    }
+
+    @Override
+    public void sendHeartBeatSignal() {
+        Set<Node> peerNodes = PeerTableImpl.getInstance().getPeerNodeList();
+
+        if(!peerNodes.isEmpty()){
+            HeartBeatSignalModel heartBeatSignalModel = new HeartBeatSignalModel(ApplicationConstants.IP, ApplicationConstants.PORT, ApplicationConstants.USER_NAME);
+            for (Node peer : peerNodes) {
+                String heartBeatMessage = messageBuilder.buildHeartBeatSignalMessage(heartBeatSignalModel);
+                try {
+                    System.out.println("Sending HBEAT by"+ApplicationConstants.IP +" "+ String.valueOf(ApplicationConstants.PORT)+" " + ApplicationConstants.USER_NAME);
+                    udpConnector.send(heartBeatMessage, InetAddress.getByName(peer.getNodeIp()), peer.getPort());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     @Override
@@ -90,6 +109,8 @@ public class HandlerImpl implements Handler {
         System.out.println(" Local port is " + searchResponseModel.getPort());
         udpConnector.send(searchResponseToSourceMessage, null, searchResponseModel.getPort());
     }
+
+
 
 
 }

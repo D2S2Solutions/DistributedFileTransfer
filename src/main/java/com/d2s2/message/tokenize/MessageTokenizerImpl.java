@@ -31,11 +31,20 @@ public class MessageTokenizerImpl implements MessageTokenizer {
             case MessageConstants.SEROK_MESSAGE:
                 return this.getSearchResponseOb(stringTokenizer);
 
+            case MessageConstants.HEARTBEAT_MESSAGE:
+                return this.getHeartBeatSignalOb(stringTokenizer);
 
         }
         return null;
 
 
+    }
+
+    private AbstractRequestResponseModel getHeartBeatSignalOb(StringTokenizer stringTokenizer){
+        String ip = stringTokenizer.nextToken();
+        int port = Integer.parseInt(stringTokenizer.nextToken());
+        String username = stringTokenizer.nextToken();
+        return new HeartBeatSignalModel(ip,port,username);
     }
 
     private AbstractRequestResponseModel getSearchResponseOb(StringTokenizer stringTokenizer) {
