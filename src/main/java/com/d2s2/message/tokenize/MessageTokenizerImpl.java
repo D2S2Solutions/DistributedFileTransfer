@@ -32,6 +32,8 @@ public class MessageTokenizerImpl implements MessageTokenizer {
             case MessageConstants.SEROK_MESSAGE:
                 return this.getSearchResponseOb(stringTokenizer);
 
+            case MessageConstants.HEARTBEAT_MESSAGE:
+                return this.getHeartBeatSignalOb(stringTokenizer);
             case MessageConstants.NEIGHBOUR_MESSAGE:
 
                 return this.getNeighbourResponseMessageOb(stringTokenizer);
@@ -41,6 +43,13 @@ public class MessageTokenizerImpl implements MessageTokenizer {
         return null;
 
 
+    }
+
+    private AbstractRequestResponseModel getHeartBeatSignalOb(StringTokenizer stringTokenizer){
+        String ip = stringTokenizer.nextToken();
+        int port = Integer.parseInt(stringTokenizer.nextToken());
+        String username = stringTokenizer.nextToken();
+        return new HeartBeatSignalModel(ip,port,username);
     }
 
     private AbstractRequestResponseModel getSearchResponseOb(StringTokenizer stringTokenizer) {

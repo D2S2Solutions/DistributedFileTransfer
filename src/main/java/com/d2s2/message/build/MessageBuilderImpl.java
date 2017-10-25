@@ -71,7 +71,10 @@ public class MessageBuilderImpl implements MessageBuilder {
     @Override
     public String buildHeartBeatSignalMessage(HeartBeatSignalModel model) {
         //todo build heart beat msg
-        return null;
+        // length HBEAT ip port username
+        int length = MessageConstants.HEARTBEAT_MESSAGE.length() + model.getIp().length() + String.valueOf(model.getPort()).length() + model.getUserName().length() + 4 + 4;
+        final String requestFinalLength = String.format("%04d", length);
+        return requestFinalLength + " " + MessageConstants.HEARTBEAT_MESSAGE + " " + model.getIp() + " " + model.getPort() + " " + model.getUserName();
     }
     @Override
     public String buildNeighbourJoinMessage(NotifyNeighbourRequestModel model) {

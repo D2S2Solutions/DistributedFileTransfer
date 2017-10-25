@@ -1,5 +1,6 @@
 package com.d2s2.heartbeater;
 
+import com.d2s2.Handler.Handler;
 import com.d2s2.message.build.MessageBuilder;
 import com.d2s2.models.HeartBeatSignalModel;
 import com.d2s2.models.Node;
@@ -37,18 +38,6 @@ public class HeartBeaterImpl implements HeartBeater {
     public void makeHeartBeat() {
         //todo search through peer(up) table and send message to every node in every 0.5 seconds
 
-        peerNodes = peerTable.getPeerNodeList();
-
-        if(!peerNodes.isEmpty()){
-            for (Node peer : peerNodes) {
-                String heartBeatMessage = messageBuilder.buildHeartBeatSignalMessage(heartBeatSignalModel);
-                try {
-                    udpConnector.send(heartBeatMessage, InetAddress.getByName(peer.getNodeIp()), peer.getPort());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 
     @Override

@@ -61,7 +61,8 @@ public class SearchRequestModel extends AbstractRequestModel {
             }
 
             ConcurrentLinkedQueue statTablePeers = StatTableImpl.getInstance().search(this.fileName);
-            System.out.println(statTablePeers);
+            System.out.println("Stat table "+statTablePeers);
+
 
             try {
                 handler.sendSearchRequest(this, statTablePeers);

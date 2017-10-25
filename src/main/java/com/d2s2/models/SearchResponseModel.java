@@ -1,5 +1,6 @@
 package com.d2s2.models;
 
+import com.d2s2.constants.ApplicationConstants;
 import com.d2s2.overlay.route.PeerTableImpl;
 import com.d2s2.overlay.route.StatTableImpl;
 
@@ -50,15 +51,34 @@ public class SearchResponseModel extends AbstractRequestResponseModel {
         final StatTableImpl statTable = StatTableImpl.getInstance();
         final PeerTableImpl peerTable = PeerTableImpl.getInstance();
 
-        fileList.forEach((fileName) -> {
+        System.out.println("Files found @ "+ this.getIp() + " : "+this.port +" -- " + this.fileList);
 
-            ConcurrentLinkedQueue<Node> concurrentLinkedQueue = statTable.get(fileName);
+        if(!ApplicationConstants.IP.equals(this.ip) && ApplicationConstants.PORT!=this.port){
+
             Node node = new Node(this.ip, this.port);
-            concurrentLinkedQueue.add(node);
-            peerTable.insert(node);
+
+            fileList.forEach((fileName) -> {
+
+                ConcurrentLinkedQueue<Node> concurrentLinkedQueue = statTable.get(fileName);
+
+                if(concurrentLinkedQueue==null){
+                    concurrentLinkedQueue= new ConcurrentLinkedQueue<>();
+                    statTable.insert(fileName,concurrentLinkedQueue);
+                }
+
+                if(!concurrentLinkedQueue.contains(node)){
+                    concurrentLinkedQueue.add(node);
+                }
 
 
-        });
+            });
+
+            if(!peerTable.getPeerNodeList().contains(node)){
+                peerTable.insert(node);
+            }
+        }
+
+        PeerTableImpl.getInstance().printPeerTable();
 
 
     }

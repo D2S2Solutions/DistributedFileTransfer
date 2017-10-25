@@ -1,5 +1,6 @@
 package com.d2s2.Handler;
 
+import com.d2s2.models.HeartBeatSignalModel;
 import com.d2s2.models.Node;
 import com.d2s2.models.SearchRequestModel;
 import com.d2s2.models.SearchResponseModel;
@@ -21,4 +22,6 @@ public interface Handler {
     public void sendSearchRequest(SearchRequestModel model,ConcurrentLinkedQueue<Node> concurrentLinkedQueue) throws IOException;
 
     public void sendLocalSearchToSource(SearchResponseModel searchResponseModel, List<String> list) throws IOException;
+
+    public void sendHeartBeatSignal();
 }

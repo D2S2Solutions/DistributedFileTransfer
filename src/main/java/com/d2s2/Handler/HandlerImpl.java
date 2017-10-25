@@ -52,6 +52,24 @@ public class HandlerImpl implements Handler {
     }
 
     @Override
+    public void sendHeartBeatSignal() {
+        Set<Node> peerNodes = PeerTableImpl.getInstance().getPeerNodeList();
+
+        if(!peerNodes.isEmpty()){
+            HeartBeatSignalModel heartBeatSignalModel = new HeartBeatSignalModel(ApplicationConstants.IP, ApplicationConstants.PORT, ApplicationConstants.USER_NAME);
+            for (Node peer : peerNodes) {
+                String heartBeatMessage = messageBuilder.buildHeartBeatSignalMessage(heartBeatSignalModel);
+                try {
+                    System.out.println("Sending HBEAT by"+ApplicationConstants.IP +" "+ String.valueOf(ApplicationConstants.PORT)+" " + ApplicationConstants.USER_NAME);
+                    udpConnector.send(heartBeatMessage, InetAddress.getByName(peer.getNodeIp()), peer.getPort());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @Override
     public void searchFile(String file) {
         SearchRequestModel searchRequestModel = new SearchRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT, file, ApplicationConstants.HOPS);
         searchRequestModel.handle();
@@ -108,6 +126,8 @@ public class HandlerImpl implements Handler {
         udpConnector.send(message, null, port);
 
     }
+
+
 
 
 }
