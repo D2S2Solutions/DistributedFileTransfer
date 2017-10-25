@@ -49,7 +49,7 @@ public class UDPConnectorImpl implements UdpConnector {
 
     @Override
     public Future<String> receive() throws IOException {
-        byte[] bufferIncoming = new byte[1000];
+        byte[] bufferIncoming = new byte[55000];
         DatagramPacket incomingPacket = new DatagramPacket(bufferIncoming, bufferIncoming.length);
         socket.receive(incomingPacket);
         String incomingMessage = new String(bufferIncoming);

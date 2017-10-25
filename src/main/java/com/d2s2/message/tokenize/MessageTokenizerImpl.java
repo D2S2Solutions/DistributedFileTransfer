@@ -22,11 +22,14 @@ public class MessageTokenizerImpl implements MessageTokenizer {
             case MessageConstants.REGOK_MESSAGE:
                 return this.getRegisterResponseMessageOb(stringTokenizer);
 
-            case MessageConstants.UNREG_MESSAGE:
-                return this.getUnregisterMessageOb(stringTokenizer);
+            case MessageConstants.UNROK_MESSAGE:
+                return this.getUnregisterResponseMessageOb(stringTokenizer);
 
             case MessageConstants.SER_MESSAGE:
                 return this.getSearchMessageOb(stringTokenizer);
+
+            case MessageConstants.SEROK_MESSAGE:
+                return this.getSearchResponseOb(stringTokenizer);
 
 
         }
@@ -35,15 +38,32 @@ public class MessageTokenizerImpl implements MessageTokenizer {
 
     }
 
+    private AbstractRequestResponseModel getSearchResponseOb(StringTokenizer stringTokenizer) {
+
+        int noOfFiles = Integer.valueOf(stringTokenizer.nextToken());
+        String ip = stringTokenizer.nextToken();
+        int port = Integer.parseInt(stringTokenizer.nextToken());
+        int hops = Integer.parseInt(stringTokenizer.nextToken());
+
+        HashSet<String> fileSet = new HashSet<>();
+
+        for (int i = 0; i < noOfFiles; i++) {
+            fileSet.add(stringTokenizer.nextToken());
+        }
+
+        return new SearchResponseModel(ip, port, hops, noOfFiles, fileSet);
+
+    }
+
     private AbstractRequestResponseModel getSearchMessageOb(StringTokenizer stringTokenizer) {
         String ip = stringTokenizer.nextToken();
         int port = Integer.parseInt(stringTokenizer.nextToken());
-        String fileName=stringTokenizer.nextToken();
-        int hops= Integer.parseInt(stringTokenizer.nextToken());
-        return new SearchRequestModel(ip,port,fileName,hops);
+        String fileName = stringTokenizer.nextToken();
+        int hops = Integer.parseInt(stringTokenizer.nextToken());
+        return new SearchRequestModel(ip, port, fileName, hops);
     }
 
-    private AbstractRequestResponseModel getUnregisterMessageOb(StringTokenizer stringTokenizer) {
+    private AbstractRequestResponseModel getUnregisterResponseMessageOb(StringTokenizer stringTokenizer) {
         String token = stringTokenizer.nextToken();
         if (token != null) {
             return new UnregistrationResponseModel(Integer.parseInt(token));
@@ -81,7 +101,6 @@ public class MessageTokenizerImpl implements MessageTokenizer {
                     nodeset.add(new Node(ip, Integer.parseInt(port)));
 
                 }
-                System.out.println("nodeeeeeeeeeeeeeeeeeeeeeeeeee");
                 return new RegistrationResponseModel(nodeCount, nodeset);
         }
 
