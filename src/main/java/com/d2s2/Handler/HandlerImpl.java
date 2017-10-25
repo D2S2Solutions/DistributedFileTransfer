@@ -54,11 +54,10 @@ public class HandlerImpl implements Handler {
     @Override
     public void sendSearchRequest(SearchRequestModel model, ConcurrentLinkedQueue<Node> statTablePeers) throws IOException {
         String searchRequestMessage = messageBuilder.buildSearchRequestMessage(model);
-        System.out.println("SEARCH REQUEST " +searchRequestMessage);
         Iterator<Node> iterator = statTablePeers.iterator();
         while (iterator.hasNext()) {
             Node next = iterator.next();
-            if(!isRequestingNode(model, next)){
+            if (!isRequestingNode(model, next)) {
                 udpConnector.send(searchRequestMessage, null, next.getPort());
             }
         }
@@ -67,8 +66,8 @@ public class HandlerImpl implements Handler {
 
         final ArrayList<Node> peerNodeListToSend = new ArrayList<>();
 
-        peerNodeList.forEach((node)->{
-            if( (!statTablePeers.contains(node)) && (!isRequestingNode(model,node))){
+        peerNodeList.forEach((node) -> {
+            if ((!statTablePeers.contains(node)) && (!isRequestingNode(model, node))) {
                 peerNodeListToSend.add(node);
             }
         });
@@ -78,13 +77,9 @@ public class HandlerImpl implements Handler {
         if (size > 0) {
             final int item1 = random.nextInt(size);
             final int item2 = random.nextInt(size);
-
             udpConnector.send(searchRequestMessage, null, peerNodeListToSend.get(item1).getPort());
             udpConnector.send(searchRequestMessage, null, peerNodeListToSend.get(item2).getPort());
-
         }
-
-
     }
 
     @Override
@@ -94,15 +89,9 @@ public class HandlerImpl implements Handler {
         udpConnector.send(searchResponseToSourceMessage, null, searchResponseModel.getPort());
     }
 
-//check whether the stat table entry equals to the node which request the file
-    private boolean isRequestingNode(SearchRequestModel searchRequestModel, Node node){
-
-        if(searchRequestModel.getFileName().equals(node.getNodeIp()) && searchRequestModel.getPort() == node.getPort()){
-            return true;
-        }else{
-            return false;
-        }
-
+    //check whether the stat table entry equals to the node which request the file
+    private boolean isRequestingNode(SearchRequestModel searchRequestModel, Node node) {
+        return searchRequestModel.getFileName().equals(node.getNodeIp()) && searchRequestModel.getPort() == node.getPort();
     }
 
 

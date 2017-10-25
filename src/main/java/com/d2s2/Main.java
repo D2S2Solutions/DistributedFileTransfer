@@ -22,36 +22,47 @@ import static com.d2s2.constants.ApplicationConstants.randomWithRange;
 public class Main {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
+
+        ProgressBar pb = new ProgressBar("Registering in BS server||", 100);
+        pb.start();
+        pb.stepTo(35);
+        pb.stepTo(100);
+        pb.stop();
+        initLocalFileStorage();
+        UdpConnector udpConnector = new UDPConnectorImpl();
+
+        Handler handler = new HandlerImpl();
         try {
-            ProgressBar pb = new ProgressBar("Registering in BS server||", 100);
-            pb.start();
-            pb.stepTo(35);
-            pb.stepTo(100);
-            pb.stop();
-            initLocalFileStorage();
-            UdpConnector udpConnector = new UDPConnectorImpl();
-
-            Handler handler = new HandlerImpl();
             handler.registerInBS();
-
-
-            while (true) {
-                System.out.println("WAITING");
-                Future<String> stringFuture = udpConnector.receive();
-                int i = 0;
-                while (!stringFuture.isDone()) {
-//                    System.out.println(++i);
-                }
-//                search("American");
-                handler.searchFile("American");
-//                performGracefulDeparture(udpConnector);
-            }
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        new Thread() {
+            @Override
+            public void run() {
+                while (true) {
+                    System.out.println("WAITING");
+                    Future<String> stringFuture = null;
+                    try {
+                        stringFuture = udpConnector.receive();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    while (!stringFuture.isDone()) {
+//                    System.out.println(++i);
+                    }
+//                search("American");
+
+//                performGracefulDeparture(udpConnector);
+                }
+            }
+
+        }.start();
+        handler.searchFile("American");
+
     }
+
 
     private static void search(String query) {
         FileHandler fileHandler = FileHandlerImpl.getInstance();
