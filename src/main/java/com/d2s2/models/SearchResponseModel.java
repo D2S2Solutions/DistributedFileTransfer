@@ -60,8 +60,12 @@ public class SearchResponseModel extends AbstractRequestResponseModel {
             }
 
             Node node = new Node(this.ip, this.port);
-            concurrentLinkedQueue.add(node);
-            peerTable.insert(node);
+
+            if(!concurrentLinkedQueue.contains(node)){
+                concurrentLinkedQueue.add(node);
+                peerTable.insert(node);
+            }
+
 
         });
 
