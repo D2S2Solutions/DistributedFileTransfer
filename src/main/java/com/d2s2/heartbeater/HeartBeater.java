@@ -5,8 +5,6 @@ package com.d2s2.heartbeater;
  */
 public interface HeartBeater {
 
-    void makeHeartBeat();
-
     void handleBeat();
 
 }
