@@ -1,6 +1,7 @@
 package com.d2s2.message.build;
 
 import com.d2s2.message.MessageConstants;
+import com.d2s2.models.HeartBeatSignalModel;
 import com.d2s2.models.RegistrationRequestModel;
 import com.d2s2.models.SearchRequestModel;
 import com.d2s2.models.SearchResponseModel;
@@ -66,4 +67,9 @@ public class MessageBuilderImpl implements MessageBuilder {
         return s;
     }
 
+    @Override
+    public String buildHeartBeatSignalMessage(HeartBeatSignalModel model) {
+        //todo build heart beat msg
+        return null;
+    }
 }
