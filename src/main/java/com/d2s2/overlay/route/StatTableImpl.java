@@ -56,5 +56,8 @@ public class StatTableImpl {
         return concurrentLinkedQueues;
     }
 
+    public void printStatTable(){
+//        statTable.fo
+    }
 
 }

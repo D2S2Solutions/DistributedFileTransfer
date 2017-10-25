@@ -46,5 +46,7 @@ public class RegistrationResponseModel extends AbstractRequestResponseModel {
             System.out.println("PEER TABLE CONTENT " + node.getId());
         });
 
+        PeerTableImpl.getInstance().printPeerTable();
+
     }
 }

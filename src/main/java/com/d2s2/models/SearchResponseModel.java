@@ -65,6 +65,8 @@ public class SearchResponseModel extends AbstractRequestResponseModel {
 
         });
 
+        PeerTableImpl.getInstance().printPeerTable();
+
 
     }
 }
