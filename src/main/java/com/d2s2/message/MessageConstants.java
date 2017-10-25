@@ -20,6 +20,11 @@ public class MessageConstants {
     public static final String SER_MESSAGE = "SER";
     public static final String SEROK_MESSAGE = "SEROK";
 
+    public static final String NEIGHBOUR_MESSAGE = "NEIGHBOUR";
+    public static final String NEIGHBOUROK_MESSAGE = "NEIGHBOUROK";
+
+
+
     public static final String HEARTBEAT_MESSAGE = "HBEAT";
 
 }

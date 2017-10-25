@@ -6,16 +6,18 @@ import com.d2s2.message.build.MessageBuilderImpl;
 import com.d2s2.message.tokenize.MessageTokenizer;
 import com.d2s2.message.tokenize.MessageTokenizerImpl;
 import com.d2s2.models.*;
+import com.d2s2.overlay.route.NeighbourTableImpl;
 import com.d2s2.overlay.route.PeerTableImpl;
 import com.d2s2.socket.UDPConnectorImpl;
 import com.d2s2.socket.UdpConnector;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -74,40 +76,55 @@ public class HandlerImpl implements Handler {
     }
 
     @Override
-    public void sendSearchRequest(SearchRequestModel model, ConcurrentLinkedQueue<Node> concurrentLinkedQueue) throws IOException {
+    public void sendSearchRequest(SearchRequestModel model, ConcurrentLinkedQueue<Node> statTablePeers) throws IOException {
         String searchRequestMessage = messageBuilder.buildSearchRequestMessage(model);
-        Iterator<Node> iterator = concurrentLinkedQueue.iterator();
+        Iterator<Node> iterator = statTablePeers.iterator();
         while (iterator.hasNext()) {
             Node next = iterator.next();
-            udpConnector.send(searchRequestMessage, null, next.getPort());
-        }
-
-        final Set<Node> peerNodeList = PeerTableImpl.getInstance().getPeerNodeList();
-        Random random = new Random();
-        final int size = peerNodeList.size();
-        if (size > 0) {
-            final int item1 = random.nextInt(size);
-            final int item2 = random.nextInt(size);
-
-            int i = 0;
-            Iterator<Node> nodeIterator = peerNodeList.iterator();
-            while (nodeIterator.hasNext()) {
-
-                if ((item1 == i || item2 == i) && !concurrentLinkedQueue.contains(item1)) {
-                    udpConnector.send(searchRequestMessage, null, nodeIterator.next().getPort());
-                }
-                i++;
+            if (!isRequestingNode(model, next)) {
+                udpConnector.send(searchRequestMessage, null, next.getPort());
             }
         }
 
+        final Set<Node> peerNodeList = PeerTableImpl.getInstance().getPeerNodeList();
 
+        final ArrayList<Node> peerNodeListToSend = new ArrayList<>();
+
+        peerNodeList.forEach((node) -> {
+            if ((!statTablePeers.contains(node)) && (!isRequestingNode(model, node))) {
+                peerNodeListToSend.add(node);
+            }
+        });
+
+        Random random = new Random();
+        final int size = peerNodeListToSend.size();
+        if (size > 0) {
+            final int item1 = random.nextInt(size);
+            final int item2 = random.nextInt(size);
+            udpConnector.send(searchRequestMessage, null, peerNodeListToSend.get(item1).getPort());
+            udpConnector.send(searchRequestMessage, null, peerNodeListToSend.get(item2).getPort());
+        }
     }
 
     @Override
     public void sendLocalSearchToSource(SearchResponseModel searchResponseModel, List<String> list) throws IOException {
         String searchResponseToSourceMessage = messageBuilder.buildSearchResponseToSourceMessage(searchResponseModel);
-        System.out.println(" Local port is " + searchResponseModel.getPort());
+        System.out.println(" LOCAL SEARCH RESPONSE " + searchResponseToSourceMessage);
         udpConnector.send(searchResponseToSourceMessage, null, searchResponseModel.getPort());
+    }
+
+    //check whether the stat table entry equals to the node which request the file
+    private boolean isRequestingNode(SearchRequestModel searchRequestModel, Node node) {
+        return searchRequestModel.getFileName().equals(node.getNodeIp()) && searchRequestModel.getPort() == node.getPort();
+    }
+
+    public void notifyNeighbours(String ip, int port) throws IOException{
+        System.out.println("IP "+ip+" PORT "+port);
+        NotifyNeighbourRequestModel notifyNeighbourRequestModel = new NotifyNeighbourRequestModel(ApplicationConstants.IP,ApplicationConstants.PORT);
+        String message = messageBuilder.buildNeighbourJoinMessage(notifyNeighbourRequestModel);
+        //System.out.println(message);
+        udpConnector.send(message, null, port);
+
     }
 
 

@@ -13,7 +13,7 @@ public class MessageTokenizerImpl implements MessageTokenizer {
     @Override
     public AbstractRequestResponseModel tokenizeMessage(String message) {
         message = message.substring(0, Integer.parseInt(message.substring(0, 4)));
-        System.out.println(message);
+
         StringTokenizer stringTokenizer = new StringTokenizer(message, " ");
         int length = Integer.parseInt(stringTokenizer.nextToken());
         String response = stringTokenizer.nextToken();
@@ -69,6 +69,7 @@ public class MessageTokenizerImpl implements MessageTokenizer {
         int port = Integer.parseInt(stringTokenizer.nextToken());
         String fileName = stringTokenizer.nextToken();
         int hops = Integer.parseInt(stringTokenizer.nextToken());
+        System.out.println("HOPS COUNT " + hops);
         return new SearchRequestModel(ip, port, fileName, hops);
     }
 

@@ -46,25 +46,26 @@ public class SearchRequestModel extends AbstractRequestModel {
     public void handle() {
         //search from stat table    List<String,NOde>
         //create searchRequestModels
+        --this.hops;
+        if (this.hops > 0) {
+            FileHandlerImpl instance = FileHandlerImpl.getInstance();
+            List<String> fileList = instance.searchLocalFileList(this.fileName);
 
-        FileHandlerImpl instance = FileHandlerImpl.getInstance();
-        List<String> fileList = instance.searchLocalFileList(this.fileName);
-        System.out.println("LOCAL SEARCH " + fileList);
-        if (fileList.size() > 0) {
-            SearchResponseModel searchResponseModel = new SearchResponseModel(ApplicationConstants.IP, ApplicationConstants.PORT, hops, fileList.size(), new HashSet<>(fileList));
-            try {
-                handler.sendLocalSearchToSource(searchResponseModel, fileList);
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (fileList.size() > 0) {
+                SearchResponseModel searchResponseModel = new SearchResponseModel(ApplicationConstants.IP, ApplicationConstants.PORT, this.hops, fileList.size(), new HashSet<>(fileList));
+                try {
+                    handler.sendLocalSearchToSource(searchResponseModel, fileList);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-        }
-        this.hops--;
-        if (hops > 0) {
-            ConcurrentLinkedQueue linkedQueue = StatTableImpl.getInstance().search(this.fileName);
-            System.out.println(linkedQueue);
+
+            ConcurrentLinkedQueue statTablePeers = StatTableImpl.getInstance().search(this.fileName);
+            System.out.println("Stat table "+statTablePeers);
+
 
             try {
-                handler.sendSearchRequest(this, linkedQueue);
+                handler.sendSearchRequest(this, statTablePeers);
 
             } catch (IOException e) {
                 e.printStackTrace();

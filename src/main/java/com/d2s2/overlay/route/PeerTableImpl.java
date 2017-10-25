@@ -48,4 +48,12 @@ public class PeerTableImpl {
     public void search() {
 
     }
+
+
+    public void printPeerTable(){
+        peerNodeList.forEach((node)->{
+            System.out.print(node.getNodeIp()+":"+node.getPort()+"   ");
+        });
+        System.out.println();
+    }
 }
