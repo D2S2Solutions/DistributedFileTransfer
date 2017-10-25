@@ -38,6 +38,9 @@ public class StatTableImpl {
         statTable.put("SECOND", nodes);
     }
 
+    public void insert(String fileName,ConcurrentLinkedQueue<Node> queue) {
+        this.statTable.put(fileName,queue);
+    }
 
     public void remove() {
 

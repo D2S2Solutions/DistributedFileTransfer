@@ -53,10 +53,15 @@ public class SearchResponseModel extends AbstractRequestResponseModel {
         fileList.forEach((fileName) -> {
 
             ConcurrentLinkedQueue<Node> concurrentLinkedQueue = statTable.get(fileName);
+
+            if(concurrentLinkedQueue==null){
+                concurrentLinkedQueue=new ConcurrentLinkedQueue<Node>();
+                statTable.insert(fileName,concurrentLinkedQueue);
+            }
+
             Node node = new Node(this.ip, this.port);
             concurrentLinkedQueue.add(node);
             peerTable.insert(node);
-
 
         });
 
