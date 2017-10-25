@@ -13,7 +13,7 @@ public class MessageTokenizerImpl implements MessageTokenizer {
     @Override
     public AbstractRequestResponseModel tokenizeMessage(String message) {
         message = message.substring(0, Integer.parseInt(message.substring(0, 4)));
-        System.out.println(message);
+
         StringTokenizer stringTokenizer = new StringTokenizer(message, " ");
         int length = Integer.parseInt(stringTokenizer.nextToken());
         String response = stringTokenizer.nextToken();

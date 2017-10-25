@@ -1,5 +1,6 @@
 package com.d2s2.message.build;
 
+import com.d2s2.models.NotifyNeighbourRequestModel;
 import com.d2s2.models.HeartBeatSignalModel;
 import com.d2s2.models.RegistrationRequestModel;
 import com.d2s2.models.SearchRequestModel;
@@ -19,6 +20,8 @@ public interface MessageBuilder {
     String buildLeaveMessage();
 
     String buildSearchRequestMessage(SearchRequestModel model);
+
+    String buildNeighbourJoinMessage(NotifyNeighbourRequestModel model);
 
     String buildSearchResponseToSourceMessage(SearchResponseModel model);
 

@@ -13,6 +13,7 @@ public class JoinResponseModel extends AbstractRequestResponseModel {
 
     @Override
     public void handle() {
+        System.out.println("Join Response Received");
 
     }
 }

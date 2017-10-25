@@ -1,6 +1,7 @@
 package com.d2s2.message.build;
 
 import com.d2s2.message.MessageConstants;
+import com.d2s2.models.NotifyNeighbourRequestModel;
 import com.d2s2.models.HeartBeatSignalModel;
 import com.d2s2.models.RegistrationRequestModel;
 import com.d2s2.models.SearchRequestModel;
@@ -72,4 +73,15 @@ public class MessageBuilderImpl implements MessageBuilder {
         //todo build heart beat msg
         return null;
     }
+    @Override
+    public String buildNeighbourJoinMessage(NotifyNeighbourRequestModel model) {
+
+        int length = MessageConstants.NEIGHBOUR_MESSAGE.length() + model.getIp().length() + String.valueOf(model.getPort()).length()  + 4 + 4;
+        final String requestFinalLength = String.format("%04d", length);
+        return requestFinalLength + " " + MessageConstants.NEIGHBOUR_MESSAGE + " " + model.getIp() + " " + model.getPort() ;
+
+
+    }
+
+
 }

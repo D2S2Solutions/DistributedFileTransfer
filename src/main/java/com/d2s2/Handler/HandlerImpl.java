@@ -6,11 +6,17 @@ import com.d2s2.message.build.MessageBuilderImpl;
 import com.d2s2.message.tokenize.MessageTokenizer;
 import com.d2s2.message.tokenize.MessageTokenizerImpl;
 import com.d2s2.models.*;
+import com.d2s2.overlay.route.NeighbourTableImpl;
 import com.d2s2.overlay.route.PeerTableImpl;
 import com.d2s2.socket.UDPConnectorImpl;
 import com.d2s2.socket.UdpConnector;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Random;
+import java.util.Set;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -92,6 +98,15 @@ public class HandlerImpl implements Handler {
     //check whether the stat table entry equals to the node which request the file
     private boolean isRequestingNode(SearchRequestModel searchRequestModel, Node node) {
         return searchRequestModel.getFileName().equals(node.getNodeIp()) && searchRequestModel.getPort() == node.getPort();
+    }
+
+    public void notifyNeighbours(String ip, int port) throws IOException{
+        System.out.println("IP "+ip+" PORT "+port);
+        NotifyNeighbourRequestModel notifyNeighbourRequestModel = new NotifyNeighbourRequestModel(ApplicationConstants.IP,ApplicationConstants.PORT);
+        String message = messageBuilder.buildNeighbourJoinMessage(notifyNeighbourRequestModel);
+        //System.out.println(message);
+        udpConnector.send(message, null, port);
+
     }
 
 
