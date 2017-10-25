@@ -70,6 +70,25 @@ public class HandlerImpl implements Handler {
     }
 
     @Override
+    public void gracefulLeaveRequest() {
+        NeighbourTableImpl neighbourTable = NeighbourTableImpl.getInstance();
+        Set<Node> neighbourNodeList=neighbourTable.getNeighbourNodeList();
+
+        GracefulLeaveRequestModel gracefulLeaveRequestModel = new GracefulLeaveRequestModel(ApplicationConstants.IP,ApplicationConstants.PORT,"username");
+        String message = gracefulLeaveRequestModel.toString();
+        for (Node node : neighbourNodeList) {
+
+            try {
+                udpConnector.send(message, null, gracefulLeaveRequestModel.getPort());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
+    @Override
     public void searchFile(String file) {
         SearchRequestModel searchRequestModel = new SearchRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT, file, ApplicationConstants.HOPS);
         searchRequestModel.handle();

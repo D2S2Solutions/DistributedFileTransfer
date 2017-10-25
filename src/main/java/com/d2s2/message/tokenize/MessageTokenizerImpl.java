@@ -38,6 +38,11 @@ public class MessageTokenizerImpl implements MessageTokenizer {
 
                 return this.getNeighbourResponseMessageOb(stringTokenizer);
 
+            case MessageConstants.LEAVE_MESSAGE:
+                System.out.println("LEAVE MESSAGE RECEIVED");
+                return null;
+                //return this.getNeighbourResponseMessageOb(stringTokenizer);
+
 
         }
         return null;

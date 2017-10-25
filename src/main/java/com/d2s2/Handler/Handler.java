@@ -24,4 +24,6 @@ public interface Handler {
     public void sendLocalSearchToSource(SearchResponseModel searchResponseModel, List<String> list) throws IOException;
 
     public void sendHeartBeatSignal();
+
+    public void gracefulLeaveRequest();
 }

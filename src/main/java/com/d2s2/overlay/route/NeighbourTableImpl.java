@@ -47,4 +47,8 @@ public class NeighbourTableImpl implements Table {
     public void search(String query) {
 
     }
+
+    public Set<Node> getNeighbourNodeList(){
+        return neighbourNodeList;
+    }
 }
