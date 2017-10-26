@@ -38,8 +38,9 @@ public class StatTableImpl {
         statTable.put("SECOND", nodes);
     }
 
-    public void insert(String fileName,ConcurrentLinkedQueue<Node> queue) {
-        this.statTable.put(fileName,queue);
+    public void insert(String fileName, ConcurrentLinkedQueue<Node> queue) {
+        this.statTable.put(fileName, queue);
+
     }
 
     public void remove(Node node) {
@@ -50,14 +51,15 @@ public class StatTableImpl {
         return this.statTable.get(fileName);
     }
 
+
     public ConcurrentLinkedQueue search(String query) {
         ConcurrentLinkedQueue concurrentLinkedQueues = new ConcurrentLinkedQueue();
         statTable.keySet().stream().filter(s -> s.contains(query)).forEach(s -> concurrentLinkedQueues.add(statTable.get(s)));
         return concurrentLinkedQueues;
     }
 
-    public void printStatTable(){
-//        statTable.fo
-    }
 
+    public ConcurrentHashMap<String, ConcurrentLinkedQueue<Node>> get() {
+        return statTable;
+    }
 }

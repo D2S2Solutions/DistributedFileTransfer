@@ -53,7 +53,6 @@ public class UDPConnectorImpl implements UdpConnector {
         DatagramPacket incomingPacket = new DatagramPacket(bufferIncoming, bufferIncoming.length);
         socket.receive(incomingPacket);
         String incomingMessage = new String(bufferIncoming);
-
         executorService = Executors.newFixedThreadPool(10);
 
         Future<String> future = (Future<String>) executorService.submit(() -> handler.handleResponse(incomingMessage));

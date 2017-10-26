@@ -43,4 +43,9 @@ public class Node {
         Node node = (Node) object;
         return (this.nodeIp.equals(node.getNodeIp()) && this.port == node.getPort()) ? true : false;
     }
+
+    @Override
+    public String toString() {
+        return String.valueOf(this.nodeIp).concat(":").concat(String.valueOf(this.port));
+    }
 }

@@ -2,6 +2,7 @@ package com.d2s2;
 
 import com.d2s2.Handler.Handler;
 import com.d2s2.Handler.HandlerImpl;
+import com.d2s2.constants.ApplicationConstants;
 import com.d2s2.files.FileHandler;
 import com.d2s2.files.FileHandlerImpl;
 import com.d2s2.socket.UDPConnectorImpl;
@@ -28,6 +29,7 @@ public class Main {
         pb.stepTo(35);
         pb.stepTo(100);
         pb.stop();
+        System.out.println("This node operates in " + ApplicationConstants.IP + " and the port is " + ApplicationConstants.PORT);
         initLocalFileStorage();
         UdpConnector udpConnector = new UDPConnectorImpl();
 
@@ -38,32 +40,24 @@ public class Main {
             e.printStackTrace();
         }
 
-        new Thread() {
-            @Override
-            public void run() {
-                while (true) {
-                    System.out.println("WAITING");
-                    Future<String> stringFuture = null;
-                    try {
-                        stringFuture = udpConnector.receive();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    while (!stringFuture.isDone()) {
-//                    System.out.println(++i);
-                    }
-//                search("American");
-
-
-//                performGracefulDeparture(udpConnector);
+        new Thread(() -> {
+            while (true) {
+                System.out.println(">>>>>>>>>> WAITING FOR REQUEST <<<<<<<<<<<<\n");
+                Future<String> stringFuture = null;
+                try {
+                    stringFuture = udpConnector.receive();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+                while (!stringFuture.isDone()) {
+//                    System.out.println(++i);
+                }
+                    handler.sendHeartBeatSignal();
+
             }
-
-        }.start();
-
-
-
-        //handler.sendHeartBeatSignal();
+        }
+        ).start();
+        Thread.sleep(1000); // Wait until the system acknowledges the node
         handler.searchFile("American");
         handler.gracefulLeaveRequest();
 
@@ -103,8 +97,10 @@ public class Main {
                 "American Idol",
                 "Hacking for Dummies"
         };
+        System.out.println("This node has :");
         Arrays.stream(fullLocalFileArray).filter(s -> (s.length() > randomWithRange(5, 20)))
                 .forEach(s -> {
+                    System.out.println("\t" + s);
                     String saltedName = s.replace(" ", "@");
                     fileHandler.initializeFileStorage(saltedName);
                 });

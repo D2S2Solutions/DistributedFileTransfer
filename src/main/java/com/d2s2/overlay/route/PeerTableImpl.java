@@ -35,6 +35,7 @@ public class PeerTableImpl {
 
     public void insert(Node node) {
         peerNodeList.add(node); // todo limit the number of node to 2
+
     }
 
     public Set<Node> getPeerNodeList() {
@@ -49,11 +50,4 @@ public class PeerTableImpl {
 
     }
 
-
-    public void printPeerTable(){
-        peerNodeList.forEach((node)->{
-            System.out.print(node.getNodeIp()+":"+node.getPort()+"   ");
-        });
-        System.out.println();
-    }
 }

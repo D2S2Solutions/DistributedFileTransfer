@@ -2,7 +2,6 @@ package com.d2s2.overlay.route;
 
 import com.d2s2.constants.ApplicationConstants;
 import com.d2s2.models.Node;
-import sun.java2d.pipe.AlphaPaintPipe;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,7 +18,8 @@ public class NeighbourTableImpl implements Table {
         neighbourNodeList = ConcurrentHashMap.newKeySet();
     }
 
-    private NeighbourTableImpl(){}
+    private NeighbourTableImpl() {
+    }
 
     public static NeighbourTableImpl getInstance() {
         if (neighbourTable == null) {
@@ -34,8 +34,10 @@ public class NeighbourTableImpl implements Table {
 
     @Override
     public void insert(Node node) {
-        System.out.println("Node "+node.getNodeIp()+":"+node.getPort()+" Added to Neighbour Table of "+ ApplicationConstants.IP+":"+ ApplicationConstants.PORT);
+        System.out.println("Node " + node.getNodeIp() + ":" + node.getPort() + " Added to Neighbour Table of " + ApplicationConstants.IP + ":" + ApplicationConstants.PORT);
         neighbourNodeList.add(node);
+//        System.out.println("Content in the neighbour table are");
+//        neighbourNodeList.forEach(node1 -> System.out.println("\t" + node1.getNodeIp() + "\t" + node1.getPort()));
     }
 
     @Override
@@ -43,16 +45,11 @@ public class NeighbourTableImpl implements Table {
         neighbourNodeList.remove(node);
     }
 
-    public Set<Node> getNeighbourNodeList() {
-        return neighbourNodeList;
-    }
-
     @Override
     public void search(String query) {
-
     }
 
-    public Set<Node> getNeighbourNodeList(){
+    public Set<Node> getNeighbourNodeList() {
         return neighbourNodeList;
     }
 }

@@ -1,11 +1,8 @@
 package com.d2s2.message.build;
 
+import com.d2s2.constants.ApplicationConstants;
 import com.d2s2.message.MessageConstants;
-import com.d2s2.models.NotifyNeighbourRequestModel;
-import com.d2s2.models.HeartBeatSignalModel;
-import com.d2s2.models.RegistrationRequestModel;
-import com.d2s2.models.SearchRequestModel;
-import com.d2s2.models.SearchResponseModel;
+import com.d2s2.models.*;
 
 /**
  * Created by Heshan Sandamal on 10/6/2017.
@@ -40,9 +37,23 @@ public class MessageBuilderImpl implements MessageBuilder {
 
     @Override
     public String buildSearchRequestMessage(SearchRequestModel model) {
-        int length = MessageConstants.SER_MESSAGE.length() + model.getIp().length() + String.valueOf(model.getPort()).length() + model.getFileName().length() + String.valueOf(model.getHops()).length() + 5 + 4;
-        final String requestFinalLength = String.format("%04d", length);
-        return requestFinalLength + " " + MessageConstants.SER_MESSAGE + " " + model.getIp() + " " + model.getPort() + " " + model.getFileName() + " " +model.getHops();
+        int length = MessageConstants.SER_MESSAGE.length() + model.getIp().length()
+                + String.valueOf(model.getPort()).length() + model.getFileName().length()
+                + String.valueOf(model.getHops()).length() + 5 + 4;
+        for (Node node : model.getLastHops()) {
+            length += node.getNodeIp().length();
+            length += String.valueOf(node.getPort()).length();
+            length += 2;
+        }
+        String requestFinalLength = String.format("%04d", length);
+        requestFinalLength = requestFinalLength + " " + MessageConstants.SER_MESSAGE + " "
+                + model.getIp() + " " + model.getPort() + " " + model.getFileName() + " " + model.getHops();
+        for (Node node : model.getLastHops()) {
+            requestFinalLength += (" " + node.getNodeIp() + " " + node.getPort());
+        }
+        return requestFinalLength;
+
+
     }
 
     @Override
@@ -56,12 +67,12 @@ public class MessageBuilderImpl implements MessageBuilder {
             stringBuilder.deleteCharAt(stringBuilder.length() - 1); // to remove the trailing space.
         }
         int length = MessageConstants.SEROK_MESSAGE.length() + String.valueOf(model.getNoOfFiles()).length()
-                + String.valueOf(model.getIp()).length() + String.valueOf(model.getPort()).length()
+                + String.valueOf(ApplicationConstants.IP).length() + String.valueOf(ApplicationConstants.PORT).length()
                 + String.valueOf(model.getHops()).length() + stringBuilder.length() + 6 + 4 + model.getNoOfFiles() - 1;
-        final String requestFinalLength = String.format("%04d", length);
-        String s = requestFinalLength + " " + MessageConstants.SEROK_MESSAGE + " " + model.getNoOfFiles() + " " + model.getIp()
-                + " " + model.getPort() + " " + model.getHops();
 
+        final String requestFinalLength = String.format("%04d", length);
+        String s = requestFinalLength + " " + MessageConstants.SEROK_MESSAGE + " " + model.getNoOfFiles() + " "
+                + ApplicationConstants.IP + " " + ApplicationConstants.PORT + " " + model.getHops();
         if (model.getFileList() != null) {
             s += " " + stringBuilder;
         }
@@ -76,14 +87,12 @@ public class MessageBuilderImpl implements MessageBuilder {
         final String requestFinalLength = String.format("%04d", length);
         return requestFinalLength + " " + MessageConstants.HEARTBEAT_MESSAGE + " " + model.getIp() + " " + model.getPort() + " " + model.getUserName();
     }
+
     @Override
     public String buildNeighbourJoinMessage(NotifyNeighbourRequestModel model) {
-
-        int length = MessageConstants.NEIGHBOUR_MESSAGE.length() + model.getIp().length() + String.valueOf(model.getPort()).length()  + 4 + 4;
+        int length = MessageConstants.NEIGHBOUR_MESSAGE.length() + model.getIp().length() + String.valueOf(model.getPort()).length() + 4 + 4;
         final String requestFinalLength = String.format("%04d", length);
-        return requestFinalLength + " " + MessageConstants.NEIGHBOUR_MESSAGE + " " + model.getIp() + " " + model.getPort() ;
-
-
+        return requestFinalLength + " " + MessageConstants.NEIGHBOUR_MESSAGE + " " + model.getIp() + " " + model.getPort();
     }
 
 
