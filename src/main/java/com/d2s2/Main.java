@@ -7,9 +7,12 @@ import com.d2s2.files.FileHandler;
 import com.d2s2.files.FileHandlerImpl;
 import com.d2s2.socket.UDPConnectorImpl;
 import com.d2s2.socket.UdpConnector;
+import com.d2s2.ui.FileSearchInterface;
+import com.d2s2.ui.GUIController;
 import me.tongfei.progressbar.ProgressBar;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -21,6 +24,7 @@ import static com.d2s2.constants.ApplicationConstants.randomWithRange;
  * Created by Heshan Sandamal on 10/6/2017.
  */
 public class Main {
+
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
 
@@ -58,7 +62,7 @@ public class Main {
         }
         ).start();
         Thread.sleep(1000); // Wait until the system acknowledges the node
-        handler.searchFile("American");
+//        handler.searchFile("American");
 //        handler.gracefulLeaveRequest();
 
     }
@@ -98,12 +102,19 @@ public class Main {
                 "Hacking for Dummies"
         };
         System.out.println("This node has :");
+        ArrayList<String> fileList=new ArrayList<>();
         Arrays.stream(fullLocalFileArray).filter(s -> (s.length() > randomWithRange(5, 20)))
                 .forEach(s -> {
                     System.out.println("\t" + s);
                     String saltedName = s.replace(" ", "@");
                     fileHandler.initializeFileStorage(saltedName);
+                    fileList.add(saltedName);
                 });
+
+        GUIController guiController=GUIController.getInstance();
+        FileSearchInterface fileSearchInterface = new FileSearchInterface(guiController,fileList);
+        guiController.setUIinstance(fileSearchInterface);
+        fileSearchInterface.setVisible(true);
 
     }
 
