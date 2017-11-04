@@ -52,14 +52,14 @@ public class Main {
                 while (!stringFuture.isDone()) {
 //                    System.out.println(++i);
                 }
-                    handler.sendHeartBeatSignal();
+//                    handler.sendHeartBeatSignal();
 
             }
         }
         ).start();
         Thread.sleep(1000); // Wait until the system acknowledges the node
         handler.searchFile("American");
-        handler.gracefulLeaveRequest();
+//        handler.gracefulLeaveRequest();
 
     }
 

@@ -18,6 +18,7 @@ public class MessageTokenizerImpl implements MessageTokenizer {
         StringTokenizer stringTokenizer = new StringTokenizer(message, " ");
         int length = Integer.parseInt(stringTokenizer.nextToken());
         String response = stringTokenizer.nextToken();
+        System.out.println(message);
 
         switch (response) {
             case MessageConstants.REGOK_MESSAGE:

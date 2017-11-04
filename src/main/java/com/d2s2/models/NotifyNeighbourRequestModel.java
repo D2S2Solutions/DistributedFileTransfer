@@ -22,6 +22,8 @@ public class NotifyNeighbourRequestModel extends AbstractRequestModel {
         if (peerTable.getPeerNodeList().size() < 2) {
             peerTable.insert(node);
         }
+        System.out.println("Peer table");
+        System.out.println(peerTable.getPeerNodeList());
 
 
     }

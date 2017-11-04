@@ -70,6 +70,10 @@ public class SearchResponseModel extends AbstractRequestResponseModel {
                     concurrentLinkedQueue.add(node);
                 }
             });
+
+            System.out.println("Stat Table ");
+            System.out.println(statTable.getStatTable());
+
             if (!peerTable.getPeerNodeList().contains(node)) {
                 peerTable.insert(node);
             }

@@ -8,15 +8,13 @@ import com.d2s2.message.tokenize.MessageTokenizerImpl;
 import com.d2s2.models.*;
 import com.d2s2.overlay.route.NeighbourTableImpl;
 import com.d2s2.overlay.route.PeerTableImpl;
+import com.d2s2.overlay.route.StatTableImpl;
 import com.d2s2.socket.UDPConnectorImpl;
 import com.d2s2.socket.UdpConnector;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -113,28 +111,38 @@ public class HandlerImpl implements Handler {
     public void sendSearchRequest(SearchRequestModel model, ConcurrentLinkedQueue<Node> statTablePeers) throws IOException {
         String searchRequestMessage = messageBuilder.buildSearchRequestMessage(model);
 
+        System.out.println("Found stat table entries");
+        System.out.println(statTablePeers);
+
+        Iterator<Node> nodeIterator = statTablePeers.iterator();
+        while (nodeIterator.hasNext()){
+            Node node = nodeIterator.next();
+            udpConnector.send(searchRequestMessage,null, node.getPort());
+            System.out.println("send to stat table entries "+ node.getPort());
+        }
+
         final Set<Node> peerNodeList = PeerTableImpl.getInstance().getPeerNodeList();
 
         final ArrayList<Node> peerNodeListToSend = new ArrayList<>();
 
         peerNodeList.forEach((node) -> {
-//            if (!(isRequestingNode(model, node))) {
-            if (!model.getLastHops().contains(node)) {
+            if (!model.getLastHops().contains(node)  && !statTablePeers.contains(node)) {
                 peerNodeListToSend.add(node);
             }
-//            }
         });
         Random random = new Random();
         int size = peerNodeListToSend.size();
         if (size > 0) {
             final int item1 = random.nextInt(size);
             udpConnector.send(searchRequestMessage, null, peerNodeListToSend.get(item1).getPort());
+            System.out.println("Sending to peer node "+peerNodeListToSend.get(item1).getPort());
             peerNodeListToSend.remove(item1);
         }
         size = peerNodeListToSend.size();
         if (size > 0) {
             final int item2 = random.nextInt(size);
             udpConnector.send(searchRequestMessage, null, peerNodeListToSend.get(item2).getPort());
+            System.out.println("Sending to peer node "+peerNodeListToSend.get(item2).getPort());
         }
     }
 
