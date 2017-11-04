@@ -117,7 +117,9 @@ public class HandlerImpl implements Handler {
         Iterator<Node> nodeIterator = statTablePeers.iterator();
         while (nodeIterator.hasNext()){
             Node node = nodeIterator.next();
-            udpConnector.send(searchRequestMessage,null, node.getPort());
+            if(!model.getLastHops().contains(node)){
+                udpConnector.send(searchRequestMessage,null, node.getPort());
+            }
             System.out.println("send to stat table entries "+ node.getPort());
         }
 
@@ -130,6 +132,8 @@ public class HandlerImpl implements Handler {
                 peerNodeListToSend.add(node);
             }
         });
+
+        System.out.println("peer nodes to send list "+peerNodeListToSend );
         Random random = new Random();
         int size = peerNodeListToSend.size();
         if (size > 0) {
