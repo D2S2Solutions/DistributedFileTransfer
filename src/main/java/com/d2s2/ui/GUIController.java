@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.d2s2.constants.ApplicationConstants.IPADDRESS_PATTERN;
+import static com.d2s2.constants.ApplicationConstants.IP_ADDRESS_PATTERN;
 
 /**
  * Created by Heshan Sandamal on 11/4/2017.
@@ -41,15 +41,15 @@ public class GUIController {
 
     public void registerInBS() throws IOException {
         String BsServerIp = JOptionPane.showInputDialog("Enter BS server IP");
-        if (BsServerIp == null){
+        if (BsServerIp == null) {
             return;
         }
-        Pattern pattern = Pattern.compile(IPADDRESS_PATTERN);
+        Pattern pattern = Pattern.compile(IP_ADDRESS_PATTERN);
         Matcher matcher = pattern.matcher(BsServerIp);
-        if (matcher.matches()){
+        if (matcher.matches()) {
             handler.registerInBS(BsServerIp);
-        }else {
-            JOptionPane.showMessageDialog(null, "Error in IP address format","Error",JOptionPane.ERROR_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, "Error in IP address format", "Error", JOptionPane.ERROR_MESSAGE);
             registerInBS();
         }
     }

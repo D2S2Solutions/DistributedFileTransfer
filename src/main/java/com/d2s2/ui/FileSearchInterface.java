@@ -76,6 +76,7 @@ public class FileSearchInterface extends javax.swing.JFrame {
     private javax.swing.JTable selfFilesTable;
     private javax.swing.JButton unregisterButton;
     private javax.swing.JTextField userNameTextField;
+
     public FileSearchInterface(GUIController guiController, ArrayList<String> fileList) {
         initComponents();
         this.selfFilesTable.getTableHeader().setVisible(false);

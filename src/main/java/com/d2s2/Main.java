@@ -1,7 +1,5 @@
 package com.d2s2;
 
-import com.d2s2.Handler.Handler;
-import com.d2s2.Handler.HandlerImpl;
 import com.d2s2.constants.ApplicationConstants;
 import com.d2s2.files.FileHandler;
 import com.d2s2.files.FileHandlerImpl;

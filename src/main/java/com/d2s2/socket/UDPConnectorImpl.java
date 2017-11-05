@@ -40,8 +40,7 @@ public class UDPConnectorImpl implements UdpConnector {
 
     @Override
     public void send(String message, InetAddress receiverAddress, int port) throws IOException {
-        byte[] buffer = message.toString().getBytes();
-        receiverAddress = InetAddress.getLocalHost();
+        byte[] buffer = message.getBytes();
         DatagramPacket packet = new DatagramPacket(
                 buffer, buffer.length, receiverAddress, port);
         socket.send(packet);

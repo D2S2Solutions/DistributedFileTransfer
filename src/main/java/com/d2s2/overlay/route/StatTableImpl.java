@@ -12,6 +12,7 @@ public class StatTableImpl {
 
     private static ConcurrentHashMap<String, ConcurrentLinkedQueue<Node>> statTable = new ConcurrentHashMap();
     private volatile static StatTableImpl statTableImpl;
+
     private StatTableImpl() {
     }
 

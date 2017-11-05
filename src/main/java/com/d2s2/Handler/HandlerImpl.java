@@ -45,6 +45,7 @@ public class HandlerImpl implements Handler {
         RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT, ApplicationConstants.USER_NAME);
         String message = messageBuilder.buildRegisterRequestMessage(registrationRequestModel);
         udpConnector.send(message, InetAddress.getByName(bsServerIp), 55555);
+        ApplicationConstants.BootstrapServerIp = bsServerIp;
     }
 
     @Override
@@ -68,32 +69,33 @@ public class HandlerImpl implements Handler {
     public void gracefulLeaveRequest() {
         NeighbourTableImpl neighbourTable = NeighbourTableImpl.getInstance();
         Set<Node> neighbourNodeList = neighbourTable.getNeighbourNodeList();
+        /*
+        * First Unreg from the Bootstrap server
+        * */
+        GracefulLeaveBootstrapServerRequestModel gracefulLeaveBootstrapServerRequestModel = new GracefulLeaveBootstrapServerRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT, ApplicationConstants.USER_NAME);
+        String message = gracefulLeaveBootstrapServerRequestModel.toString();
 
-        GracefulLeaveRequestModel gracefulLeaveRequestModel = new GracefulLeaveRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT, "username");
-        String message = gracefulLeaveRequestModel.toString();
-        for (Node node : neighbourNodeList) {
-            try {
-                udpConnector.send(message, null, gracefulLeaveRequestModel.getPort());
+        try {
+            udpConnector.send(message, InetAddress.getByName(ApplicationConstants.BootstrapServerIp), ApplicationConstants.BS_SERVER_PORT);
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        new java.util.Timer().schedule(
-                new java.util.TimerTask() {
-                    @Override
-                    public void run() {
-                        try {
-                            System.out.println("Unregister the node from the BS");
-                            udpConnector.send(message, null, 55555);// Unregister from the BS
-                            System.exit(0);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                15000
-        );
+//        new java.util.Timer().schedule(
+//                new java.util.TimerTask() {
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            System.out.println("Unregister the node from the BS");
+//                            udpConnector.send(message, null, 55555);// Unregister from the BS
+//                            System.exit(0);
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                },
+//                15000
+//        );
 
     }
 
@@ -117,7 +119,7 @@ public class HandlerImpl implements Handler {
         while (nodeIterator.hasNext()) {
             Node node = nodeIterator.next();
             if (!model.getLastHops().contains(node)) {
-                udpConnector.send(searchRequestMessage, null, node.getPort());
+                udpConnector.send(searchRequestMessage, InetAddress.getByName(node.getNodeIp()), node.getPort());
             }
             System.out.println("send to stat table entries " + node.getPort());
         }
@@ -137,14 +139,16 @@ public class HandlerImpl implements Handler {
         int size = peerNodeListToSend.size();
         if (size > 0) {
             final int item1 = random.nextInt(size);
-            udpConnector.send(searchRequestMessage, null, peerNodeListToSend.get(item1).getPort());
+            Node node = peerNodeListToSend.get(item1);
+            udpConnector.send(searchRequestMessage, InetAddress.getByName(node.getNodeIp()), node.getPort());
             System.out.println("Sending to peer node " + peerNodeListToSend.get(item1).getPort());
             peerNodeListToSend.remove(item1);
         }
         size = peerNodeListToSend.size();
         if (size > 0) {
             final int item2 = random.nextInt(size);
-            udpConnector.send(searchRequestMessage, null, peerNodeListToSend.get(item2).getPort());
+            Node node = peerNodeListToSend.get(item2);
+            udpConnector.send(searchRequestMessage, InetAddress.getByName(node.getNodeIp()), node.getPort());
             System.out.println("Sending to peer node " + peerNodeListToSend.get(item2).getPort());
         }
     }
@@ -152,7 +156,7 @@ public class HandlerImpl implements Handler {
     @Override
     public void sendLocalSearchToSource(SearchResponseModel searchResponseModel, List<String> list) throws IOException {
         String searchResponseToSourceMessage = messageBuilder.buildSearchResponseToSourceMessage(searchResponseModel);
-        udpConnector.send(searchResponseToSourceMessage, null, searchResponseModel.getPort());
+        udpConnector.send(searchResponseToSourceMessage, InetAddress.getByName(searchResponseModel.getIp()), searchResponseModel.getPort());
     }
 
     //check whether the stat table entry equals to the node which request the file
@@ -163,7 +167,7 @@ public class HandlerImpl implements Handler {
     public void notifyNeighbours(String ip, int port) throws IOException {
         NotifyNeighbourRequestModel notifyNeighbourRequestModel = new NotifyNeighbourRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT);
         String message = messageBuilder.buildNeighbourJoinMessage(notifyNeighbourRequestModel);
-        udpConnector.send(message, null, port);
+        udpConnector.send(message, InetAddress.getByName(ip), port);
 
     }
 
