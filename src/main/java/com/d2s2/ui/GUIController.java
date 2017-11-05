@@ -5,6 +5,8 @@ import com.d2s2.Handler.HandlerImpl;
 import com.d2s2.models.SearchResponseModel;
 import com.d2s2.overlay.route.PeerTableImpl;
 
+import java.io.IOException;
+
 /**
  * Created by Heshan Sandamal on 11/4/2017.
  */
@@ -32,6 +34,14 @@ public class GUIController {
 
     public void searchFile(String fileName){
         handler.searchFile(fileName);
+    }
+
+    public void registerInBS() throws IOException {
+        handler.registerInBS();
+    }
+
+    public void unRegister(){
+        handler.gracefulLeaveRequest();
     }
 
     public void displaySearchResults(SearchResponseModel searchResponseModel){
