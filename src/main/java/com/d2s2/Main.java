@@ -13,7 +13,6 @@ import me.tongfei.progressbar.ProgressBar;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -102,19 +101,19 @@ public class Main {
                 "Hacking for Dummies"
         };
         System.out.println("This node has :");
-        ArrayList<String> fileList=new ArrayList<>();
+        ArrayList<String> fileList = new ArrayList<>();
 
-        int length=fullLocalFileArray.length;
-        for (int i = 0; i < randomWithRange(3,5) ; i++) {
-            String s = fullLocalFileArray[randomWithRange(0, length-1)];
+        int length = fullLocalFileArray.length;
+        for (int i = 0; i < randomWithRange(3, 5); i++) {
+            String s = fullLocalFileArray[randomWithRange(0, length - 1)];
             System.out.println("\t" + s);
             String saltedName = s.replace(" ", "@");
             fileHandler.initializeFileStorage(saltedName);
             fileList.add(saltedName);
         }
 
-        GUIController guiController=GUIController.getInstance();
-        FileSearchInterface fileSearchInterface = new FileSearchInterface(guiController,fileList);
+        GUIController guiController = GUIController.getInstance();
+        FileSearchInterface fileSearchInterface = new FileSearchInterface(guiController, fileList);
         guiController.setUIinstance(fileSearchInterface);
         fileSearchInterface.setVisible(true);
 

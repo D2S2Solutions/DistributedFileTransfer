@@ -52,7 +52,7 @@ public class SearchResponseModel extends AbstractRequestResponseModel {
         final StatTableImpl statTable = StatTableImpl.getInstance();
         final PeerTableImpl peerTable = PeerTableImpl.getInstance();
 
-        GUIController guiController=GUIController.getInstance();
+        GUIController guiController = GUIController.getInstance();
         // Go inside iff ip and the port are equal.
         if (ApplicationConstants.IP.equals(this.ip) && ApplicationConstants.PORT == this.port) {
             System.out.println("Matching file are found at query source node, they are : ");
@@ -60,7 +60,7 @@ public class SearchResponseModel extends AbstractRequestResponseModel {
             guiController.displaySearchResults(this);
         } else {
             System.out.println("Files found @ >>>>> " + this.getIp() + " : " + this.port + " and they are : ");
-            fileList.forEach(s -> System.out.println("\t"+"* " +s));
+            fileList.forEach(s -> System.out.println("\t" + "* " + s));
 
             guiController.displaySearchResults(this);
 

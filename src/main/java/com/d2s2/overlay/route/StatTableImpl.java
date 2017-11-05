@@ -4,21 +4,19 @@ import com.d2s2.models.Node;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.stream.Collectors;
 
 /**
  * Created by Heshan Sandamal on 10/6/2017.
  */
 public class StatTableImpl {
 
-    public static ConcurrentHashMap<String, ConcurrentLinkedQueue<Node>> getStatTable() {
-        return statTable;
-    }
-
     private static ConcurrentHashMap<String, ConcurrentLinkedQueue<Node>> statTable = new ConcurrentHashMap();
     private volatile static StatTableImpl statTableImpl;
-
     private StatTableImpl() {
+    }
+
+    public static ConcurrentHashMap<String, ConcurrentLinkedQueue<Node>> getStatTable() {
+        return statTable;
     }
 
     public static StatTableImpl getInstance() {
@@ -60,7 +58,7 @@ public class StatTableImpl {
     public ConcurrentLinkedQueue<Node> search(String query) {
         ConcurrentLinkedQueue<Node> concurrentLinkedQueues = new ConcurrentLinkedQueue();
         statTable.keySet().stream().filter(s -> s.contains(query)).forEach(s -> {
-            statTable.get(s).stream().filter(z->!concurrentLinkedQueues.contains(z)).forEach(node->concurrentLinkedQueues.add(node));
+            statTable.get(s).stream().filter(z -> !concurrentLinkedQueues.contains(z)).forEach(node -> concurrentLinkedQueues.add(node));
         });
         return concurrentLinkedQueues;
     }

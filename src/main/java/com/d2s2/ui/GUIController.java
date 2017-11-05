@@ -3,7 +3,6 @@ package com.d2s2.ui;
 import com.d2s2.Handler.Handler;
 import com.d2s2.Handler.HandlerImpl;
 import com.d2s2.models.SearchResponseModel;
-import com.d2s2.overlay.route.PeerTableImpl;
 
 import java.io.IOException;
 
@@ -16,11 +15,6 @@ public class GUIController {
     private static FileSearchInterface fileSearchInterface;
     private static Handler handler = new HandlerImpl();
 
-
-    public void setUIinstance(FileSearchInterface fileSearchInterface){
-        GUIController.fileSearchInterface=fileSearchInterface;
-    }
-
     public static GUIController getInstance() {
         if (guiController == null) {
             synchronized (GUIController.class) {
@@ -32,7 +26,11 @@ public class GUIController {
         return guiController;
     }
 
-    public void searchFile(String fileName){
+    public void setUIinstance(FileSearchInterface fileSearchInterface) {
+        GUIController.fileSearchInterface = fileSearchInterface;
+    }
+
+    public void searchFile(String fileName) {
         handler.searchFile(fileName);
     }
 
@@ -40,13 +38,13 @@ public class GUIController {
         handler.registerInBS();
     }
 
-    public void unRegister(){
+    public void unRegister() {
         handler.gracefulLeaveRequest();
     }
 
-    public void displaySearchResults(SearchResponseModel searchResponseModel){
-        fileSearchInterface.addToTable(searchResponseModel.getIp(),searchResponseModel.getPort(),searchResponseModel.getNoOfFiles()
-        ,searchResponseModel.getFileList(),searchResponseModel.getHops());
+    public void displaySearchResults(SearchResponseModel searchResponseModel) {
+        fileSearchInterface.addToTable(searchResponseModel.getIp(), searchResponseModel.getPort(), searchResponseModel.getNoOfFiles()
+                , searchResponseModel.getFileList(), searchResponseModel.getHops());
     }
 
 

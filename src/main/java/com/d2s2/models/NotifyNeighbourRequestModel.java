@@ -27,7 +27,7 @@ public class NotifyNeighbourRequestModel extends AbstractRequestModel {
         neighbourTable.insert(node);
         PeerTableImpl peerTable = PeerTableImpl.getInstance();
         if (peerTable.getPeerNodeList().size() < 10) {
-            if(!peerTable.getPeerNodeList().contains(node)){
+            if (!peerTable.getPeerNodeList().contains(node)) {
                 peerTable.insert(node);
                 try {
                     handler.notifyNeighbours(node.getNodeIp(), node.getPort());
