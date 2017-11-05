@@ -54,7 +54,7 @@ public class FileSearchInterface extends javax.swing.JFrame {
         dtmForSelfFileTable = (DefaultTableModel) selfFilesTable.getModel();
 
         for(int x=0;x<fileList.size();x++){
-            dtmForSelfFileTable.setValueAt(fileList.get(x).toString(),0,x);
+            dtmForSelfFileTable.setValueAt(fileList.get(x).replace("@"," ").toString(),0,x);
         }
     }
 
@@ -66,7 +66,7 @@ public class FileSearchInterface extends javax.swing.JFrame {
         System.out.println("Calling interface " + nodeIp + port);
         String fileNames = "";
         for (String fileName : fileList) {
-            fileNames += fileName + ",";
+            fileNames += fileName.replace("@"," ") + " , ";
         }
         int noOfHops=ApplicationConstants.HOPS-1-ttl;
         if (!this.isValueExistsAtTable(nodeIp, port)) {
