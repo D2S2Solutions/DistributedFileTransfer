@@ -112,9 +112,6 @@ public class MessageTokenizerImpl implements MessageTokenizer {
     private AbstractRequestResponseModel getRegisterResponseMessageOb(StringTokenizer stringTokenizer) {
         int nodeCount = Integer.parseInt(stringTokenizer.nextToken());
         switch (nodeCount) {
-            case 0:
-                System.out.println(" Request is successful but, no other nodes in the system");
-                return null;
             case 9996:
                 System.out.println(" failed, can’t register. BS is full.");
                 return null;
@@ -127,6 +124,8 @@ public class MessageTokenizerImpl implements MessageTokenizer {
             case 9999:
                 System.out.println(" failed, there is some error in the command");
                 return null;
+            case 0:
+                System.out.println(" Request is successful but, no other nodes in the system");
             default:
                 HashSet<Node> nodeset = new HashSet<>();
                 for (int i = 0; i < nodeCount; i++) {

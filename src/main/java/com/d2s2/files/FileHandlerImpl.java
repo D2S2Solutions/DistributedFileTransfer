@@ -33,7 +33,8 @@ public class FileHandlerImpl implements FileHandler {
     }
 
     public List<String> searchLocalFileList(String searchText) {
-        return localFileList.stream().filter(s -> s.contains(searchText)).collect(Collectors.toList());
+
+        return localFileList.stream().filter(s -> s.toLowerCase().contains(searchText.toLowerCase())).collect(Collectors.toList());
     }
 
 }
