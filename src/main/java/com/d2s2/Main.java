@@ -35,13 +35,13 @@ public class Main {
         System.out.println("This node operates in " + ApplicationConstants.IP + " and the port is " + ApplicationConstants.PORT);
         initLocalFileStorage();
         UdpConnector udpConnector = new UDPConnectorImpl();
-
-        Handler handler = new HandlerImpl();
-        try {
-            handler.registerInBS();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//
+//        Handler handler = new HandlerImpl();
+//        try {
+//            handler.registerInBS(BsServerIp);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         new Thread(() -> {
             while (true) {

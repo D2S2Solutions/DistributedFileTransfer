@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public interface Handler {
     public void handleResponse(String message);
 
-    public void registerInBS() throws IOException;
+    public void registerInBS(String bsServerIp) throws IOException;
 
     public void searchFile(String file);
 

@@ -21,9 +21,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class HandlerImpl implements Handler {
 
-    MessageTokenizer messageTokenizer;
-    MessageBuilder messageBuilder;
-    UdpConnector udpConnector;
+    private MessageTokenizer messageTokenizer;
+    private MessageBuilder messageBuilder;
+    private UdpConnector udpConnector;
 
     public HandlerImpl() {
         this.udpConnector = new UDPConnectorImpl();
@@ -41,10 +41,10 @@ public class HandlerImpl implements Handler {
     }
 
     @Override
-    public void registerInBS() throws IOException {
+    public void registerInBS(String bsServerIp) throws IOException {
         RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT, ApplicationConstants.USER_NAME);
         String message = messageBuilder.buildRegisterRequestMessage(registrationRequestModel);
-        udpConnector.send(message, null, 55555);
+        udpConnector.send(message, InetAddress.getByName(bsServerIp), 55555);
     }
 
     @Override
