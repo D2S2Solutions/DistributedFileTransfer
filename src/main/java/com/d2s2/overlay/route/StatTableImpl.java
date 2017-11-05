@@ -2,6 +2,7 @@ package com.d2s2.overlay.route;
 
 import com.d2s2.models.Node;
 
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -48,7 +49,9 @@ public class StatTableImpl {
     }
 
     public void remove(Node node) {
-        //statTable.remove()
+        for (ConcurrentLinkedQueue<Node> next : statTable.values()) {
+            next.remove(node);
+        }
     }
 
     public ConcurrentLinkedQueue<Node> get(String fileName) {

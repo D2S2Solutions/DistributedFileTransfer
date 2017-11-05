@@ -114,13 +114,13 @@ public class FileSearchInterface extends javax.swing.JFrame {
 
     public synchronized void addToTable(String nodeIp, int port, int fileCount, HashSet<String> fileList, int ttl) {
         System.out.println("Calling interface " + nodeIp + port);
-        String fileNames = "";
+        StringBuilder fileNames = new StringBuilder();
         for (String fileName : fileList) {
-            fileNames += fileName.replace("@", " ") + " , ";
+            fileNames.append(fileName.replace("@", " ")).append(" , ");
         }
         int noOfHops = ApplicationConstants.HOPS - 1 - ttl;
         if (!this.isValueExistsAtTable(nodeIp, port)) {
-            this.dtmForSearchResultTable.addRow(new Object[]{nodeIp, port, fileCount, fileNames, noOfHops});
+            this.dtmForSearchResultTable.addRow(new Object[]{nodeIp, port, fileCount, fileNames.toString(), noOfHops});
         }
     }
 

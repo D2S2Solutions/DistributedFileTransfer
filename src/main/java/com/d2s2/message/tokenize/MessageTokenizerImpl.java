@@ -40,15 +40,21 @@ public class MessageTokenizerImpl implements MessageTokenizer {
                 return this.getNeighbourResponseMessageOb(stringTokenizer);
 
             case MessageConstants.LEAVE_MESSAGE:
-                System.out.println("LEAVE MESSAGE RECEIVED");
-                return null;
-            //return this.getNeighbourResponseMessageOb(stringTokenizer);
+                return this.getNeighbourLeaveResponseOb(stringTokenizer);
+
 
 
         }
         return null;
 
 
+    }
+
+    private AbstractRequestResponseModel getNeighbourLeaveResponseOb(StringTokenizer stringTokenizer) {
+        String ip = stringTokenizer.nextToken();
+        String port = stringTokenizer.nextToken();
+        GracefulLeaveBootstrapServerResponseModel gracefulLeaveBootstrapServerResponseModel = new GracefulLeaveBootstrapServerResponseModel(ip,port);
+        return gracefulLeaveBootstrapServerResponseModel;
     }
 
     private AbstractRequestResponseModel getHeartBeatSignalOb(StringTokenizer stringTokenizer) {

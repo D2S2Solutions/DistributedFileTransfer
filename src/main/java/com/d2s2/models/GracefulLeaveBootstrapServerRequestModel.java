@@ -18,6 +18,6 @@ public class GracefulLeaveBootstrapServerRequestModel extends AbstractRequestMod
 
     @Override
     public void handle() {
-        System.out.println("SUCCESSFULLY UNREG from the bootstrap server");
+
     }
 }
