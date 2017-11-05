@@ -29,10 +29,11 @@ public class UDPConnectorImpl implements UdpConnector {
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
+        executorService = Executors.newFixedThreadPool(30);
         handler = new HandlerImpl();
     }
 
-    private ExecutorService executorService;
+    private static ExecutorService executorService;
 
 
 //    @Override
@@ -54,7 +55,6 @@ public class UDPConnectorImpl implements UdpConnector {
         DatagramPacket incomingPacket = new DatagramPacket(bufferIncoming, bufferIncoming.length);
         socket.receive(incomingPacket);
         String incomingMessage = new String(bufferIncoming);
-        executorService = Executors.newFixedThreadPool(10);
         return (Future<String>) executorService.submit(() -> handler.handleResponse(incomingMessage));
     }
 
