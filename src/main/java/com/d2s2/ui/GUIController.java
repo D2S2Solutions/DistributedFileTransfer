@@ -4,7 +4,6 @@ import com.d2s2.Handler.Handler;
 import com.d2s2.Handler.HandlerImpl;
 import com.d2s2.models.SearchResponseModel;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -62,7 +61,8 @@ public class GUIController {
         fileSearchInterface.addToTable(searchResponseModel.getIp(), searchResponseModel.getPort(), searchResponseModel.getNoOfFiles()
                 , searchResponseModel.getFileList(), searchResponseModel.getHops());
     }
-    public void displayMessage(String message){
+
+    public void displayMessage(String message) {
         fileSearchInterface.showMessage(message);
     }
 

@@ -4,6 +4,7 @@ import com.d2s2.ui.GUIController;
 
 public class GracefulLeaveBootstrapServerResponseModel extends AbstractRequestResponseModel {
     private int status;
+
     public GracefulLeaveBootstrapServerResponseModel(int value) {
         this.status = value;
     }

@@ -36,7 +36,7 @@ public class MessageBuilderImpl implements MessageBuilder {
     public String buildLeaveMessage(GracefulLeaveRequestModel gracefulLeaveRequestModel) {
         String ip = gracefulLeaveRequestModel.getIp();
         int port = gracefulLeaveRequestModel.getPort();
-        int length = MessageConstants.LEAVE_MESSAGE.length() +ip.length() + String.valueOf(port).length() + 3 + 4;
+        int length = MessageConstants.LEAVE_MESSAGE.length() + ip.length() + String.valueOf(port).length() + 3 + 4;
         final String requestFinalLength = String.format("%04d", length);
         return requestFinalLength + " " + MessageConstants.LEAVE_MESSAGE + " " + ip + " " + port;
     }

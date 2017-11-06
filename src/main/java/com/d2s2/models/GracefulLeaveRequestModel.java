@@ -17,7 +17,7 @@ public class GracefulLeaveRequestModel extends AbstractRequestModel {
         Node node = new Node(this.ip, this.port);
         boolean peerTableRemoved = peerTable.remove(node);
         Boolean statTableRemoved = StatTableImpl.getInstance().remove(node);
-        if (statTableRemoved || peerTableRemoved){
+        if (statTableRemoved || peerTableRemoved) {
             GUIController.getInstance().displayMessage("A neighbour left the system " + ApplicationConstants.PORT);
         }
     }

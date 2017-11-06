@@ -385,11 +385,11 @@ public class FileSearchInterface extends javax.swing.JFrame {
     }//GEN-LAST:event_registerButtonActionPerformed
 
     public void showMessage(String message) {
-        JOptionPane.showMessageDialog(this,message);
+        JOptionPane.showMessageDialog(this, message);
     }
 
     public String showInputDialog(String message) {
-        return JOptionPane.showInputDialog(this,message);
+        return JOptionPane.showInputDialog(this, message);
     }
     // End of variables declaration//GEN-END:variables
 }

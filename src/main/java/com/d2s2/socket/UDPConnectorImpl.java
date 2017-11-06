@@ -22,7 +22,7 @@ public class UDPConnectorImpl implements UdpConnector {
         try {
             socket = new DatagramSocket(ApplicationConstants.PORT);
             DatagramSocket socket1 = new DatagramSocket();
-            socket1.connect(InetAddress.getByName("10.10.29.237"),ApplicationConstants.PORT);
+            socket1.connect(InetAddress.getByName("10.10.29.237"), ApplicationConstants.PORT);
             ApplicationConstants.IP = socket1.getLocalAddress().getHostAddress();
         } catch (SocketException e) {
             e.printStackTrace();

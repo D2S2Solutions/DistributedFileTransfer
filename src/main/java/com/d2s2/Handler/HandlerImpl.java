@@ -81,10 +81,10 @@ public class HandlerImpl implements Handler {
         }
         //Next, Notify Neighbours of our departure
         neighbourNodeList.forEach(node -> {
-            GracefulLeaveRequestModel gracefulLeaveRequestModel = new GracefulLeaveRequestModel(ApplicationConstants.IP,ApplicationConstants.PORT);
+            GracefulLeaveRequestModel gracefulLeaveRequestModel = new GracefulLeaveRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT);
             String neighbourLeaveMessage = messageBuilder.buildLeaveMessage(gracefulLeaveRequestModel);
             try {
-                udpConnector.send(neighbourLeaveMessage, InetAddress.getByName(node.getNodeIp()),node.getPort());
+                udpConnector.send(neighbourLeaveMessage, InetAddress.getByName(node.getNodeIp()), node.getPort());
             } catch (IOException e) {
                 e.printStackTrace();
             }

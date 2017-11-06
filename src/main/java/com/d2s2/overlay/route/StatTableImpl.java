@@ -53,7 +53,7 @@ public class StatTableImpl {
         for (Iterator<ConcurrentLinkedQueue<Node>> iterator = statTable.values().iterator(); iterator.hasNext(); ) {
             ConcurrentLinkedQueue<Node> next = iterator.next();
             boolean nowRemoved = next.remove(node);
-            if (!isElementRemoved && nowRemoved){
+            if (!isElementRemoved && nowRemoved) {
                 isElementRemoved = true;
             }
         }
