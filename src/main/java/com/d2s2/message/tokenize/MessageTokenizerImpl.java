@@ -39,22 +39,26 @@ public class MessageTokenizerImpl implements MessageTokenizer {
             case MessageConstants.NEIGHBOUR_MESSAGE:
                 return this.getNeighbourResponseMessageOb(stringTokenizer);
 
-            case MessageConstants.LEAVE_MESSAGE:
+            case MessageConstants.LEAVEOK_MESSAGE:
                 return this.getNeighbourLeaveResponseOb(stringTokenizer);
 
-
-
+            case MessageConstants.LEAVE_MESSAGE:
+                return this.getNeighbourLeaveMessageOb(stringTokenizer);
         }
         return null;
+    }
 
-
+    private AbstractRequestResponseModel getNeighbourLeaveMessageOb(StringTokenizer stringTokenizer) {
+        String ip = stringTokenizer.nextToken();
+        int port = Integer.parseInt(stringTokenizer.nextToken());
+        GracefulLeaveRequestModel gracefulLeaveRequestModel = new GracefulLeaveRequestModel(ip,port);
+        return gracefulLeaveRequestModel;
     }
 
     private AbstractRequestResponseModel getNeighbourLeaveResponseOb(StringTokenizer stringTokenizer) {
-        String ip = stringTokenizer.nextToken();
-        String port = stringTokenizer.nextToken();
-        GracefulLeaveBootstrapServerResponseModel gracefulLeaveBootstrapServerResponseModel = new GracefulLeaveBootstrapServerResponseModel(ip,port);
-        return gracefulLeaveBootstrapServerResponseModel;
+        String status = stringTokenizer.nextToken();
+        GracefulLeaveResponseModel gracefulLeaveResponseModel = new GracefulLeaveResponseModel(Integer.valueOf(status));
+        return gracefulLeaveResponseModel;
     }
 
     private AbstractRequestResponseModel getHeartBeatSignalOb(StringTokenizer stringTokenizer) {
@@ -98,7 +102,7 @@ public class MessageTokenizerImpl implements MessageTokenizer {
     private AbstractRequestResponseModel getUnregisterResponseMessageOb(StringTokenizer stringTokenizer) {
         String token = stringTokenizer.nextToken();
         if (token != null) {
-            return new UnregistrationResponseModel(Integer.parseInt(token));
+            return new GracefulLeaveBootstrapServerResponseModel(Integer.parseInt(token));
         } else {
             return null;
         }

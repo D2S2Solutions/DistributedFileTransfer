@@ -9,20 +9,22 @@ import com.d2s2.models.*;
  */
 public class MessageBuilderImpl implements MessageBuilder {
 
-    private static final String IP_ADDRESS = "";
-    private static final String PORT = "";
-
-
     @Override
     public String buildRegisterRequestMessage(RegistrationRequestModel model) {
-        int length = MessageConstants.REG_MESSAGE.length() + model.getIp().length() + String.valueOf(model.getPort()).length() + model.getUserName().length() + 4 + 4;
+        int length = MessageConstants.REG_MESSAGE.length() + model.getIp().length() + String.valueOf(model.getPort()).length()
+                + model.getUserName().length() + 4 + 4;
         final String requestFinalLength = String.format("%04d", length);
         return requestFinalLength + " " + MessageConstants.REG_MESSAGE + " " + model.getIp() + " " + model.getPort() + " " + model.getUserName();
     }
 
     @Override
-    public String buildUnregisterRequestMessage() {
-        return null;
+    public String buildUnregisterRequestMessage(GracefulLeaveBootstrapServerRequestModel gracefulLeaveBootstrapServerRequestModel) {
+        String ip = gracefulLeaveBootstrapServerRequestModel.getIp();
+        int port = gracefulLeaveBootstrapServerRequestModel.getPort();
+        String userName = gracefulLeaveBootstrapServerRequestModel.getUserName();
+        int length = MessageConstants.UNREG_MESSAGE.length() + ip.length() + String.valueOf(port).length() + userName.length() + 4 + 4;
+        final String requestFinalLength = String.format("%04d", length);
+        return requestFinalLength + " " + MessageConstants.UNREG_MESSAGE + " " + ip + " " + port + " " + userName;
     }
 
     @Override
@@ -31,8 +33,12 @@ public class MessageBuilderImpl implements MessageBuilder {
     }
 
     @Override
-    public String buildLeaveMessage() {
-        return null;
+    public String buildLeaveMessage(GracefulLeaveRequestModel gracefulLeaveRequestModel) {
+        String ip = gracefulLeaveRequestModel.getIp();
+        int port = gracefulLeaveRequestModel.getPort();
+        int length = MessageConstants.LEAVE_MESSAGE.length() +ip.length() + String.valueOf(port).length() + 3 + 4;
+        final String requestFinalLength = String.format("%04d", length);
+        return requestFinalLength + " " + MessageConstants.LEAVE_MESSAGE + " " + ip + " " + port;
     }
 
     @Override

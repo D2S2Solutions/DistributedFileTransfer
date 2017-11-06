@@ -1,23 +1,24 @@
 package com.d2s2.models;
 
+import com.d2s2.constants.ApplicationConstants;
+import com.d2s2.overlay.route.PeerTableImpl;
+import com.d2s2.overlay.route.StatTableImpl;
+import com.d2s2.ui.GUIController;
+
 public class GracefulLeaveRequestModel extends AbstractRequestModel {
 
-    private String userName;
-
-    public GracefulLeaveRequestModel(String ip, int port, String userName) {
+    public GracefulLeaveRequestModel(String ip, int port) {
         super(ip, port);
-        this.userName = userName;
-    }
-
-    @Override
-    public String toString() {
-        int length = ip.length() + String.valueOf(port).length() + userName.length() + 4 + 4;
-        final String requestFinalLength = String.format("%04d", length);
-        return requestFinalLength + " LEAVE " + ip + " " + port + " ";
     }
 
     @Override
     public void handle() {
-
+        PeerTableImpl peerTable = PeerTableImpl.getInstance();
+        Node node = new Node(this.ip, this.port);
+        boolean peerTableRemoved = peerTable.remove(node);
+        Boolean statTableRemoved = StatTableImpl.getInstance().remove(node);
+        if (statTableRemoved || peerTableRemoved){
+            GUIController.getInstance().displayMessage("A neighbour left the system " + ApplicationConstants.PORT);
+        }
     }
 }

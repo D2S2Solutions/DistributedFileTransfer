@@ -40,7 +40,7 @@ public class GUIController {
     }
 
     public void registerInBS() throws IOException {
-        String BsServerIp = fileSearchInterface.showInputDialog("Error in IP address format");
+        String BsServerIp = fileSearchInterface.showInputDialog("Enter Bootstrap server IP");
         if (BsServerIp == null) {
             return;
         }

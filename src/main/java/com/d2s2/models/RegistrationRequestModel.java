@@ -10,16 +10,7 @@ public class RegistrationRequestModel extends AbstractRequestModel {
     }
 
     @Override
-    public String toString() {
-        int length = ip.length() + String.valueOf(port).length() + userName.length() + 4;
-        final String requestFinalLength = String.format("%04d", length);
-        return requestFinalLength + " REG " + ip + " " + port + " " + userName;
-    }
-
-    @Override
     public void handle() {
-
-
     }
 
     public String getUserName() {

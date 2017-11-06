@@ -29,20 +29,6 @@ public class Main {
 
 
     public static void main(String[] args) throws ExecutionException, InterruptedException, UnknownHostException, SocketException {
-        Enumeration enumeration = NetworkInterface.getNetworkInterfaces();
-        while(enumeration.hasMoreElements())
-        {
-            NetworkInterface n = (NetworkInterface) enumeration.nextElement();
-            Enumeration ee = n.getInetAddresses();
-            while (ee.hasMoreElements())
-            {
-                InetAddress i = (InetAddress) ee.nextElement();
-                if (i.toString().startsWith("10.10")){
-                    ApplicationConstants.IP = i.getHostAddress();
-                }
-                System.out.println(i.getHostAddress());
-            }
-        }
         ProgressBar pb = new ProgressBar("Registering in BS server||", 100);
         pb.start();
         pb.stepTo(35);
@@ -135,34 +121,4 @@ public class Main {
 
     }
 
-
-//    public static void performGracefulDeparture(UdpConnector udpConnector) throws IOException {
-//        GracefulLeaveRequestModel gracefulLeaveRequest = new MessageBuilderImpl.GracefulLeaveRequestMessageBuilder()
-//                .setIp("129.82.123.45")
-//                .setPort(5002)
-//                .setUserName("--")
-//                .build();
-//        Set<Node> peerNodeList = PeerTableImpl.getInstance().getPeerNodeList();
-//        peerNodeList.forEach(node -> {
-//            try {
-//                udpConnector.send(gracefulLeaveRequest.toString(), InetAddress.getByAddress(node.getNodeIp().getBytes()), node.getPort());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        });
-//
-//        //Say goodbye to BS server
-//
-//        UnregistrationRequestModel unregistrationRequest = new MessageBuilderImpl.UnregisterRequestMessageBuilder()
-//                .setIp("129.82.123.45")
-//                .setPort(5002)
-//                .setUserName("--")
-//                .build();
-//        udpConnector.send(unregistrationRequest.toString(), InetAddress.getLocalHost(), 55555);
-//
-//        ((UDPConnectorImpl) udpConnector).killExecutorService();
-//        System.exit(0);
-//
-//
-//    }
 }

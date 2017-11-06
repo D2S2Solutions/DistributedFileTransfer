@@ -48,10 +48,16 @@ public class StatTableImpl {
 
     }
 
-    public void remove(Node node) {
-        for (ConcurrentLinkedQueue<Node> next : statTable.values()) {
-            next.remove(node);
+    public Boolean remove(Node node) {
+        Boolean isElementRemoved = false;
+        for (Iterator<ConcurrentLinkedQueue<Node>> iterator = statTable.values().iterator(); iterator.hasNext(); ) {
+            ConcurrentLinkedQueue<Node> next = iterator.next();
+            boolean nowRemoved = next.remove(node);
+            if (!isElementRemoved && nowRemoved){
+                isElementRemoved = true;
+            }
         }
+        return isElementRemoved;
     }
 
     public ConcurrentLinkedQueue<Node> get(String fileName) {
