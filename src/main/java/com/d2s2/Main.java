@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -101,10 +102,18 @@ public class Main {
         };
         System.out.println("This node has :");
         ArrayList<String> fileList = new ArrayList<>();
-
+        ArrayList<Integer> randomList = new ArrayList<>();
         int length = fullLocalFileArray.length;
         for (int i = 0; i < randomWithRange(3, 5); i++) {
-            String s = fullLocalFileArray[randomWithRange(0, length - 1)];
+            int random = randomWithRange(0, length - 1);
+            boolean contains = randomList.contains(random);
+            if (contains){
+                --i;
+                continue;
+            }else {
+                randomList.add(random);
+            }
+            String s = fullLocalFileArray[random];
             System.out.println("\t" + s);
             String saltedName = s.replace(" ", "@");
             fileHandler.initializeFileStorage(saltedName);
