@@ -5,10 +5,7 @@ import com.d2s2.Handler.HandlerImpl;
 import com.d2s2.constants.ApplicationConstants;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
+import java.net.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -24,7 +21,12 @@ public class UDPConnectorImpl implements UdpConnector {
     static {
         try {
             socket = new DatagramSocket(ApplicationConstants.PORT);
+            DatagramSocket socket1 = new DatagramSocket();
+            socket1.connect(InetAddress.getByName("10.10.29.237"),ApplicationConstants.PORT);
+            ApplicationConstants.IP = socket1.getLocalAddress().getHostAddress();
         } catch (SocketException e) {
+            e.printStackTrace();
+        } catch (UnknownHostException e) {
             e.printStackTrace();
         }
         handler = new HandlerImpl();
@@ -53,10 +55,7 @@ public class UDPConnectorImpl implements UdpConnector {
         socket.receive(incomingPacket);
         String incomingMessage = new String(bufferIncoming);
         executorService = Executors.newFixedThreadPool(10);
-
-        Future<String> future = (Future<String>) executorService.submit(() -> handler.handleResponse(incomingMessage));
-
-        return future;
+        return (Future<String>) executorService.submit(() -> handler.handleResponse(incomingMessage));
     }
 
     public void killExecutorService() {

@@ -3,6 +3,7 @@ package com.d2s2.models;
 import com.d2s2.Handler.Handler;
 import com.d2s2.Handler.HandlerImpl;
 import com.d2s2.overlay.route.PeerTableImpl;
+import com.d2s2.ui.GUIController;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -32,5 +33,7 @@ public class RegistrationResponseModel extends AbstractRequestResponseModel {
                 io.printStackTrace();
             }
         });
+        GUIController guiController = GUIController.getInstance();
+        guiController.displayMessage("Successfully registered");
     }
 }

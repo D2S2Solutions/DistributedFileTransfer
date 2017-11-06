@@ -11,6 +11,7 @@ package com.d2s2.ui;
 
 import com.d2s2.constants.ApplicationConstants;
 
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -382,5 +383,13 @@ public class FileSearchInterface extends javax.swing.JFrame {
     private void registerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_registerButtonActionPerformed
+
+    public void showMessage(String message) {
+        JOptionPane.showMessageDialog(this,message);
+    }
+
+    public String showInputDialog(String message) {
+        return JOptionPane.showInputDialog(this,message);
+    }
     // End of variables declaration//GEN-END:variables
 }

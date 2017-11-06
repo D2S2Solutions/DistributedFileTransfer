@@ -40,7 +40,7 @@ public class GUIController {
     }
 
     public void registerInBS() throws IOException {
-        String BsServerIp = JOptionPane.showInputDialog("Enter BS server IP");
+        String BsServerIp = fileSearchInterface.showInputDialog("Error in IP address format");
         if (BsServerIp == null) {
             return;
         }
@@ -49,7 +49,7 @@ public class GUIController {
         if (matcher.matches()) {
             handler.registerInBS(BsServerIp);
         } else {
-            JOptionPane.showMessageDialog(null, "Error in IP address format", "Error", JOptionPane.ERROR_MESSAGE);
+            fileSearchInterface.showMessage("Error in IP address format");
             registerInBS();
         }
     }
@@ -61,6 +61,9 @@ public class GUIController {
     public void displaySearchResults(SearchResponseModel searchResponseModel) {
         fileSearchInterface.addToTable(searchResponseModel.getIp(), searchResponseModel.getPort(), searchResponseModel.getNoOfFiles()
                 , searchResponseModel.getFileList(), searchResponseModel.getHops());
+    }
+    public void displayMessage(String message){
+        fileSearchInterface.showMessage(message);
     }
 
 

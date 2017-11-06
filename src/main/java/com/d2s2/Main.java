@@ -10,7 +10,12 @@ import com.d2s2.ui.GUIController;
 import me.tongfei.progressbar.ProgressBar;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -23,8 +28,21 @@ import static com.d2s2.constants.ApplicationConstants.randomWithRange;
 public class Main {
 
 
-    public static void main(String[] args) throws ExecutionException, InterruptedException {
-
+    public static void main(String[] args) throws ExecutionException, InterruptedException, UnknownHostException, SocketException {
+        Enumeration enumeration = NetworkInterface.getNetworkInterfaces();
+        while(enumeration.hasMoreElements())
+        {
+            NetworkInterface n = (NetworkInterface) enumeration.nextElement();
+            Enumeration ee = n.getInetAddresses();
+            while (ee.hasMoreElements())
+            {
+                InetAddress i = (InetAddress) ee.nextElement();
+                if (i.toString().startsWith("10.10")){
+                    ApplicationConstants.IP = i.getHostAddress();
+                }
+                System.out.println(i.getHostAddress());
+            }
+        }
         ProgressBar pb = new ProgressBar("Registering in BS server||", 100);
         pb.start();
         pb.stepTo(35);
