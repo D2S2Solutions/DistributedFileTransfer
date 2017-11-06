@@ -1,5 +1,7 @@
 package com.d2s2.models;
 
+import com.d2s2.ui.GUIController;
+
 /**
  * Created by Heshan Sandamal on 10/24/2017.
  */
@@ -13,6 +15,13 @@ public class UnregistrationResponseModel extends AbstractRequestResponseModel {
 
     @Override
     public void handle() {
-        System.out.println(this.status == 0 ? "Successfully unregistered" : "Error while unregistering");
+        GUIController guiController = GUIController.getInstance();
+        if (this.status == 0) {
+            System.out.println("Successfully unregistered");
+            guiController.displayMessage("Successfully registered");
+        } else {
+            System.out.println("Error while unregistering");
+            guiController.displayMessage("Error while unregistering");
+        }
     }
 }
