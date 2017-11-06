@@ -95,10 +95,10 @@ public class MessageBuilderImpl implements MessageBuilder {
     }
 
     @Override
-    public String buildLeaveOkToSourceMessage(GracefulLeaveRequestModel gracefulLeaveRequestModel) {
-        int length = MessageConstants.LEAVEOK_MESSAGE.length() + 4+ 3;
+    public String buildLeaveOkToSourceMessage(GracefulLeaveResponseModel gracefulLeaveResponseModel) {
+        int length = MessageConstants.LEAVEOK_MESSAGE.length()+ ApplicationConstants.IP.length() + String.valueOf(ApplicationConstants.PORT).length() + String.valueOf(gracefulLeaveResponseModel.getStatus()).length() + 4+ 4;
         final String requestFinalLength = String.format("%04d", length);
-        return requestFinalLength + " " + MessageConstants.LEAVEOK_MESSAGE + " " + "0";
+        return requestFinalLength + " " + MessageConstants.LEAVEOK_MESSAGE + " " + ApplicationConstants.IP +" "+ ApplicationConstants.PORT + " " + gracefulLeaveResponseModel.getStatus();
     }
 
     @Override

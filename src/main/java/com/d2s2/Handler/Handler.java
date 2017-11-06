@@ -1,9 +1,6 @@
 package com.d2s2.Handler;
 
-import com.d2s2.models.GracefulLeaveRequestModel;
-import com.d2s2.models.Node;
-import com.d2s2.models.SearchRequestModel;
-import com.d2s2.models.SearchResponseModel;
+import com.d2s2.models.*;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -27,5 +24,5 @@ public interface Handler {
 
     void gracefulLeaveRequest();
 
-    void sendLeaveOkToSource(GracefulLeaveRequestModel node) throws IOException;
+    void sendLeaveOkToSource(GracefulLeaveResponseModel gracefulLeaveResponseModel) throws IOException;
 }

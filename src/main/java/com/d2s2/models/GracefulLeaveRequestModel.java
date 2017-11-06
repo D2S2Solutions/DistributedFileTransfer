@@ -26,7 +26,7 @@ public class GracefulLeaveRequestModel extends AbstractRequestModel {
         Boolean statTableRemoved = StatTableImpl.getInstance().remove(node);
         if (statTableRemoved || peerTableRemoved) {
             try {
-                handler.sendLeaveOkToSource(this);
+                handler.sendLeaveOkToSource(new GracefulLeaveResponseModel(ip,port,0));
             } catch (IOException e) {
                 e.printStackTrace();
             }

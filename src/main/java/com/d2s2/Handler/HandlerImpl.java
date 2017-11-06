@@ -93,9 +93,9 @@ public class HandlerImpl implements Handler {
     }
 
     @Override
-    public void sendLeaveOkToSource(GracefulLeaveRequestModel gracefulLeaveRequestModel) throws IOException {
-        String buildLeaveOkToSourceMessage = messageBuilder.buildLeaveOkToSourceMessage(gracefulLeaveRequestModel);
-        udpConnector.send(buildLeaveOkToSourceMessage,InetAddress.getByName(gracefulLeaveRequestModel.getIp()),gracefulLeaveRequestModel.getPort());
+    public void sendLeaveOkToSource(GracefulLeaveResponseModel gracefulLeaveResponseModel) throws IOException {
+        String buildLeaveOkToSourceMessage = messageBuilder.buildLeaveOkToSourceMessage(gracefulLeaveResponseModel);
+        udpConnector.send(buildLeaveOkToSourceMessage,InetAddress.getByName(gracefulLeaveResponseModel.getIp()),gracefulLeaveResponseModel.getPort());
     }
 
     @Override
