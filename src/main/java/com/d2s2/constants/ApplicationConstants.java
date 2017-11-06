@@ -9,8 +9,14 @@ public class ApplicationConstants {
     public static final int PORT = randomWithRange(45000, 55000);
     public static final String USER_NAME = "vin";
     public static final int HOPS = 10;
-
+    public static final int BS_SERVER_PORT = 55555;
     public static final int HEART_BEAT_THRESHOLD = 10;
+    public static final String IP_ADDRESS_PATTERN =
+            "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+                    "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+                    "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+                    "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
+    public static String BootstrapServerIp = "";
 
     public static int randomWithRange(int min, int max) {
         int range = (max - min) + 1;

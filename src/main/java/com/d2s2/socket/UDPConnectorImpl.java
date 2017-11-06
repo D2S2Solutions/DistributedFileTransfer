@@ -40,8 +40,7 @@ public class UDPConnectorImpl implements UdpConnector {
 
     @Override
     public void send(String message, InetAddress receiverAddress, int port) throws IOException {
-        byte[] buffer = message.toString().getBytes();
-        receiverAddress = InetAddress.getLocalHost();
+        byte[] buffer = message.getBytes();
         DatagramPacket packet = new DatagramPacket(
                 buffer, buffer.length, receiverAddress, port);
         socket.send(packet);
@@ -53,7 +52,6 @@ public class UDPConnectorImpl implements UdpConnector {
         DatagramPacket incomingPacket = new DatagramPacket(bufferIncoming, bufferIncoming.length);
         socket.receive(incomingPacket);
         String incomingMessage = new String(bufferIncoming);
-
         executorService = Executors.newFixedThreadPool(10);
 
         Future<String> future = (Future<String>) executorService.submit(() -> handler.handleResponse(incomingMessage));

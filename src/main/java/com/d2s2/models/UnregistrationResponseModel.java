@@ -5,7 +5,7 @@ package com.d2s2.models;
  */
 public class UnregistrationResponseModel extends AbstractRequestResponseModel {
 
-    int status;
+    private int status;
 
     public UnregistrationResponseModel(int status) {
         this.status = status;
@@ -13,12 +13,6 @@ public class UnregistrationResponseModel extends AbstractRequestResponseModel {
 
     @Override
     public void handle() {
-
-        if (this.status == 0) {
-            System.out.println("Successfully unregistered");
-        } else {
-            System.out.println("Error while unregistering");
-        }
-
+        System.out.println(this.status == 0 ? "Successfully unregistered" : "Error while unregistering");
     }
 }

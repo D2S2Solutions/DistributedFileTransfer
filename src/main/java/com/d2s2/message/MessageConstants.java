@@ -24,7 +24,6 @@ public class MessageConstants {
     public static final String NEIGHBOUROK_MESSAGE = "NEIGHBOUROK";
 
 
-
     public static final String HEARTBEAT_MESSAGE = "HBEAT";
 
 }

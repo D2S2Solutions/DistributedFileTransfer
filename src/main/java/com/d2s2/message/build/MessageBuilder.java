@@ -1,10 +1,6 @@
 package com.d2s2.message.build;
 
-import com.d2s2.models.NotifyNeighbourRequestModel;
-import com.d2s2.models.HeartBeatSignalModel;
-import com.d2s2.models.RegistrationRequestModel;
-import com.d2s2.models.SearchRequestModel;
-import com.d2s2.models.SearchResponseModel;
+import com.d2s2.models.*;
 
 /**
  * Created by Heshan Sandamal on 10/6/2017.

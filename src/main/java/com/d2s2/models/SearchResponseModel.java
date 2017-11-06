@@ -3,6 +3,7 @@ package com.d2s2.models;
 import com.d2s2.constants.ApplicationConstants;
 import com.d2s2.overlay.route.PeerTableImpl;
 import com.d2s2.overlay.route.StatTableImpl;
+import com.d2s2.ui.GUIController;
 
 import java.util.HashSet;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -51,35 +52,36 @@ public class SearchResponseModel extends AbstractRequestResponseModel {
         final StatTableImpl statTable = StatTableImpl.getInstance();
         final PeerTableImpl peerTable = PeerTableImpl.getInstance();
 
-        System.out.println("Files found @ "+ this.getIp() + " : "+this.port +" -- " + this.fileList);
+        GUIController guiController = GUIController.getInstance();
+        // Go inside iff ip and the port are equal.
+        if (ApplicationConstants.IP.equals(this.ip) && ApplicationConstants.PORT == this.port) {
+            System.out.println("Matching file are found at query source node, they are : ");
+            fileList.stream().map(s -> s.replace("@", " ")).forEach(System.out::println);
+            guiController.displaySearchResults(this);
+        } else {
+            System.out.println("Files found @ >>>>> " + this.getIp() + " : " + this.port + " and they are : ");
+            fileList.forEach(s -> System.out.println("\t" + "* " + s));
 
-        if(!ApplicationConstants.IP.equals(this.ip) && ApplicationConstants.PORT!=this.port){
+            guiController.displaySearchResults(this);
 
             Node node = new Node(this.ip, this.port);
-
             fileList.forEach((fileName) -> {
-
                 ConcurrentLinkedQueue<Node> concurrentLinkedQueue = statTable.get(fileName);
-
-                if(concurrentLinkedQueue==null){
-                    concurrentLinkedQueue= new ConcurrentLinkedQueue<>();
-                    statTable.insert(fileName,concurrentLinkedQueue);
+                if (concurrentLinkedQueue == null) {
+                    concurrentLinkedQueue = new ConcurrentLinkedQueue<>();
+                    statTable.insert(fileName, concurrentLinkedQueue);
                 }
-
-                if(!concurrentLinkedQueue.contains(node)){
+                if (!concurrentLinkedQueue.contains(node)) {
                     concurrentLinkedQueue.add(node);
                 }
-
-
             });
 
-            if(!peerTable.getPeerNodeList().contains(node)){
+            System.out.println("Stat Table ");
+            System.out.println(statTable.getStatTable());
+
+            if (!peerTable.getPeerNodeList().contains(node)) {
                 peerTable.insert(node);
             }
         }
-
-        PeerTableImpl.getInstance().printPeerTable();
-
-
     }
 }

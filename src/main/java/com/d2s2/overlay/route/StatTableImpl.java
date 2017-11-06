@@ -2,6 +2,7 @@ package com.d2s2.overlay.route;
 
 import com.d2s2.models.Node;
 
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -14,6 +15,10 @@ public class StatTableImpl {
     private volatile static StatTableImpl statTableImpl;
 
     private StatTableImpl() {
+    }
+
+    public static ConcurrentHashMap<String, ConcurrentLinkedQueue<Node>> getStatTable() {
+        return statTable;
     }
 
     public static StatTableImpl getInstance() {
@@ -38,26 +43,32 @@ public class StatTableImpl {
         statTable.put("SECOND", nodes);
     }
 
-    public void insert(String fileName,ConcurrentLinkedQueue<Node> queue) {
-        this.statTable.put(fileName,queue);
+    public void insert(String fileName, ConcurrentLinkedQueue<Node> queue) {
+        this.statTable.put(fileName, queue);
+
     }
 
     public void remove(Node node) {
-        //statTable.remove()
+        for (ConcurrentLinkedQueue<Node> next : statTable.values()) {
+            next.remove(node);
+        }
     }
 
     public ConcurrentLinkedQueue<Node> get(String fileName) {
         return this.statTable.get(fileName);
     }
 
-    public ConcurrentLinkedQueue search(String query) {
-        ConcurrentLinkedQueue concurrentLinkedQueues = new ConcurrentLinkedQueue();
-        statTable.keySet().stream().filter(s -> s.contains(query)).forEach(s -> concurrentLinkedQueues.add(statTable.get(s)));
+
+    public ConcurrentLinkedQueue<Node> search(String query) {
+        ConcurrentLinkedQueue<Node> concurrentLinkedQueues = new ConcurrentLinkedQueue();
+        statTable.keySet().stream().filter(s -> s.contains(query)).forEach(s -> {
+            statTable.get(s).stream().filter(z -> !concurrentLinkedQueues.contains(z)).forEach(node -> concurrentLinkedQueues.add(node));
+        });
         return concurrentLinkedQueues;
     }
 
-    public void printStatTable(){
-//        statTable.fo
-    }
 
+    public ConcurrentHashMap<String, ConcurrentLinkedQueue<Node>> get() {
+        return statTable;
+    }
 }

@@ -13,10 +13,6 @@ import com.d2s2.socket.UdpConnector;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Random;
-import java.util.Set;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -25,9 +21,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class HandlerImpl implements Handler {
 
-    MessageTokenizer messageTokenizer;
-    MessageBuilder messageBuilder;
-    UdpConnector udpConnector;
+    private MessageTokenizer messageTokenizer;
+    private MessageBuilder messageBuilder;
+    private UdpConnector udpConnector;
 
     public HandlerImpl() {
         this.udpConnector = new UDPConnectorImpl();
@@ -45,22 +41,22 @@ public class HandlerImpl implements Handler {
     }
 
     @Override
-    public void registerInBS() throws IOException {
+    public void registerInBS(String bsServerIp) throws IOException {
         RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT, ApplicationConstants.USER_NAME);
         String message = messageBuilder.buildRegisterRequestMessage(registrationRequestModel);
-        udpConnector.send(message, null, 55555);
+        udpConnector.send(message, InetAddress.getByName(bsServerIp), 55555);
+        ApplicationConstants.BootstrapServerIp = bsServerIp;
     }
 
     @Override
     public void sendHeartBeatSignal() {
         Set<Node> peerNodes = PeerTableImpl.getInstance().getPeerNodeList();
-
-        if(!peerNodes.isEmpty()){
+        if (!peerNodes.isEmpty()) {
             HeartBeatSignalModel heartBeatSignalModel = new HeartBeatSignalModel(ApplicationConstants.IP, ApplicationConstants.PORT, ApplicationConstants.USER_NAME);
             for (Node peer : peerNodes) {
                 String heartBeatMessage = messageBuilder.buildHeartBeatSignalMessage(heartBeatSignalModel);
                 try {
-                    System.out.println("Sending HBEAT by"+ApplicationConstants.IP +" "+ String.valueOf(ApplicationConstants.PORT)+" " + ApplicationConstants.USER_NAME);
+                    System.out.println("Sending HBEAT by" + ApplicationConstants.IP + " " + String.valueOf(ApplicationConstants.PORT) + " " + ApplicationConstants.USER_NAME);
                     udpConnector.send(heartBeatMessage, InetAddress.getByName(peer.getNodeIp()), peer.getPort());
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -72,25 +68,57 @@ public class HandlerImpl implements Handler {
     @Override
     public void gracefulLeaveRequest() {
         NeighbourTableImpl neighbourTable = NeighbourTableImpl.getInstance();
-        Set<Node> neighbourNodeList=neighbourTable.getNeighbourNodeList();
+        Set<Node> neighbourNodeList = neighbourTable.getNeighbourNodeList();
+        /*
+        * First Unreg from the Bootstrap server
+        * */
+        GracefulLeaveBootstrapServerRequestModel gracefulLeaveBootstrapServerRequestModel = new GracefulLeaveBootstrapServerRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT, ApplicationConstants.USER_NAME);
+        String message = gracefulLeaveBootstrapServerRequestModel.toString();
 
-        GracefulLeaveRequestModel gracefulLeaveRequestModel = new GracefulLeaveRequestModel(ApplicationConstants.IP,ApplicationConstants.PORT,"username");
-        String message = gracefulLeaveRequestModel.toString();
-        for (Node node : neighbourNodeList) {
+        try {
+            udpConnector.send(message, InetAddress.getByName(ApplicationConstants.BootstrapServerIp), ApplicationConstants.BS_SERVER_PORT);
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        /**
+         * Next, Notify Neighbours of our departure
+         *
+         */
+        neighbourNodeList.forEach(node -> {
+            GracefulLeaveRequestModel gracefulLeaveRequestModel = new GracefulLeaveRequestModel(ApplicationConstants.IP,ApplicationConstants.PORT,ApplicationConstants.USER_NAME);
+            String neighbourLeaveMessage = gracefulLeaveRequestModel.toString();
             try {
-                udpConnector.send(message, null, gracefulLeaveRequestModel.getPort());
+                udpConnector.send(neighbourLeaveMessage, InetAddress.getByName(node.getNodeIp()),node.getPort());
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        });
 
-        }
+//        new java.util.Timer().schedule(
+//                new java.util.TimerTask() {
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            System.out.println("Unregister the node from the BS");
+//                            udpConnector.send(message, null, 55555);// Unregister from the BS
+//                            System.exit(0);
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                },
+//                15000
+//        );
 
     }
 
     @Override
     public void searchFile(String file) {
-        SearchRequestModel searchRequestModel = new SearchRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT, file, ApplicationConstants.HOPS);
+        ArrayList<Node> nodes = new ArrayList<>();
+        nodes.add(new Node(ApplicationConstants.IP, ApplicationConstants.PORT));
+        SearchRequestModel searchRequestModel = new SearchRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT, file, ApplicationConstants.HOPS, nodes);
         searchRequestModel.handle();
         //forward to two picked nodes
     }
@@ -98,12 +126,17 @@ public class HandlerImpl implements Handler {
     @Override
     public void sendSearchRequest(SearchRequestModel model, ConcurrentLinkedQueue<Node> statTablePeers) throws IOException {
         String searchRequestMessage = messageBuilder.buildSearchRequestMessage(model);
-        Iterator<Node> iterator = statTablePeers.iterator();
-        while (iterator.hasNext()) {
-            Node next = iterator.next();
-            if (!isRequestingNode(model, next)) {
-                udpConnector.send(searchRequestMessage, null, next.getPort());
+
+        System.out.println("Found stat table entries");
+        System.out.println(statTablePeers);
+
+        Iterator<Node> nodeIterator = statTablePeers.iterator();
+        while (nodeIterator.hasNext()) {
+            Node node = nodeIterator.next();
+            if (!model.getLastHops().contains(node)) {
+                udpConnector.send(searchRequestMessage, InetAddress.getByName(node.getNodeIp()), node.getPort());
             }
+            System.out.println("send to stat table entries " + node.getPort());
         }
 
         final Set<Node> peerNodeList = PeerTableImpl.getInstance().getPeerNodeList();
@@ -111,26 +144,34 @@ public class HandlerImpl implements Handler {
         final ArrayList<Node> peerNodeListToSend = new ArrayList<>();
 
         peerNodeList.forEach((node) -> {
-            if ((!statTablePeers.contains(node)) && (!isRequestingNode(model, node))) {
+            if (!model.getLastHops().contains(node) && !statTablePeers.contains(node)) {
                 peerNodeListToSend.add(node);
             }
         });
 
+        System.out.println("peer nodes to send list " + peerNodeListToSend);
         Random random = new Random();
-        final int size = peerNodeListToSend.size();
+        int size = peerNodeListToSend.size();
         if (size > 0) {
             final int item1 = random.nextInt(size);
+            Node node = peerNodeListToSend.get(item1);
+            udpConnector.send(searchRequestMessage, InetAddress.getByName(node.getNodeIp()), node.getPort());
+            System.out.println("Sending to peer node " + peerNodeListToSend.get(item1).getPort());
+            peerNodeListToSend.remove(item1);
+        }
+        size = peerNodeListToSend.size();
+        if (size > 0) {
             final int item2 = random.nextInt(size);
-            udpConnector.send(searchRequestMessage, null, peerNodeListToSend.get(item1).getPort());
-            udpConnector.send(searchRequestMessage, null, peerNodeListToSend.get(item2).getPort());
+            Node node = peerNodeListToSend.get(item2);
+            udpConnector.send(searchRequestMessage, InetAddress.getByName(node.getNodeIp()), node.getPort());
+            System.out.println("Sending to peer node " + peerNodeListToSend.get(item2).getPort());
         }
     }
 
     @Override
     public void sendLocalSearchToSource(SearchResponseModel searchResponseModel, List<String> list) throws IOException {
         String searchResponseToSourceMessage = messageBuilder.buildSearchResponseToSourceMessage(searchResponseModel);
-        System.out.println(" LOCAL SEARCH RESPONSE " + searchResponseToSourceMessage);
-        udpConnector.send(searchResponseToSourceMessage, null, searchResponseModel.getPort());
+        udpConnector.send(searchResponseToSourceMessage, InetAddress.getByName(searchResponseModel.getIp()), searchResponseModel.getPort());
     }
 
     //check whether the stat table entry equals to the node which request the file
@@ -138,15 +179,12 @@ public class HandlerImpl implements Handler {
         return searchRequestModel.getFileName().equals(node.getNodeIp()) && searchRequestModel.getPort() == node.getPort();
     }
 
-    public void notifyNeighbours(String ip, int port) throws IOException{
-        NotifyNeighbourRequestModel notifyNeighbourRequestModel = new NotifyNeighbourRequestModel(ApplicationConstants.IP,ApplicationConstants.PORT);
+    public void notifyNeighbours(String ip, int port) throws IOException {
+        NotifyNeighbourRequestModel notifyNeighbourRequestModel = new NotifyNeighbourRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT);
         String message = messageBuilder.buildNeighbourJoinMessage(notifyNeighbourRequestModel);
-        //System.out.println(message);
-        udpConnector.send(message, null, port);
+        udpConnector.send(message, InetAddress.getByName(ip), port);
 
     }
-
-
 
 
 }

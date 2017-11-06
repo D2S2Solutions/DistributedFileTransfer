@@ -13,15 +13,13 @@ public class HeartBeatSignalModel extends AbstractRequestResponseModel {
     public HeartBeatSignalModel(String ip, int port, String userName) {
         this.userName = userName;
         this.port = port;
-        this.ip =ip;
+        this.ip = ip;
     }
 
 
     @Override
     public void handle() {
-        //todo handle when response received
-        System.out.println("Heart Beat received from "+getIp()+" "+ String.valueOf(getPort()));
-        Node beatedNode = new Node(this.ip,this.port);
+        Node beatedNode = new Node(this.ip, this.port);
         HeartBeaterImpl.getInstance().handleBeat(beatedNode);
     }
 
