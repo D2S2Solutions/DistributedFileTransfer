@@ -37,15 +37,16 @@ public class HeartBeaterImpl {
     }
 
     public void handleBeat(Node beatedNode) {
-        //todo if there are no consecutive two beats with in the time period (10beats) remove node from neighbour(down) list
+        //todo if there are no consecutive two beats with in the time period (10beats) remove node from peer(up) list
         if (ApplicationConstants.HEART_BEAT_THRESHOLD == count) {
-            for (Node neighbourNode : NeighbourTableImpl.getInstance().getNeighbourNodeList()) {
+            System.out.println("Removing from peer table");
+            /*for (Node neighbourNode : NeighbourTableImpl.getInstance().getNeighbourNodeList()) {
                 if (!beatedNodes.contains(neighbourNode)) {
                     System.out.println("Removing node in heartbeating failure " + String.valueOf(count));
                     NeighbourTableImpl.getInstance().remove(neighbourNode);
                     //todo remove from stat table
                 }
-            }
+            }*/
             count = 0;
             beatedNodes.clear();
         } else {

@@ -50,14 +50,15 @@ public class HandlerImpl implements Handler {
 
     @Override
     public void sendHeartBeatSignal() {
-        Set<Node> peerNodes = PeerTableImpl.getInstance().getPeerNodeList();
-        if (!peerNodes.isEmpty()) {
+        //Set<Node> peerNodes = PeerTableImpl.getInstance().getPeerNodeList();
+        Set<Node> neighbourNodes = NeighbourTableImpl.getInstance().getNeighbourNodeList();
+        if (!neighbourNodes.isEmpty()) {
             HeartBeatSignalModel heartBeatSignalModel = new HeartBeatSignalModel(ApplicationConstants.IP, ApplicationConstants.PORT, ApplicationConstants.USER_NAME);
-            for (Node peer : peerNodes) {
+            for (Node neighbour : neighbourNodes) {
                 String heartBeatMessage = messageBuilder.buildHeartBeatSignalMessage(heartBeatSignalModel);
                 try {
                     System.out.println("Sending HBEAT by" + ApplicationConstants.IP + " " + String.valueOf(ApplicationConstants.PORT) + " " + ApplicationConstants.USER_NAME);
-                    udpConnector.send(heartBeatMessage, InetAddress.getByName(peer.getNodeIp()), peer.getPort());
+                    udpConnector.send(heartBeatMessage, InetAddress.getByName(neighbour.getNodeIp()), neighbour.getPort());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
