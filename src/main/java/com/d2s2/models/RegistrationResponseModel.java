@@ -6,6 +6,7 @@ import com.d2s2.overlay.route.PeerTableImpl;
 import com.d2s2.ui.GUIController;
 
 import java.io.IOException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashSet;
@@ -31,7 +32,7 @@ public class RegistrationResponseModel extends UnicastRemoteObject implements Ab
             instance.insert(node);
             try {
                 handler.notifyNeighbours(node.getNodeIp(), node.getPort());
-            } catch (IOException io) {
+            } catch (IOException | NotBoundException io) {
                 io.printStackTrace();
             }
         });

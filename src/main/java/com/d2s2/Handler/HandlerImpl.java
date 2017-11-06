@@ -14,6 +14,7 @@ import com.d2s2.socket.UdpConnector;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -85,25 +86,26 @@ public class HandlerImpl implements Handler {
         }
         //Next, Notify Neighbours of our departure
         neighbourNodeList.forEach(node -> {
-            GracefulLeaveRequestModel gracefulLeaveRequestModel = null;
             try {
-                gracefulLeaveRequestModel = new GracefulLeaveRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT);
-            } catch (RemoteException e) {
+                final ServerConnector serverConnector = ServerConnector.getServerConnector(node.getNodeIp(), node.getPort());
+                if(serverConnector!=null){
+                    serverConnector.callRemoteGracefulLeaveRequestHandle(ApplicationConstants.IP,ApplicationConstants.PORT);
+                } else {
+                    System.out.println("server connector is null");
+                }
+            } catch (RemoteException | NotBoundException | MalformedURLException e) {
                 e.printStackTrace();
             }
-            String neighbourLeaveMessage = messageBuilder.buildLeaveMessage(gracefulLeaveRequestModel);
-            try {
-                udpConnector.send(neighbourLeaveMessage, InetAddress.getByName(node.getNodeIp()), node.getPort());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
         });
     }
 
     @Override
-    public void sendLeaveOkToSource(GracefulLeaveRequestModel gracefulLeaveRequestModel) throws IOException {
-        String buildLeaveOkToSourceMessage = messageBuilder.buildLeaveOkToSourceMessage(gracefulLeaveRequestModel);
-        udpConnector.send(buildLeaveOkToSourceMessage, InetAddress.getByName(gracefulLeaveRequestModel.getIp()), gracefulLeaveRequestModel.getPort());
+    public void sendLeaveOkToSource(GracefulLeaveResponseModel gracefulLeaveResponseModel) throws IOException, NotBoundException {
+        final ServerConnector serverConnector = ServerConnector.getServerConnector(gracefulLeaveResponseModel.getIp(), gracefulLeaveResponseModel.getPort());
+        if(serverConnector!=null){
+            serverConnector.callRemoteGracefulLeaveResponseHandle(ApplicationConstants.IP,ApplicationConstants.PORT,gracefulLeaveResponseModel.getStatus());
+        }
     }
 
     @Override
@@ -117,7 +119,6 @@ public class HandlerImpl implements Handler {
 
     @Override
     public void sendSearchRequest(SearchRequestModel model, ConcurrentLinkedQueue<Node> statTablePeers) throws IOException, NotBoundException {
-        String searchRequestMessage = messageBuilder.buildSearchRequestMessage(model);
 
         System.out.println("Found stat table entries");
         System.out.println(statTablePeers);
@@ -126,7 +127,6 @@ public class HandlerImpl implements Handler {
         while (nodeIterator.hasNext()) {
             Node node = nodeIterator.next();
             if (!model.getLastHops().contains(node)) {
-//                udpConnector.send(searchRequestMessage, InetAddress.getByName(node.getNodeIp()), node.getPort());
                 ServerConnector.getServerConnector(node.getNodeIp(), node.getPort())
                         .callRemoteSearchRequestHadle(model.getIp(), model.getPort(), model.getFileName(), model.getHops(), model.getLastHops());
 
@@ -190,10 +190,13 @@ public class HandlerImpl implements Handler {
         return searchRequestModel.getFileName().equals(node.getNodeIp()) && searchRequestModel.getPort() == node.getPort();
     }
 
-    public void notifyNeighbours(String ip, int port) throws IOException {
-        NotifyNeighbourRequestModel notifyNeighbourRequestModel = new NotifyNeighbourRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT);
-        String message = messageBuilder.buildNeighbourJoinMessage(notifyNeighbourRequestModel);
-        udpConnector.send(message, InetAddress.getByName(ip), port);
+    public void notifyNeighbours(String ip, int port) throws IOException, NotBoundException {
+        final ServerConnector serverConnector = ServerConnector.getServerConnector(ip, port);
+        if(serverConnector!=null){
+            serverConnector.callRemoteNotifyNeighbourRequestHandle(ApplicationConstants.IP,ApplicationConstants.PORT);
+        }else{
+            System.out.println("server connector is null");
+        }
 
     }
 

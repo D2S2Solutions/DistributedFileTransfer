@@ -19,10 +19,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ServerConnector {
 
     private static ServerConnector serverConnector;
-    private  RemoteFactory remoteFactory;
+    private RemoteFactory remoteFactory;
 
     private String ip;
-    private AbstractRequestResponseModel searchResponseModel;
 
     public int getPort() {
         return port;
@@ -40,14 +39,6 @@ public class ServerConnector {
         this.ip = ip;
     }
 
-    public  static Set<ServerConnector> getServerConnectors() {
-        return serverConnectors;
-    }
-
-    public static void setServerConnectors(HashSet<ServerConnector> serverConnectors) {
-        ServerConnector.serverConnectors = serverConnectors;
-    }
-
     private int port;
 
     private volatile static Set<ServerConnector> serverConnectors;
@@ -56,12 +47,11 @@ public class ServerConnector {
         serverConnectors = ConcurrentHashMap.newKeySet();
     }
 
-    private AbstractRequestResponseModel searchRequestModel;
 
     private ServerConnector(String ip, int port) throws NotBoundException, MalformedURLException, RemoteException {
         remoteFactory = (RemoteFactory) Naming.lookup("rmi://" + ip + ":" + port + "/DBFileTranfer");
-        this.ip=ip;
-        this.port=port;
+        this.ip = ip;
+        this.port = port;
     }
 
 
@@ -84,11 +74,12 @@ public class ServerConnector {
     }
 
     public void callRemoteSearchRequestHadle(String ip, int port, String fileName, int hops, ArrayList<Node> lastHops) throws RemoteException, NotBoundException {
-        searchRequestModel = remoteFactory.getSearchRequestModel(ip, port, fileName, hops, lastHops);
-        if(searchRequestModel!=null){
-            this.searchRequestModel.handle();
+
+        AbstractRequestResponseModel searchRequestModel = remoteFactory.getSearchRequestModel(ip, port, fileName, hops, lastHops);
+        if (searchRequestModel != null) {
+            searchRequestModel.handle();
             System.out.println("Invoking Search Request remote method");
-        }else{
+        } else {
             System.out.println("remote object is null");
         }
 
@@ -96,15 +87,50 @@ public class ServerConnector {
 
 
     public void callRemoteSearchResponseHadle(String ip, int port, int hops, int noOfFiles, HashSet<String> fileList) throws RemoteException, NotBoundException {
-        searchResponseModel = remoteFactory.getSearchReeponseModel(ip, port, hops, noOfFiles, fileList);
-        if(searchResponseModel!=null){
-            this.searchResponseModel.handle();
+
+        AbstractRequestResponseModel searchResponseModel = remoteFactory.getSearchResponseModel(ip, port, hops, noOfFiles, fileList);
+        if (searchResponseModel != null) {
+            searchResponseModel.handle();
             System.out.println("Invoking Search Response remote method");
-        }else{
+        } else {
             System.out.println("remote object is null");
         }
 
     }
+
+
+    public void callRemoteNotifyNeighbourRequestHandle(String ip, int port) throws RemoteException, NotBoundException {
+
+        AbstractRequestResponseModel notifyNeighbourRequestModel = remoteFactory.getNotifyNeighbourRequestModel(ip, port);
+        if (notifyNeighbourRequestModel != null) {
+            notifyNeighbourRequestModel.handle();
+            System.out.println("Invoking Notify Neighbour remote method");
+        } else {
+            System.out.println("remote object is null");
+        }
+
+    }
+
+    public void callRemoteGracefulLeaveRequestHandle(String ip, int port) throws RemoteException, NotBoundException {
+        final AbstractRequestResponseModel gracefulLeaveRequestModel = remoteFactory.getGracefulLeaveRequestModel(ip, port);
+        if(gracefulLeaveRequestModel!=null){
+            gracefulLeaveRequestModel.handle();
+            System.out.println("Invoking Graceful Leave remote method");
+        } else {
+            System.out.println("remote object is null");
+        }
+    }
+
+    public void callRemoteGracefulLeaveResponseHandle(String ip, int port,int status) throws RemoteException, NotBoundException {
+        final AbstractRequestResponseModel gracefulLeaveRequestModel = remoteFactory.getGracefulLeaveResponseModel(ip, port,status);
+        if(gracefulLeaveRequestModel!=null){
+            gracefulLeaveRequestModel.handle();
+            System.out.println("Invoking Graceful Leave remote method");
+        } else {
+            System.out.println("remote object is null");
+        }
+    }
+
 
     @Override
     public int hashCode() {

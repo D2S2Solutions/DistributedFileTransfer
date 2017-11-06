@@ -1,9 +1,6 @@
 package com.d2s2.Handler;
 
-import com.d2s2.models.GracefulLeaveRequestModel;
-import com.d2s2.models.Node;
-import com.d2s2.models.SearchRequestModel;
-import com.d2s2.models.SearchResponseModel;
+import com.d2s2.models.*;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -19,7 +16,7 @@ public interface Handler {
 
     void searchFile(String file) throws RemoteException, NotBoundException;
 
-    void notifyNeighbours(String ip, int port) throws IOException;
+    void notifyNeighbours(String ip, int port) throws IOException, NotBoundException;
 
     void sendSearchRequest(SearchRequestModel model, ConcurrentLinkedQueue<Node> concurrentLinkedQueue) throws IOException, NotBoundException;
 
@@ -29,5 +26,5 @@ public interface Handler {
 
     void gracefulLeaveRequest() throws RemoteException;
 
-    void sendLeaveOkToSource(GracefulLeaveRequestModel node) throws IOException;
+    void sendLeaveOkToSource(GracefulLeaveResponseModel node) throws IOException, NotBoundException;
 }

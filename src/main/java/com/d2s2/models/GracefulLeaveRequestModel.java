@@ -9,6 +9,7 @@ import com.d2s2.socket.UDPConnectorImpl;
 import com.d2s2.ui.GUIController;
 
 import java.io.IOException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 public class GracefulLeaveRequestModel extends AbstractRequestModel {
@@ -21,13 +22,13 @@ public class GracefulLeaveRequestModel extends AbstractRequestModel {
     }
 
     @Override
-    public void handle() {
+    public void handle() throws NotBoundException {
         PeerTableImpl peerTable = PeerTableImpl.getInstance();
         boolean peerTableRemoved = peerTable.remove(node);
         Boolean statTableRemoved = StatTableImpl.getInstance().remove(node);
         if (statTableRemoved || peerTableRemoved) {
             try {
-                handler.sendLeaveOkToSource(this);
+                handler.sendLeaveOkToSource(new GracefulLeaveResponseModel(ip,port,0));
             } catch (IOException e) {
                 e.printStackTrace();
             }

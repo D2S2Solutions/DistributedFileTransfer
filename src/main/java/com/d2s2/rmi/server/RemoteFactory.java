@@ -14,5 +14,13 @@ import java.util.HashSet;
 public interface RemoteFactory extends Remote{
 
     AbstractRequestResponseModel getSearchRequestModel(String ip, int port, String fileName, int hops, ArrayList<Node> lastHops) throws RemoteException;
-    AbstractRequestResponseModel getSearchReeponseModel(String ip, int port, int hops, int noOfFiles, HashSet<String> fileList) throws RemoteException;
+    AbstractRequestResponseModel getSearchResponseModel(String ip, int port, int hops, int noOfFiles, HashSet<String> fileList) throws RemoteException;
+
+    AbstractRequestResponseModel getNotifyNeighbourRequestModel(String ip, int port) throws RemoteException;
+
+    AbstractRequestResponseModel getGracefulLeaveRequestModel(String ip, int port) throws RemoteException;
+    AbstractRequestResponseModel getGracefulLeaveResponseModel(String ip,int port,int status)throws RemoteException;
+
+    AbstractRequestResponseModel getGracefulLeaveBootstrapServerRequestModel(String ip, int port, String userName) throws RemoteException;
+    AbstractRequestResponseModel getGracefulLeaveBootstrapServerResponseModel(int value) throws RemoteException;
 }

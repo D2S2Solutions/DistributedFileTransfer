@@ -1,9 +1,6 @@
 package com.d2s2.rmi.server;
 
-import com.d2s2.models.AbstractRequestResponseModel;
-import com.d2s2.models.Node;
-import com.d2s2.models.SearchRequestModel;
-import com.d2s2.models.SearchResponseModel;
+import com.d2s2.models.*;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -24,7 +21,32 @@ public class RemoteFactoryImpl extends UnicastRemoteObject implements RemoteFact
     }
 
     @Override
-    public AbstractRequestResponseModel getSearchReeponseModel(String ip, int port, int hops, int noOfFiles, HashSet<String> fileList) throws RemoteException {
+    public AbstractRequestResponseModel getNotifyNeighbourRequestModel(String ip, int port) throws RemoteException {
+        return new NotifyNeighbourRequestModel(ip,port);
+    }
+
+    @Override
+    public AbstractRequestResponseModel getGracefulLeaveRequestModel(String ip, int port) throws RemoteException {
+        return new GracefulLeaveRequestModel(ip,port);
+    }
+
+    @Override
+    public AbstractRequestResponseModel getGracefulLeaveResponseModel(String ip,int port,int status) throws RemoteException {
+        return new GracefulLeaveResponseModel(ip,port,status);
+    }
+
+    @Override
+    public AbstractRequestResponseModel getGracefulLeaveBootstrapServerRequestModel(String ip, int port, String userName) throws RemoteException {
+        return new GracefulLeaveBootstrapServerRequestModel(ip,port,userName);
+    }
+
+    @Override
+    public AbstractRequestResponseModel getGracefulLeaveBootstrapServerResponseModel(int value) throws RemoteException {
+        return new GracefulLeaveBootstrapServerResponseModel(value);
+    }
+
+    @Override
+    public AbstractRequestResponseModel getSearchResponseModel(String ip, int port, int hops, int noOfFiles, HashSet<String> fileList) throws RemoteException {
         return new SearchResponseModel(ip,port,hops,noOfFiles,fileList);
     }
 

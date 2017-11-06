@@ -6,6 +6,7 @@ import com.d2s2.overlay.route.NeighbourTableImpl;
 import com.d2s2.overlay.route.PeerTableImpl;
 
 import java.io.IOException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 /**
@@ -22,7 +23,7 @@ public class NotifyNeighbourRequestModel extends AbstractRequestModel {
 
 
     @Override
-    public void handle() {
+    public void handle() throws NotBoundException {
         NeighbourTableImpl neighbourTable = NeighbourTableImpl.getInstance();
         Node node = new Node(this.ip, this.port);
         neighbourTable.insert(node);
