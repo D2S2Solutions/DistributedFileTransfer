@@ -18,10 +18,8 @@ public class GracefulLeaveResponseModel extends AbstractRequestResponseModel {
         GUIController guiController = GUIController.getInstance();
         if (this.status == 0) {
             System.out.println("Successfully Left");
-            guiController.displayMessage("Successfully left");
         } else {
             System.out.println("Error while leaving");
-            guiController.displayMessage("Error while leaving");
         }
     }
 }

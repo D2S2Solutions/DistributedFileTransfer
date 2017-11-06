@@ -25,7 +25,6 @@ public class GracefulLeaveRequestModel extends AbstractRequestModel {
         boolean peerTableRemoved = peerTable.remove(node);
         Boolean statTableRemoved = StatTableImpl.getInstance().remove(node);
         if (statTableRemoved || peerTableRemoved) {
-            GUIController.getInstance().displayMessage("A neighbour left the system " + ApplicationConstants.PORT);
             try {
                 handler.sendLeaveOkToSource(this);
             } catch (IOException e) {
