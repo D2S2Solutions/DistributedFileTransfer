@@ -13,6 +13,7 @@ import com.d2s2.socket.UdpConnector;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -89,6 +90,12 @@ public class HandlerImpl implements Handler {
                 e.printStackTrace();
             }
         });
+    }
+
+    @Override
+    public void sendLeaveOkToSource(GracefulLeaveRequestModel gracefulLeaveRequestModel) throws IOException {
+        String buildLeaveOkToSourceMessage = messageBuilder.buildLeaveOkToSourceMessage(gracefulLeaveRequestModel);
+        udpConnector.send(buildLeaveOkToSourceMessage,InetAddress.getByName(gracefulLeaveRequestModel.getIp()),gracefulLeaveRequestModel.getPort());
     }
 
     @Override

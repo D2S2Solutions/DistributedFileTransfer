@@ -95,6 +95,13 @@ public class MessageBuilderImpl implements MessageBuilder {
     }
 
     @Override
+    public String buildLeaveOkToSourceMessage(GracefulLeaveRequestModel gracefulLeaveRequestModel) {
+        int length = MessageConstants.LEAVEOK_MESSAGE.length() + 4+ 3;
+        final String requestFinalLength = String.format("%04d", length);
+        return requestFinalLength + " " + MessageConstants.LEAVEOK_MESSAGE + " " + "0";
+    }
+
+    @Override
     public String buildNeighbourJoinMessage(NotifyNeighbourRequestModel model) {
         int length = MessageConstants.NEIGHBOUR_MESSAGE.length() + model.getIp().length() + String.valueOf(model.getPort()).length() + 4 + 4;
         final String requestFinalLength = String.format("%04d", length);
