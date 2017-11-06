@@ -1,10 +1,14 @@
 package com.d2s2.models;
 
+import java.rmi.NotBoundException;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
 /**
  * Created by Heshan Sandamal on 10/24/2017.
  */
-public abstract class AbstractRequestResponseModel {
+public interface AbstractRequestResponseModel extends Remote{
 
-    public abstract void handle();
+    public abstract void handle() throws RemoteException, NotBoundException;
 
 }

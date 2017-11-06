@@ -6,17 +6,19 @@ import com.d2s2.overlay.route.PeerTableImpl;
 import com.d2s2.ui.GUIController;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.HashSet;
 
 /**
  * Created by Heshan Sandamal on 10/24/2017.
  */
-public class RegistrationResponseModel extends AbstractRequestResponseModel {
+public class RegistrationResponseModel extends UnicastRemoteObject implements AbstractRequestResponseModel {
     HashSet<Node> nodeset;
     int nodeCount;
     Handler handler;
 
-    public RegistrationResponseModel(int nodeCount, HashSet<Node> nodeset) {
+    public RegistrationResponseModel(int nodeCount, HashSet<Node> nodeset) throws RemoteException {
         this.nodeCount = nodeCount;
         this.nodeset = nodeset;
         handler = new HandlerImpl();

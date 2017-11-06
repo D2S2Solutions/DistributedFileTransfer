@@ -3,6 +3,7 @@ package com.d2s2;
 import com.d2s2.constants.ApplicationConstants;
 import com.d2s2.files.FileHandler;
 import com.d2s2.files.FileHandlerImpl;
+import com.d2s2.rmi.server.RemoteFactoryImpl;
 import com.d2s2.socket.UDPConnectorImpl;
 import com.d2s2.socket.UdpConnector;
 import com.d2s2.ui.FileSearchInterface;
@@ -12,6 +13,9 @@ import me.tongfei.progressbar.ProgressBar;
 import java.io.IOException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -35,16 +39,8 @@ public class Main {
         System.out.println("This node operates in " + ApplicationConstants.IP + " and the port is " + ApplicationConstants.PORT);
         initLocalFileStorage();
         UdpConnector udpConnector = new UDPConnectorImpl();
-//
-//        Handler handler = new HandlerImpl();
-//        try {
-//            handler.registerInBS(BsServerIp);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
 
         new Thread(() -> {
-            while (true) {
                 System.out.println(">>>>>>>>>> WAITING FOR REQUEST <<<<<<<<<<<<\n");
                 Future<String> stringFuture = null;
                 try {
@@ -52,18 +48,29 @@ public class Main {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                while (!stringFuture.isDone()) {
-//                    System.out.println(++i);
-                }
-//                    handler.sendHeartBeatSignal();
-
+                initRMIRegistry();
             }
-        }
-        ).start();
-        Thread.sleep(1000); // Wait until the system acknowledges the node
-//        handler.searchFile("American");
-//        handler.gracefulLeaveRequest();
 
+        ).start();
+
+
+    }
+
+    private static void initRMIRegistry() {
+        System.setProperty("java.rmi.server.hostname", ApplicationConstants.IP);
+        try {
+            Registry registry = null;
+            try {
+                registry = LocateRegistry.createRegistry(ApplicationConstants.PORT);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+            registry.rebind("DBFileTranfer", new RemoteFactoryImpl());
+            System.out.println("Server is Starting...");
+
+        } catch (RemoteException ex) {
+            ex.printStackTrace();
+        }
     }
 
 

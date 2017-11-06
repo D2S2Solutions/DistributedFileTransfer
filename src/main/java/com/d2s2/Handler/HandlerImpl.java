@@ -8,12 +8,15 @@ import com.d2s2.message.tokenize.MessageTokenizerImpl;
 import com.d2s2.models.*;
 import com.d2s2.overlay.route.NeighbourTableImpl;
 import com.d2s2.overlay.route.PeerTableImpl;
+import com.d2s2.rmi.client.ServerConnector;
 import com.d2s2.socket.UDPConnectorImpl;
 import com.d2s2.socket.UdpConnector;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -33,7 +36,7 @@ public class HandlerImpl implements Handler {
     }
 
     @Override
-    public void handleResponse(String message) {
+    public void handleResponse(String message) throws RemoteException, NotBoundException {
         AbstractRequestResponseModel abstractRequestResponseModel = messageTokenizer.tokenizeMessage(message);
         if (abstractRequestResponseModel != null) {
             abstractRequestResponseModel.handle();
@@ -67,7 +70,7 @@ public class HandlerImpl implements Handler {
     }
 
     @Override
-    public void gracefulLeaveRequest() {
+    public void gracefulLeaveRequest() throws RemoteException {
         NeighbourTableImpl neighbourTable = NeighbourTableImpl.getInstance();
         Set<Node> neighbourNodeList = neighbourTable.getNeighbourNodeList();
 
@@ -82,7 +85,12 @@ public class HandlerImpl implements Handler {
         }
         //Next, Notify Neighbours of our departure
         neighbourNodeList.forEach(node -> {
-            GracefulLeaveRequestModel gracefulLeaveRequestModel = new GracefulLeaveRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT);
+            GracefulLeaveRequestModel gracefulLeaveRequestModel = null;
+            try {
+                gracefulLeaveRequestModel = new GracefulLeaveRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
             String neighbourLeaveMessage = messageBuilder.buildLeaveMessage(gracefulLeaveRequestModel);
             try {
                 udpConnector.send(neighbourLeaveMessage, InetAddress.getByName(node.getNodeIp()), node.getPort());
@@ -95,11 +103,11 @@ public class HandlerImpl implements Handler {
     @Override
     public void sendLeaveOkToSource(GracefulLeaveRequestModel gracefulLeaveRequestModel) throws IOException {
         String buildLeaveOkToSourceMessage = messageBuilder.buildLeaveOkToSourceMessage(gracefulLeaveRequestModel);
-        udpConnector.send(buildLeaveOkToSourceMessage,InetAddress.getByName(gracefulLeaveRequestModel.getIp()),gracefulLeaveRequestModel.getPort());
+        udpConnector.send(buildLeaveOkToSourceMessage, InetAddress.getByName(gracefulLeaveRequestModel.getIp()), gracefulLeaveRequestModel.getPort());
     }
 
     @Override
-    public void searchFile(String file) {
+    public void searchFile(String file) throws RemoteException, NotBoundException {
         ArrayList<Node> nodes = new ArrayList<>();
         nodes.add(new Node(ApplicationConstants.IP, ApplicationConstants.PORT));
         SearchRequestModel searchRequestModel = new SearchRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT, file, ApplicationConstants.HOPS, nodes);
@@ -108,7 +116,7 @@ public class HandlerImpl implements Handler {
     }
 
     @Override
-    public void sendSearchRequest(SearchRequestModel model, ConcurrentLinkedQueue<Node> statTablePeers) throws IOException {
+    public void sendSearchRequest(SearchRequestModel model, ConcurrentLinkedQueue<Node> statTablePeers) throws IOException, NotBoundException {
         String searchRequestMessage = messageBuilder.buildSearchRequestMessage(model);
 
         System.out.println("Found stat table entries");
@@ -118,7 +126,10 @@ public class HandlerImpl implements Handler {
         while (nodeIterator.hasNext()) {
             Node node = nodeIterator.next();
             if (!model.getLastHops().contains(node)) {
-                udpConnector.send(searchRequestMessage, InetAddress.getByName(node.getNodeIp()), node.getPort());
+//                udpConnector.send(searchRequestMessage, InetAddress.getByName(node.getNodeIp()), node.getPort());
+                ServerConnector.getServerConnector(node.getNodeIp(), node.getPort())
+                        .callRemoteSearchRequestHadle(model.getIp(), model.getPort(), model.getFileName(), model.getHops(), model.getLastHops());
+
             }
             System.out.println("send to stat table entries " + node.getPort());
         }
@@ -138,24 +149,40 @@ public class HandlerImpl implements Handler {
         int size = peerNodeListToSend.size();
         if (size > 0) {
             final int item1 = random.nextInt(size);
-            Node node = peerNodeListToSend.get(item1);
-            udpConnector.send(searchRequestMessage, InetAddress.getByName(node.getNodeIp()), node.getPort());
-            System.out.println("Sending to peer node " + peerNodeListToSend.get(item1).getPort());
-            peerNodeListToSend.remove(item1);
+            ServerConnector serverConnector = ServerConnector.getServerConnector(peerNodeListToSend.get(item1).getNodeIp(), peerNodeListToSend.get(item1).getPort());
+
+            if (serverConnector != null) {
+                serverConnector.callRemoteSearchRequestHadle(model.getIp(), model.getPort(), model.getFileName(), model.getHops(), model.getLastHops());
+                System.out.println("Sending to peer node " + peerNodeListToSend.get(item1).getPort());
+                peerNodeListToSend.remove(item1);
+            } else {
+                System.out.println("server connector is null");
+            }
+
         }
         size = peerNodeListToSend.size();
         if (size > 0) {
             final int item2 = random.nextInt(size);
-            Node node = peerNodeListToSend.get(item2);
-            udpConnector.send(searchRequestMessage, InetAddress.getByName(node.getNodeIp()), node.getPort());
-            System.out.println("Sending to peer node " + peerNodeListToSend.get(item2).getPort());
+            ServerConnector serverConnector = ServerConnector.getServerConnector(peerNodeListToSend.get(item2).getNodeIp(), peerNodeListToSend.get(item2).getPort());
+            if (serverConnector != null) {
+                serverConnector.callRemoteSearchRequestHadle(model.getIp(), model.getPort(), model.getFileName(), model.getHops(), model.getLastHops());
+                System.out.println("Sending to peer node " + peerNodeListToSend.get(item2).getPort());
+            } else {
+                System.out.println("server connector is null");
+            }
         }
     }
 
     @Override
-    public void sendLocalSearchToSource(SearchResponseModel searchResponseModel, List<String> list) throws IOException {
-        String searchResponseToSourceMessage = messageBuilder.buildSearchResponseToSourceMessage(searchResponseModel);
-        udpConnector.send(searchResponseToSourceMessage, InetAddress.getByName(searchResponseModel.getIp()), searchResponseModel.getPort());
+    public void sendLocalSearchToSource(SearchResponseModel searchResponseModel, List<String> list) throws IOException, NotBoundException {
+        final ServerConnector serverConnector = ServerConnector.getServerConnector(searchResponseModel.getIp(), searchResponseModel.getPort());
+        if(serverConnector!=null) {
+            serverConnector.callRemoteSearchResponseHadle(
+                    ApplicationConstants.IP, ApplicationConstants.PORT,
+                    searchResponseModel.getHops(), searchResponseModel.getNoOfFiles(), new HashSet<>(list));
+        }else{
+            System.out.println("server connector is null");
+        }
     }
 
     //check whether the stat table entry equals to the node which request the file

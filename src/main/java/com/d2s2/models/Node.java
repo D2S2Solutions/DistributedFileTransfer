@@ -1,6 +1,8 @@
 package com.d2s2.models;
 
-public class Node {
+import java.io.Serializable;
+
+public class Node implements Serializable{
     private String nodeIp;
     private int port;
     private String id;

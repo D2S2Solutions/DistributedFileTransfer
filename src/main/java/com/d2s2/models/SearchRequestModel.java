@@ -7,6 +7,8 @@ import com.d2s2.files.FileHandlerImpl;
 import com.d2s2.overlay.route.StatTableImpl;
 
 import java.io.IOException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -24,14 +26,14 @@ public class SearchRequestModel extends AbstractRequestModel {
     private ArrayList<Node> lastHops;
 
 
-    public SearchRequestModel(String ip, int port, String fileName, int hops, ArrayList<Node> lastHops) {
+    public SearchRequestModel(String ip, int port, String fileName, int hops, ArrayList<Node> lastHops) throws RemoteException {
         super(ip, port);
         this.fileName = fileName;
         this.hops = hops;
         this.lastHops = lastHops;
     }
 
-    public Collection<Node> getLastHops() {
+    public ArrayList<Node> getLastHops() {
         return lastHops;
     }
 
@@ -56,7 +58,7 @@ public class SearchRequestModel extends AbstractRequestModel {
     }
 
     @Override
-    public void handle() {
+    public void handle() throws RemoteException, NotBoundException {
         //search from stat table    List<String,NOde>
         //create searchRequestModels
         --this.hops;
@@ -69,7 +71,7 @@ public class SearchRequestModel extends AbstractRequestModel {
 
             try {
                 handler.sendSearchRequest(this, statTablePeers);
-            } catch (IOException e) {
+            } catch (IOException  e) {
                 e.printStackTrace();
             }
 

@@ -2,10 +2,13 @@ package com.d2s2.models;
 
 import com.d2s2.ui.GUIController;
 
-public class GracefulLeaveBootstrapServerResponseModel extends AbstractRequestResponseModel {
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
+public class GracefulLeaveBootstrapServerResponseModel extends UnicastRemoteObject implements AbstractRequestResponseModel {
     private int status;
 
-    public GracefulLeaveBootstrapServerResponseModel(int value) {
+    public GracefulLeaveBootstrapServerResponseModel(int value) throws RemoteException{
         this.status = value;
     }
 

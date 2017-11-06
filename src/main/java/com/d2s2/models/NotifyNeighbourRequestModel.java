@@ -6,6 +6,7 @@ import com.d2s2.overlay.route.NeighbourTableImpl;
 import com.d2s2.overlay.route.PeerTableImpl;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 
 /**
  * Created by dimuth on 10/24/17.
@@ -14,7 +15,7 @@ public class NotifyNeighbourRequestModel extends AbstractRequestModel {
 
     private static Handler handler = new HandlerImpl();
 
-    public NotifyNeighbourRequestModel(String ip, int port) {
+    public NotifyNeighbourRequestModel(String ip, int port) throws RemoteException {
         super(ip, port);
 
     }

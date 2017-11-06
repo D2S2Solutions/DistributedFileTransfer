@@ -5,7 +5,7 @@ import com.d2s2.heartbeater.HeartBeaterImpl;
 /**
  * Created by Tharindu Diluksha on 10/25/2017.
  */
-public class HeartBeatSignalModel extends AbstractRequestResponseModel {
+public class HeartBeatSignalModel implements AbstractRequestResponseModel {
     String ip;
     int port;
     String userName;

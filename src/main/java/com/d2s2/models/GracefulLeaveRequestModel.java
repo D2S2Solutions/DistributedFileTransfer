@@ -9,12 +9,13 @@ import com.d2s2.socket.UDPConnectorImpl;
 import com.d2s2.ui.GUIController;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 
 public class GracefulLeaveRequestModel extends AbstractRequestModel {
 
     private static Handler handler = new HandlerImpl();
     private Node node;
-    public GracefulLeaveRequestModel(String ip, int port) {
+    public GracefulLeaveRequestModel(String ip, int port) throws RemoteException {
         super(ip, port);
         node = new Node(this.ip, this.port);
     }

@@ -5,13 +5,15 @@ import com.d2s2.overlay.route.PeerTableImpl;
 import com.d2s2.overlay.route.StatTableImpl;
 import com.d2s2.ui.GUIController;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.HashSet;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Created by Heshan Sandamal on 10/24/2017.
  */
-public class SearchResponseModel extends AbstractRequestResponseModel {
+public class SearchResponseModel extends UnicastRemoteObject implements  AbstractRequestResponseModel {
 
     private String ip;
     private int port;
@@ -19,7 +21,7 @@ public class SearchResponseModel extends AbstractRequestResponseModel {
     private int noOfFiles;
     private HashSet<String> fileList;
 
-    public SearchResponseModel(String ip, int port, int hops, int noOfFiles, HashSet<String> fileList) {
+    public SearchResponseModel(String ip, int port, int hops, int noOfFiles, HashSet<String> fileList) throws RemoteException {
         this.ip = ip;
         this.port = port;
         this.hops = hops;

@@ -4,6 +4,7 @@ import com.d2s2.constants.ApplicationConstants;
 import com.d2s2.message.MessageConstants;
 import com.d2s2.models.*;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.StringTokenizer;
@@ -13,7 +14,7 @@ import java.util.StringTokenizer;
  */
 public class MessageTokenizerImpl implements MessageTokenizer {
     @Override
-    public AbstractRequestResponseModel tokenizeMessage(String message) {
+    public AbstractRequestResponseModel tokenizeMessage(String message) throws RemoteException {
         message = message.substring(0, Integer.parseInt(message.substring(0, 4)));
         StringTokenizer stringTokenizer = new StringTokenizer(message, " ");
         int length = Integer.parseInt(stringTokenizer.nextToken());
@@ -48,14 +49,14 @@ public class MessageTokenizerImpl implements MessageTokenizer {
         return null;
     }
 
-    private AbstractRequestResponseModel getNeighbourLeaveMessageOb(StringTokenizer stringTokenizer) {
+    private AbstractRequestResponseModel getNeighbourLeaveMessageOb(StringTokenizer stringTokenizer) throws RemoteException {
         String ip = stringTokenizer.nextToken();
         int port = Integer.parseInt(stringTokenizer.nextToken());
         GracefulLeaveRequestModel gracefulLeaveRequestModel = new GracefulLeaveRequestModel(ip, port);
         return gracefulLeaveRequestModel;
     }
 
-    private AbstractRequestResponseModel getNeighbourLeaveResponseOb(StringTokenizer stringTokenizer) {
+    private AbstractRequestResponseModel getNeighbourLeaveResponseOb(StringTokenizer stringTokenizer) throws RemoteException {
         String status = stringTokenizer.nextToken();
         GracefulLeaveResponseModel gracefulLeaveResponseModel = new GracefulLeaveResponseModel(Integer.valueOf(status));
         return gracefulLeaveResponseModel;
@@ -68,7 +69,7 @@ public class MessageTokenizerImpl implements MessageTokenizer {
         return new HeartBeatSignalModel(ip, port, username);
     }
 
-    private AbstractRequestResponseModel getSearchResponseOb(StringTokenizer stringTokenizer) {
+    private AbstractRequestResponseModel getSearchResponseOb(StringTokenizer stringTokenizer) throws RemoteException {
 
         int noOfFiles = Integer.valueOf(stringTokenizer.nextToken());
         String ip = stringTokenizer.nextToken();
@@ -82,7 +83,7 @@ public class MessageTokenizerImpl implements MessageTokenizer {
 
     }
 
-    private AbstractRequestResponseModel getSearchMessageOb(StringTokenizer stringTokenizer) {
+    private AbstractRequestResponseModel getSearchMessageOb(StringTokenizer stringTokenizer) throws RemoteException {
         String ip = stringTokenizer.nextToken();
         int port = Integer.parseInt(stringTokenizer.nextToken());
         String fileName = stringTokenizer.nextToken();
@@ -99,7 +100,7 @@ public class MessageTokenizerImpl implements MessageTokenizer {
         return searchRequestModel;
     }
 
-    private AbstractRequestResponseModel getUnregisterResponseMessageOb(StringTokenizer stringTokenizer) {
+    private AbstractRequestResponseModel getUnregisterResponseMessageOb(StringTokenizer stringTokenizer) throws RemoteException {
         String token = stringTokenizer.nextToken();
         if (token != null) {
             return new GracefulLeaveBootstrapServerResponseModel(Integer.parseInt(token));
@@ -109,7 +110,7 @@ public class MessageTokenizerImpl implements MessageTokenizer {
 
     }
 
-    private AbstractRequestResponseModel getRegisterResponseMessageOb(StringTokenizer stringTokenizer) {
+    private AbstractRequestResponseModel getRegisterResponseMessageOb(StringTokenizer stringTokenizer) throws RemoteException {
         int nodeCount = Integer.parseInt(stringTokenizer.nextToken());
         switch (nodeCount) {
             case 9996:
@@ -138,7 +139,7 @@ public class MessageTokenizerImpl implements MessageTokenizer {
 
     }
 
-    private AbstractRequestResponseModel getNeighbourResponseMessageOb(StringTokenizer stringTokenizer) {
+    private AbstractRequestResponseModel getNeighbourResponseMessageOb(StringTokenizer stringTokenizer) throws RemoteException {
         String ip = stringTokenizer.nextToken();
         String portST = stringTokenizer.nextToken();
         int port = Integer.parseInt(portST.substring(0, portST.length() - 1));

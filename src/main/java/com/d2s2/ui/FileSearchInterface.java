@@ -14,6 +14,8 @@ import com.d2s2.constants.ApplicationConstants;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.io.IOException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -88,7 +90,11 @@ public class FileSearchInterface extends javax.swing.JFrame {
 
         this.searchButton.addActionListener(evt -> {
             dtmForSearchResultTable.setRowCount(0);
-            guiController.searchFile(this.searchTextField.getText());
+            try {
+                guiController.searchFile(this.searchTextField.getText());
+            } catch (RemoteException | NotBoundException e) {
+                e.printStackTrace();
+            }
         });
 
         this.registerButton.addActionListener(evt -> {
@@ -100,7 +106,11 @@ public class FileSearchInterface extends javax.swing.JFrame {
         });
 
         this.unregisterButton.addActionListener(evt -> {
-            guiController.unRegister();
+            try {
+                guiController.unRegister();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         });
 
         dtmForSearchResultTable = (DefaultTableModel) searchResultsTable.getModel();
