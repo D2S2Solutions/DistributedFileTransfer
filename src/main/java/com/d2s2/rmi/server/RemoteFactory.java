@@ -23,4 +23,7 @@ public interface RemoteFactory extends Remote{
 
     AbstractRequestResponseModel getGracefulLeaveBootstrapServerRequestModel(String ip, int port, String userName) throws RemoteException;
     AbstractRequestResponseModel getGracefulLeaveBootstrapServerResponseModel(int value) throws RemoteException;
+
+    AbstractRequestResponseModel getHeartBeatSignalModel(String ip, int port, String userName) throws RemoteException;
+
 }

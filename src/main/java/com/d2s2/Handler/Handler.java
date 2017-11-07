@@ -22,7 +22,7 @@ public interface Handler {
 
     void sendLocalSearchToSource(SearchResponseModel searchResponseModel, List<String> list) throws IOException, NotBoundException;
 
-    void sendHeartBeatSignal();
+    void sendHeartBeatSignal() throws NotBoundException;
 
     void gracefulLeaveRequest() throws RemoteException;
 

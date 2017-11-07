@@ -46,6 +46,11 @@ public class RemoteFactoryImpl extends UnicastRemoteObject implements RemoteFact
     }
 
     @Override
+    public AbstractRequestResponseModel getHeartBeatSignalModel(String ip, int port, String userName) throws RemoteException {
+        return new HeartBeatSignalModel(ip,port,userName);
+    }
+
+    @Override
     public AbstractRequestResponseModel getSearchResponseModel(String ip, int port, int hops, int noOfFiles, HashSet<String> fileList) throws RemoteException {
         return new SearchResponseModel(ip,port,hops,noOfFiles,fileList);
     }

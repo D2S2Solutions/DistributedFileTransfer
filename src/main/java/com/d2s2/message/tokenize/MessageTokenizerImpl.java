@@ -64,7 +64,7 @@ public class MessageTokenizerImpl implements MessageTokenizer {
         return gracefulLeaveResponseModel;
     }
 
-    private AbstractRequestResponseModel getHeartBeatSignalOb(StringTokenizer stringTokenizer) {
+    private AbstractRequestResponseModel getHeartBeatSignalOb(StringTokenizer stringTokenizer) throws RemoteException {
         String ip = stringTokenizer.nextToken();
         int port = Integer.parseInt(stringTokenizer.nextToken());
         String username = stringTokenizer.nextToken();

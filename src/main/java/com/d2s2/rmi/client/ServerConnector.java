@@ -131,6 +131,16 @@ public class ServerConnector {
         }
     }
 
+    public void callRemoteHeartbeatSignalHandle(String ip, int port, String userName) throws RemoteException, NotBoundException {
+        final AbstractRequestResponseModel heartBeatSignalModel = remoteFactory.getHeartBeatSignalModel(ip, port, userName);
+        if(heartBeatSignalModel!=null){
+            heartBeatSignalModel.handle();
+            System.out.println("Invoking Heart Beat remote method");
+        } else {
+            System.out.println("remote object is null");
+        }
+    }
+
 
     @Override
     public int hashCode() {

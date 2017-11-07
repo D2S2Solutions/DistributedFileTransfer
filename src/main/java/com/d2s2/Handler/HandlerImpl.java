@@ -12,6 +12,7 @@ import com.d2s2.rmi.client.ServerConnector;
 import com.d2s2.socket.UDPConnectorImpl;
 import com.d2s2.socket.UdpConnector;
 
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
@@ -53,15 +54,15 @@ public class HandlerImpl implements Handler {
     }
 
     @Override
-    public void sendHeartBeatSignal() {
+    public void sendHeartBeatSignal() throws NotBoundException {
         Set<Node> neighbourNodes = NeighbourTableImpl.getInstance().getNeighbourNodeList();
         if (!neighbourNodes.isEmpty()) {
-            HeartBeatSignalModel heartBeatSignalModel = new HeartBeatSignalModel(ApplicationConstants.IP, ApplicationConstants.PORT, ApplicationConstants.USER_NAME);
+
             for (Node neighbour : neighbourNodes) {
-                String heartBeatMessage = messageBuilder.buildHeartBeatSignalMessage(heartBeatSignalModel);
                 try {
                     System.out.println("Sending HBEAT to "+neighbour.getNodeIp()+" "+ neighbour.getPort() +"by" + ApplicationConstants.IP + " " + String.valueOf(ApplicationConstants.PORT) + " " + ApplicationConstants.USER_NAME);
-                    udpConnector.send(heartBeatMessage, InetAddress.getByName(neighbour.getNodeIp()), neighbour.getPort());
+                    final ServerConnector serverConnector = ServerConnector.getServerConnector(neighbour.getNodeIp(), neighbour.getPort());
+                    serverConnector.callRemoteHeartbeatSignalHandle(ApplicationConstants.IP, ApplicationConstants.PORT, ApplicationConstants.USER_NAME);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
