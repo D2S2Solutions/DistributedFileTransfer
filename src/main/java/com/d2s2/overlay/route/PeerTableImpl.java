@@ -44,8 +44,8 @@ public class PeerTableImpl {
         return peerNodeList;
     }
 
-    public void remove(Node node) {
-        peerNodeList.remove(node);
+    public boolean remove(Node node) {
+        return peerNodeList.remove(node);
     }
 
     public void search() {

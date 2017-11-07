@@ -39,22 +39,28 @@ public class MessageTokenizerImpl implements MessageTokenizer {
             case MessageConstants.NEIGHBOUR_MESSAGE:
                 return this.getNeighbourResponseMessageOb(stringTokenizer);
 
-            case MessageConstants.LEAVE_MESSAGE:
+            case MessageConstants.LEAVEOK_MESSAGE:
                 return this.getNeighbourLeaveResponseOb(stringTokenizer);
 
-
-
+            case MessageConstants.LEAVE_MESSAGE:
+                return this.getNeighbourLeaveMessageOb(stringTokenizer);
         }
         return null;
+    }
 
-
+    private AbstractRequestResponseModel getNeighbourLeaveMessageOb(StringTokenizer stringTokenizer) {
+        String ip = stringTokenizer.nextToken();
+        int port = Integer.parseInt(stringTokenizer.nextToken());
+        GracefulLeaveRequestModel gracefulLeaveRequestModel = new GracefulLeaveRequestModel(ip, port);
+        return gracefulLeaveRequestModel;
     }
 
     private AbstractRequestResponseModel getNeighbourLeaveResponseOb(StringTokenizer stringTokenizer) {
         String ip = stringTokenizer.nextToken();
-        String port = stringTokenizer.nextToken();
-        GracefulLeaveBootstrapServerResponseModel gracefulLeaveBootstrapServerResponseModel = new GracefulLeaveBootstrapServerResponseModel(ip,port);
-        return gracefulLeaveBootstrapServerResponseModel;
+        int port = Integer.valueOf(stringTokenizer.nextToken());
+        String status = stringTokenizer.nextToken();
+        GracefulLeaveResponseModel gracefulLeaveResponseModel = new GracefulLeaveResponseModel(ip,port,Integer.parseInt(status));
+        return gracefulLeaveResponseModel;
     }
 
     private AbstractRequestResponseModel getHeartBeatSignalOb(StringTokenizer stringTokenizer) {
@@ -98,7 +104,7 @@ public class MessageTokenizerImpl implements MessageTokenizer {
     private AbstractRequestResponseModel getUnregisterResponseMessageOb(StringTokenizer stringTokenizer) {
         String token = stringTokenizer.nextToken();
         if (token != null) {
-            return new UnregistrationResponseModel(Integer.parseInt(token));
+            return new GracefulLeaveBootstrapServerResponseModel(Integer.parseInt(token));
         } else {
             return null;
         }
@@ -108,9 +114,6 @@ public class MessageTokenizerImpl implements MessageTokenizer {
     private AbstractRequestResponseModel getRegisterResponseMessageOb(StringTokenizer stringTokenizer) {
         int nodeCount = Integer.parseInt(stringTokenizer.nextToken());
         switch (nodeCount) {
-            case 0:
-                System.out.println(" Request is successful but, no other nodes in the system");
-                return null;
             case 9996:
                 System.out.println(" failed, can’t register. BS is full.");
                 return null;
@@ -123,6 +126,8 @@ public class MessageTokenizerImpl implements MessageTokenizer {
             case 9999:
                 System.out.println(" failed, there is some error in the command");
                 return null;
+            case 0:
+                System.out.println(" Request is successful but, no other nodes in the system");
             default:
                 HashSet<Node> nodeset = new HashSet<>();
                 for (int i = 0; i < nodeCount; i++) {

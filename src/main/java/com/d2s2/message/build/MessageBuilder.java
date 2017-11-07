@@ -9,11 +9,11 @@ public interface MessageBuilder {
 
     String buildRegisterRequestMessage(RegistrationRequestModel model);
 
-    String buildUnregisterRequestMessage();
+    String buildUnregisterRequestMessage(GracefulLeaveBootstrapServerRequestModel gracefulLeaveBootstrapServerRequestModel);
 
     String buildJoinMessage();
 
-    String buildLeaveMessage();
+    String buildLeaveMessage(GracefulLeaveRequestModel gracefulLeaveRequestModel);
 
     String buildSearchRequestMessage(SearchRequestModel model);
 
@@ -23,4 +23,5 @@ public interface MessageBuilder {
 
     String buildHeartBeatSignalMessage(HeartBeatSignalModel model);
 
+    String buildLeaveOkToSourceMessage(GracefulLeaveResponseModel gracefulLeaveResponseModel);
 }

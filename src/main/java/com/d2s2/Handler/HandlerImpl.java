@@ -13,6 +13,7 @@ import com.d2s2.socket.UdpConnector;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -70,49 +71,32 @@ public class HandlerImpl implements Handler {
     public void gracefulLeaveRequest() {
         NeighbourTableImpl neighbourTable = NeighbourTableImpl.getInstance();
         Set<Node> neighbourNodeList = neighbourTable.getNeighbourNodeList();
-        /*
-        * First Unreg from the Bootstrap server
-        * */
-        GracefulLeaveBootstrapServerRequestModel gracefulLeaveBootstrapServerRequestModel = new GracefulLeaveBootstrapServerRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT, ApplicationConstants.USER_NAME);
-        String message = gracefulLeaveBootstrapServerRequestModel.toString();
 
+        //First Unreg from the Bootstrap server
+        GracefulLeaveBootstrapServerRequestModel gracefulLeaveBootstrapServerRequestModel = new GracefulLeaveBootstrapServerRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT, ApplicationConstants.USER_NAME);
+        String message = messageBuilder.buildUnregisterRequestMessage(gracefulLeaveBootstrapServerRequestModel);
         try {
             udpConnector.send(message, InetAddress.getByName(ApplicationConstants.BootstrapServerIp), ApplicationConstants.BS_SERVER_PORT);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        /**
-         * Next, Notify Neighbours of our departure
-         *
-         */
+        //Next, Notify Neighbours of our departure
         neighbourNodeList.forEach(node -> {
-            GracefulLeaveRequestModel gracefulLeaveRequestModel = new GracefulLeaveRequestModel(ApplicationConstants.IP,ApplicationConstants.PORT,ApplicationConstants.USER_NAME);
-            String neighbourLeaveMessage = gracefulLeaveRequestModel.toString();
+            GracefulLeaveRequestModel gracefulLeaveRequestModel = new GracefulLeaveRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT);
+            String neighbourLeaveMessage = messageBuilder.buildLeaveMessage(gracefulLeaveRequestModel);
             try {
-                udpConnector.send(neighbourLeaveMessage, InetAddress.getByName(node.getNodeIp()),node.getPort());
+                udpConnector.send(neighbourLeaveMessage, InetAddress.getByName(node.getNodeIp()), node.getPort());
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
+    }
 
-//        new java.util.Timer().schedule(
-//                new java.util.TimerTask() {
-//                    @Override
-//                    public void run() {
-//                        try {
-//                            System.out.println("Unregister the node from the BS");
-//                            udpConnector.send(message, null, 55555);// Unregister from the BS
-//                            System.exit(0);
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                },
-//                15000
-//        );
-
+    @Override
+    public void sendLeaveOkToSource(GracefulLeaveResponseModel gracefulLeaveResponseModel) throws IOException {
+        String buildLeaveOkToSourceMessage = messageBuilder.buildLeaveOkToSourceMessage(gracefulLeaveResponseModel);
+        udpConnector.send(buildLeaveOkToSourceMessage,InetAddress.getByName(gracefulLeaveResponseModel.getIp()),gracefulLeaveResponseModel.getPort());
     }
 
     @Override

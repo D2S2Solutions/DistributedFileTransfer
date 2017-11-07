@@ -12,12 +12,10 @@ import com.d2s2.ui.GUIController;
 import me.tongfei.progressbar.ProgressBar;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -32,20 +30,6 @@ public class Main {
 
 
     public static void main(String[] args) throws ExecutionException, InterruptedException, UnknownHostException, SocketException {
-        Enumeration enumeration = NetworkInterface.getNetworkInterfaces();
-        while(enumeration.hasMoreElements())
-        {
-            NetworkInterface n = (NetworkInterface) enumeration.nextElement();
-            Enumeration ee = n.getInetAddresses();
-            while (ee.hasMoreElements())
-            {
-                InetAddress i = (InetAddress) ee.nextElement();
-                if (i.toString().startsWith("10.10")){
-                    ApplicationConstants.IP = i.getHostAddress();
-                }
-                System.out.println(i.getHostAddress());
-            }
-        }
         ProgressBar pb = new ProgressBar("Registering in BS server||", 100);
         pb.start();
         pb.stepTo(35);
@@ -139,10 +123,18 @@ public class Main {
         };
         System.out.println("This node has :");
         ArrayList<String> fileList = new ArrayList<>();
-
+        ArrayList<Integer> randomList = new ArrayList<>();
         int length = fullLocalFileArray.length;
         for (int i = 0; i < randomWithRange(3, 5); i++) {
-            String s = fullLocalFileArray[randomWithRange(0, length - 1)];
+            int random = randomWithRange(0, length - 1);
+            boolean contains = randomList.contains(random);
+            if (contains){
+                --i;
+                continue;
+            }else {
+                randomList.add(random);
+            }
+            String s = fullLocalFileArray[random];
             System.out.println("\t" + s);
             String saltedName = s.replace(" ", "@");
             fileHandler.initializeFileStorage(saltedName);
@@ -156,34 +148,4 @@ public class Main {
 
     }
 
-
-//    public static void performGracefulDeparture(UdpConnector udpConnector) throws IOException {
-//        GracefulLeaveRequestModel gracefulLeaveRequest = new MessageBuilderImpl.GracefulLeaveRequestMessageBuilder()
-//                .setIp("129.82.123.45")
-//                .setPort(5002)
-//                .setUserName("--")
-//                .build();
-//        Set<Node> peerNodeList = PeerTableImpl.getInstance().getPeerNodeList();
-//        peerNodeList.forEach(node -> {
-//            try {
-//                udpConnector.send(gracefulLeaveRequest.toString(), InetAddress.getByAddress(node.getNodeIp().getBytes()), node.getPort());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        });
-//
-//        //Say goodbye to BS server
-//
-//        UnregistrationRequestModel unregistrationRequest = new MessageBuilderImpl.UnregisterRequestMessageBuilder()
-//                .setIp("129.82.123.45")
-//                .setPort(5002)
-//                .setUserName("--")
-//                .build();
-//        udpConnector.send(unregistrationRequest.toString(), InetAddress.getLocalHost(), 55555);
-//
-//        ((UDPConnectorImpl) udpConnector).killExecutorService();
-//        System.exit(0);
-//
-//
-//    }
 }
