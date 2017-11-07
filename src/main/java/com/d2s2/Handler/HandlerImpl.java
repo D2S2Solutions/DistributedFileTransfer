@@ -20,6 +20,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.logging.Logger;
 
 /**
  * Created by Heshan Sandamal on 10/24/2017.
@@ -61,10 +62,12 @@ public class HandlerImpl implements Handler {
             for (Node neighbour : neighbourNodes) {
                 try {
                     System.out.println("Sending HBEAT to "+neighbour.getNodeIp()+" "+ neighbour.getPort() +"by" + ApplicationConstants.IP + " " + String.valueOf(ApplicationConstants.PORT) + " " + ApplicationConstants.USER_NAME);
+
                     final ServerConnector serverConnector = ServerConnector.getServerConnector(neighbour.getNodeIp(), neighbour.getPort());
                     serverConnector.callRemoteHeartbeatSignalHandle(ApplicationConstants.IP, ApplicationConstants.PORT, ApplicationConstants.USER_NAME);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
+                    System.out.println("Connection refusing when Heart Beating");
                 }
             }
         }
@@ -82,7 +85,8 @@ public class HandlerImpl implements Handler {
             udpConnector.send(message, InetAddress.getByName(ApplicationConstants.BootstrapServerIp), ApplicationConstants.BS_SERVER_PORT);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            System.out.println("Connection refusing to bootstrap server when gracefulLeaving");
         }
         //Next, Notify Neighbours of our departure
         neighbourNodeList.forEach(node -> {
@@ -94,7 +98,8 @@ public class HandlerImpl implements Handler {
                     System.out.println("server connector is null");
                 }
             } catch (RemoteException | NotBoundException | MalformedURLException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
+                System.out.println("Connection refusing when gracefulLeaving");
             }
 
         });

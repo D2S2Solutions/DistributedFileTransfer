@@ -5,6 +5,7 @@ import com.d2s2.models.Node;
 import com.d2s2.rmi.server.RemoteFactory;
 
 import java.net.MalformedURLException;
+import java.rmi.ConnectException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
