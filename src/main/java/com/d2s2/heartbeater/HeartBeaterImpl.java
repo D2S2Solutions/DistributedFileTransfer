@@ -6,6 +6,7 @@ import com.d2s2.overlay.route.NeighbourTableImpl;
 import com.d2s2.overlay.route.PeerTableImpl;
 import com.d2s2.overlay.route.StatTableImpl;
 
+import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -52,7 +53,9 @@ public class HeartBeaterImpl {
     public void handleBeat() {
         //if there are no beats in HEART_BEAT_RECEIVE_THRESHOLD time
         if(!beatedNodes.isEmpty() && !PeerTableImpl.getInstance().getPeerNodeList().isEmpty() ) {
-            for (Node peerNode : PeerTableImpl.getInstance().getPeerNodeList()) {
+            Iterator<Node> nodeIterator = PeerTableImpl.getInstance().getPeerNodeList().iterator();
+            while (nodeIterator.hasNext()){
+                Node peerNode = nodeIterator.next();
                 if (!beatedNodes.contains(peerNode)) {
                     System.out.println("Removing node in HBeat failure "+ peerNode.getNodeIp() + " " + peerNode.getPort());
                     //remove node from peer(up) list
@@ -66,6 +69,17 @@ public class HeartBeaterImpl {
         }
         else if(beatedNodes.isEmpty() && !PeerTableImpl.getInstance().getPeerNodeList().isEmpty() ){
             System.out.println("Hbeat handling empty BeatedNodes");
+            Iterator<Node> nodeIterator = PeerTableImpl.getInstance().getPeerNodeList().iterator();
+            while (nodeIterator.hasNext()){
+                Node peerNode = nodeIterator.next();
+                System.out.println("Removing node in HBeat failure "+ peerNode.getNodeIp() + " " + peerNode.getPort());
+                //remove node from peer(up) list
+                Boolean isPeerRemoved =  PeerTableImpl.getInstance().remove(peerNode);
+                System.out.println("Removing peer "+isPeerRemoved);
+                //remove from stat table
+                Boolean isStatRemoved = StatTableImpl.getInstance().remove(peerNode);
+                System.out.println("Removing stat "+isStatRemoved);
+            }
         }
         else if(!beatedNodes.isEmpty() && PeerTableImpl.getInstance().getPeerNodeList().isEmpty() ){
             System.out.println("Hbeat handling empty Peer Nodes");
