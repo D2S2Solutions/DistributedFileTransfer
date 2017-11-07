@@ -1,8 +1,11 @@
 package com.d2s2;
 
+import com.d2s2.Handler.Handler;
+import com.d2s2.Handler.HandlerImpl;
 import com.d2s2.constants.ApplicationConstants;
 import com.d2s2.files.FileHandler;
 import com.d2s2.files.FileHandlerImpl;
+import com.d2s2.heartbeater.HeartBeaterImpl;
 import com.d2s2.rmi.server.RemoteFactoryImpl;
 import com.d2s2.socket.UDPConnectorImpl;
 import com.d2s2.socket.UdpConnector;
@@ -17,12 +20,13 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import static com.d2s2.constants.ApplicationConstants.randomWithRange;
+import static com.d2s2.constants.ApplicationConstants.*;
 
 /**
  * Created by Heshan Sandamal on 10/6/2017.
@@ -54,6 +58,7 @@ public class Main {
         ).start();
 
 
+
     }
 
     private static void initRMIRegistry() {
@@ -71,6 +76,67 @@ public class Main {
         } catch (RemoteException ex) {
             ex.printStackTrace();
         }
+
+        /* For heart beating sending*/
+        Runnable runnableHeartBeatSender = () -> {
+            Handler handler = new HandlerImpl();
+            Timer timer = new Timer();
+
+            timer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    try {
+                        System.out.println("Sending Hbeat");
+                        handler.sendHeartBeatSignal();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, HEART_BEAT_SEND_THRESHOLD*1000, HEART_BEAT_SEND_THRESHOLD*1000);
+        };
+        Thread heartBeatSenderThread = new Thread(runnableHeartBeatSender);
+        heartBeatSenderThread.start();
+
+        /* For heart beating handling*/
+        Runnable runnableHeartBeatHandler = () -> {
+            HeartBeaterImpl heartBeater = HeartBeaterImpl.getInstance();
+            Timer timer = new Timer();
+
+            timer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    try {
+                        System.out.println("Handling Hbeat");
+                        heartBeater.handleBeat();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, HEART_BEAT_RECEIVE_THRESHOLD*1000, HEART_BEAT_RECEIVE_THRESHOLD*1000);
+        };
+        Thread heartBeatHandlerThread = new Thread(runnableHeartBeatHandler);
+        heartBeatHandlerThread.start();
+
+        /* For heart beated node clearing*/
+        Runnable runnableHeartBeatDeleter = () -> {
+            HeartBeaterImpl heartBeater = HeartBeaterImpl.getInstance();
+            Timer timer = new Timer();
+
+            timer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    try {
+                        System.out.println("Clearing Hbeated nodes");
+                        heartBeater.clearBeatedNodes();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, HEART_BEAT_CLEAR_THRESHOLD *1000, HEART_BEAT_CLEAR_THRESHOLD*1000);
+        };
+        Thread heartBeatDeleterThread = new Thread(runnableHeartBeatDeleter);
+        heartBeatDeleterThread.start();
+
     }
 
 

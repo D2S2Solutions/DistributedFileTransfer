@@ -20,7 +20,7 @@ public class HeartBeatSignalModel implements AbstractRequestResponseModel {
     @Override
     public void handle() {
         Node beatedNode = new Node(this.ip, this.port);
-        HeartBeaterImpl.getInstance().handleBeat(beatedNode);
+        HeartBeaterImpl.getInstance().saveBeatedNodes(beatedNode);
     }
 
     public String getIp() {

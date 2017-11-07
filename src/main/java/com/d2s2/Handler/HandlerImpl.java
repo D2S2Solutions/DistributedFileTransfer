@@ -15,7 +15,6 @@ import com.d2s2.socket.UdpConnector;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
-import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.*;
@@ -55,14 +54,14 @@ public class HandlerImpl implements Handler {
 
     @Override
     public void sendHeartBeatSignal() {
-        Set<Node> peerNodes = PeerTableImpl.getInstance().getPeerNodeList();
-        if (!peerNodes.isEmpty()) {
+        Set<Node> neighbourNodes = NeighbourTableImpl.getInstance().getNeighbourNodeList();
+        if (!neighbourNodes.isEmpty()) {
             HeartBeatSignalModel heartBeatSignalModel = new HeartBeatSignalModel(ApplicationConstants.IP, ApplicationConstants.PORT, ApplicationConstants.USER_NAME);
-            for (Node peer : peerNodes) {
+            for (Node neighbour : neighbourNodes) {
                 String heartBeatMessage = messageBuilder.buildHeartBeatSignalMessage(heartBeatSignalModel);
                 try {
-                    System.out.println("Sending HBEAT by" + ApplicationConstants.IP + " " + String.valueOf(ApplicationConstants.PORT) + " " + ApplicationConstants.USER_NAME);
-                    udpConnector.send(heartBeatMessage, InetAddress.getByName(peer.getNodeIp()), peer.getPort());
+                    System.out.println("Sending HBEAT to "+neighbour.getNodeIp()+" "+ neighbour.getPort() +"by" + ApplicationConstants.IP + " " + String.valueOf(ApplicationConstants.PORT) + " " + ApplicationConstants.USER_NAME);
+                    udpConnector.send(heartBeatMessage, InetAddress.getByName(neighbour.getNodeIp()), neighbour.getPort());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -106,6 +105,7 @@ public class HandlerImpl implements Handler {
         if(serverConnector!=null){
             serverConnector.callRemoteGracefulLeaveResponseHandle(ApplicationConstants.IP,ApplicationConstants.PORT,gracefulLeaveResponseModel.getStatus());
         }
+
     }
 
     @Override

@@ -23,5 +23,5 @@ public interface MessageBuilder {
 
     String buildHeartBeatSignalMessage(HeartBeatSignalModel model);
 
-    String buildLeaveOkToSourceMessage(GracefulLeaveRequestModel gracefulLeaveRequestModel);
+    String buildLeaveOkToSourceMessage(GracefulLeaveResponseModel gracefulLeaveResponseModel);
 }

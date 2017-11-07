@@ -57,8 +57,10 @@ public class MessageTokenizerImpl implements MessageTokenizer {
     }
 
     private AbstractRequestResponseModel getNeighbourLeaveResponseOb(StringTokenizer stringTokenizer) throws RemoteException {
+        String ip = stringTokenizer.nextToken();
+        int port = Integer.valueOf(stringTokenizer.nextToken());
         String status = stringTokenizer.nextToken();
-        GracefulLeaveResponseModel gracefulLeaveResponseModel = new GracefulLeaveResponseModel(ip, port, Integer.valueOf(status));
+        GracefulLeaveResponseModel gracefulLeaveResponseModel = new GracefulLeaveResponseModel(ip,port,Integer.parseInt(status));
         return gracefulLeaveResponseModel;
     }
 

@@ -38,9 +38,9 @@ public class GracefulLeaveResponseModel  extends UnicastRemoteObject implements 
 
     public void handle() {
         if (this.status == 0) {
-            System.out.println("Successfully Left");
+            System.out.println( this.ip + ":"+ this.port +" Node's entries are successfully Updated");
         } else {
-            System.out.println("Error while leaving");
+            System.out.println( "Error while Updating " +this.ip + this.port);
         }
     }
 }
