@@ -1,5 +1,6 @@
 package com.d2s2.overlay.route;
 
+import com.d2s2.constants.ApplicationConstants;
 import com.d2s2.models.Node;
 
 import java.util.Set;
@@ -34,6 +35,7 @@ public class PeerTableImpl {
 
 
     public void insert(Node node) {
+        System.out.println("Node " + node.getNodeIp() + ":" + node.getPort() + " Added to Peer Table of " + ApplicationConstants.IP + ":" + ApplicationConstants.PORT);
         peerNodeList.add(node); // todo limit the number of node to 2
 
     }

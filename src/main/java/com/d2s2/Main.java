@@ -21,6 +21,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import static com.d2s2.constants.ApplicationConstants.randomWithRange;
 
@@ -84,6 +85,21 @@ public class Main {
 
         /* For heart beating*/
         Handler handler = new HandlerImpl();
+        Runnable runnable = () -> {
+            try {
+                String name = Thread.currentThread().getName();
+                System.out.println("Foo " + name);
+                TimeUnit.SECONDS.sleep(10);
+                //System.out.println("Bar " + name);
+                handler.sendHeartBeatSignal();
+            }
+            catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        };
+
+        Thread thread = new Thread(runnable);
+        thread.start();
 
     }
 
