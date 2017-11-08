@@ -2,6 +2,7 @@ package com.d2s2.models;
 
 import com.d2s2.Handler.Handler;
 import com.d2s2.Handler.HandlerImpl;
+import com.d2s2.constants.ApplicationConstants;
 import com.d2s2.overlay.route.NeighbourTableImpl;
 import com.d2s2.overlay.route.PeerTableImpl;
 
@@ -38,9 +39,19 @@ public class NotifyNeighbourRequestModel extends AbstractRequestModel {
                 }
             }
         }
-        System.out.println("Peer table");
-        System.out.println(peerTable.getPeerNodeList());
 
+        if ("Linux".equals(System.getProperty("os.name"))) {
+            System.out.println(ApplicationConstants.ANSI_CYAN + "Peer Nodes Table" + ApplicationConstants.ANSI_RESET);
+            System.out.println(ApplicationConstants.ANSI_PURPLE + "===================" + ApplicationConstants.ANSI_RESET);
+            peerTable.getPeerNodeList().forEach(n -> System.out.println(ApplicationConstants.ANSI_YELLOW +
+                    n.getNodeIp() + "\t\t" + n.getPort() + ApplicationConstants.ANSI_RESET
+            ));
+        } else {
+            System.out.println("Peer Nodes Table");
+            System.out.println("===================");
+            peerTable.getPeerNodeList().forEach(n -> System.out.println(n.getNodeIp() + "\t\t" + n.getPort()
+            ));
+        }
 
     }
 }

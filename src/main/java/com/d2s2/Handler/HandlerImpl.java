@@ -61,7 +61,7 @@ public class HandlerImpl implements Handler {
 
             for (Node neighbour : neighbourNodes) {
                 try {
-                    System.out.println("Sending HBEAT to "+neighbour.getNodeIp()+" "+ neighbour.getPort() +"by" + ApplicationConstants.IP + " " + String.valueOf(ApplicationConstants.PORT) + " " + ApplicationConstants.USER_NAME);
+                    System.out.println("Sending HBEAT to "+neighbour.getNodeIp()+" "+ neighbour.getPort() +" by " + ApplicationConstants.IP + " " + String.valueOf(ApplicationConstants.PORT) + " " + ApplicationConstants.USER_NAME);
 
                     final ServerConnector serverConnector = ServerConnector.getServerConnector(neighbour.getNodeIp(), neighbour.getPort());
                     serverConnector.callRemoteHeartbeatSignalHandle(ApplicationConstants.IP, ApplicationConstants.PORT, ApplicationConstants.USER_NAME);
