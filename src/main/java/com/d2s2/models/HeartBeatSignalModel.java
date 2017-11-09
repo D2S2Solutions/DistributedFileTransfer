@@ -1,6 +1,7 @@
 package com.d2s2.models;
 
 import com.d2s2.heartbeater.HeartBeaterImpl;
+import com.d2s2.overlay.route.PeerTableImpl;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -24,6 +25,7 @@ public class HeartBeatSignalModel extends UnicastRemoteObject implements Abstrac
     public void handle() {
         Node beatedNode = new Node(this.ip, this.port);
         HeartBeaterImpl.getInstance().saveBeatedNodes(beatedNode);
+        PeerTableImpl.getInstance().insert(beatedNode);
     }
 
     public String getIp() {
