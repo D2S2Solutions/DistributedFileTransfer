@@ -38,6 +38,6 @@ public class ApplicationConstants {
     }
     private static String getFakeName(){
         Faker faker = new Faker();
-        return faker.gameOfThrones().city();
+        return faker.harryPotter().character();
     }
 }
