@@ -8,14 +8,16 @@ import com.d2s2.message.tokenize.MessageTokenizerImpl;
 import com.d2s2.models.*;
 import com.d2s2.overlay.route.NeighbourTableImpl;
 import com.d2s2.overlay.route.PeerTableImpl;
+import com.d2s2.overlay.route.StatTableImpl;
 import com.d2s2.socket.UDPConnectorImpl;
 import com.d2s2.socket.UdpConnector;
+import com.d2s2.ui.GUIController;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
 
 /**
  * Created by Heshan Sandamal on 10/24/2017.
@@ -76,7 +78,7 @@ public class HandlerImpl implements Handler {
         String message = messageBuilder.buildUnregisterRequestMessage(gracefulLeaveBootstrapServerRequestModel);
         try {
             udpConnector.send(message, InetAddress.getByName(ApplicationConstants.BootstrapServerIp), ApplicationConstants.BS_SERVER_PORT);
-
+            GUIController.getInstance().displayMessage("Successfully Un-Registered from the Bootstrap Server.");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -90,6 +92,10 @@ public class HandlerImpl implements Handler {
                 e.printStackTrace();
             }
         });
+
+        PeerTableImpl.getInstance().getPeerNodeList().forEach(node -> PeerTableImpl.getInstance().remove(node));
+        NeighbourTableImpl.getInstance().getNeighbourNodeList().forEach(node -> NeighbourTableImpl.getInstance().remove(node));
+        StatTableImpl.getStatTable().clear();
     }
 
     @Override
