@@ -13,6 +13,7 @@ import com.d2s2.constants.ApplicationConstants;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -87,6 +88,17 @@ public class FileSearchInterface extends javax.swing.JFrame {
         this.ipTextField.setText(ApplicationConstants.IP);
         this.portTextField.setText(String.valueOf(ApplicationConstants.PORT));
 
+        this.searchTextField.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                dtmForSearchResultTable.setRowCount(0);
+                try {
+                    guiController.searchFile(searchTextField.getText());
+                } catch (RemoteException | NotBoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         this.searchButton.addActionListener(evt -> {
             dtmForSearchResultTable.setRowCount(0);
