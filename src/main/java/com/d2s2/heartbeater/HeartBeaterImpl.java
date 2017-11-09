@@ -5,6 +5,7 @@ import com.d2s2.models.Node;
 import com.d2s2.overlay.route.NeighbourTableImpl;
 import com.d2s2.overlay.route.PeerTableImpl;
 import com.d2s2.overlay.route.StatTableImpl;
+import com.d2s2.ui.GUIController;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -40,52 +41,60 @@ public class HeartBeaterImpl {
         return heartBeater;
     }
 
-    public void saveBeatedNodes(Node beatedNode){
+    public void saveBeatedNodes(Node beatedNode) {
         beatedNodes.add(beatedNode);
-        System.out.println("HBEAT Received from "+ beatedNode.getNodeIp()+" "+ beatedNode.getPort());
+        System.out.println("HBEAT Received from " + beatedNode.getNodeIp() + " " + beatedNode.getPort());
     }
 
-    public void clearBeatedNodes(){
+    public void clearBeatedNodes() {
         beatedNodes.clear();
         System.out.println("Clear Beated Nodes");
     }
 
     public void handleBeat() {
+        boolean isPeerTableUpdated = false;
         //if there are no beats in HEART_BEAT_RECEIVE_THRESHOLD time
-        if(!beatedNodes.isEmpty() && !PeerTableImpl.getInstance().getPeerNodeList().isEmpty() ) {
+        if (!beatedNodes.isEmpty() && !PeerTableImpl.getInstance().getPeerNodeList().isEmpty()) {
             Iterator<Node> nodeIterator = PeerTableImpl.getInstance().getPeerNodeList().iterator();
-            while (nodeIterator.hasNext()){
+            while (nodeIterator.hasNext()) {
                 Node peerNode = nodeIterator.next();
                 if (!beatedNodes.contains(peerNode)) {
-                    System.out.println("Removing node in HBeat failure "+ peerNode.getNodeIp() + " " + peerNode.getPort());
+                    System.out.println("Removing node in HBeat failure " + peerNode.getNodeIp() + " " + peerNode.getPort());
                     //remove node from peer(up) list
-                    Boolean isPeerRemoved =  PeerTableImpl.getInstance().remove(peerNode);
-                    System.out.println("Removing peer "+isPeerRemoved);
+                    Boolean isPeerRemoved = PeerTableImpl.getInstance().remove(peerNode);
+                    if (isPeerRemoved) {
+                        isPeerTableUpdated = true;
+                    }
+                    System.out.println("Removing peer " + isPeerRemoved);
                     //remove from stat table
                     Boolean isStatRemoved = StatTableImpl.getInstance().remove(peerNode);
-                    System.out.println("Removing stat "+isStatRemoved);
+                    System.out.println("Removing stat " + isStatRemoved);
                 }
             }
-        }
-        else if(beatedNodes.isEmpty() && !PeerTableImpl.getInstance().getPeerNodeList().isEmpty() ){
+        } else if (beatedNodes.isEmpty() && !PeerTableImpl.getInstance().getPeerNodeList().isEmpty()) {
             System.out.println("Hbeat handling empty BeatedNodes");
             Iterator<Node> nodeIterator = PeerTableImpl.getInstance().getPeerNodeList().iterator();
-            while (nodeIterator.hasNext()){
+            while (nodeIterator.hasNext()) {
                 Node peerNode = nodeIterator.next();
-                System.out.println("Removing node in HBeat failure "+ peerNode.getNodeIp() + " " + peerNode.getPort());
+                System.out.println("Removing node in HBeat failure " + peerNode.getNodeIp() + " " + peerNode.getPort());
                 //remove node from peer(up) list
-                Boolean isPeerRemoved =  PeerTableImpl.getInstance().remove(peerNode);
-                System.out.println("Removing peer "+isPeerRemoved);
+                Boolean isPeerRemoved = PeerTableImpl.getInstance().remove(peerNode);
+                if (isPeerRemoved) {
+                    isPeerTableUpdated = true;
+                }
+                System.out.println("Removing peer " + isPeerRemoved);
                 //remove from stat table
                 Boolean isStatRemoved = StatTableImpl.getInstance().remove(peerNode);
-                System.out.println("Removing stat "+isStatRemoved);
+                System.out.println("Removing stat " + isStatRemoved);
             }
-        }
-        else if(!beatedNodes.isEmpty() && PeerTableImpl.getInstance().getPeerNodeList().isEmpty() ){
+        } else if (!beatedNodes.isEmpty() && PeerTableImpl.getInstance().getPeerNodeList().isEmpty()) {
             System.out.println("Hbeat handling empty Peer Nodes");
-        }
-        else {
+        } else {
             System.out.println("Both empty");
+        }
+
+        if (isPeerTableUpdated) {
+            GUIController.getInstance().populatePeerTable(PeerTableImpl.getInstance().getPeerNodeList());
         }
         System.out.println("Peer Nodes at beating");
         System.out.println(PeerTableImpl.getInstance().getPeerNodeList());

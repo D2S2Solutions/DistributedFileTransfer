@@ -24,9 +24,9 @@ public class RegistrationResponseModel extends AbstractRequestResponseModel {
 
     @Override
     public void handle() {
+        PeerTableImpl peerTable = PeerTableImpl.getInstance();
         nodeset.forEach((node) -> {
-            PeerTableImpl instance = PeerTableImpl.getInstance();
-            instance.insert(node);
+            peerTable.insert(node);
             try {
                 handler.notifyNeighbours(node.getNodeIp(), node.getPort());
             } catch (IOException io) {
@@ -34,6 +34,7 @@ public class RegistrationResponseModel extends AbstractRequestResponseModel {
             }
         });
         GUIController guiController = GUIController.getInstance();
+        guiController.populatePeerTable(peerTable.getPeerNodeList());
         guiController.displayMessage("Successfully registered");
     }
 }

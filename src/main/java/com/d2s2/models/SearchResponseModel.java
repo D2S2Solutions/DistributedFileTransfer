@@ -81,6 +81,7 @@ public class SearchResponseModel extends AbstractRequestResponseModel {
 
             if (!peerTable.getPeerNodeList().contains(node)) {
                 peerTable.insert(node);
+                guiController.populatePeerTable(peerTable.getPeerNodeList());
             }
         }
     }

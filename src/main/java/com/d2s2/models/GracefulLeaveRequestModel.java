@@ -31,6 +31,8 @@ public class GracefulLeaveRequestModel extends AbstractRequestModel {
                 e.printStackTrace();
             }
         }
+
+        GUIController.getInstance().populatePeerTable(peerTable.getPeerNodeList());
     }
 
     public Node getNode() {

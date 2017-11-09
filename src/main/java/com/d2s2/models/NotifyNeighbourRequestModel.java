@@ -4,6 +4,7 @@ import com.d2s2.Handler.Handler;
 import com.d2s2.Handler.HandlerImpl;
 import com.d2s2.overlay.route.NeighbourTableImpl;
 import com.d2s2.overlay.route.PeerTableImpl;
+import com.d2s2.ui.GUIController;
 
 import java.io.IOException;
 
@@ -34,6 +35,8 @@ public class NotifyNeighbourRequestModel extends AbstractRequestModel {
                 } catch (IOException io) {
                     io.printStackTrace();
                 }
+                GUIController guiController = GUIController.getInstance();
+                guiController.populatePeerTable(peerTable.getPeerNodeList());
             }
         }
         System.out.println("Peer table");

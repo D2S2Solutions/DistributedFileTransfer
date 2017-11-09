@@ -2,9 +2,12 @@ package com.d2s2.ui;
 
 import com.d2s2.Handler.Handler;
 import com.d2s2.Handler.HandlerImpl;
+import com.d2s2.models.Node;
 import com.d2s2.models.SearchResponseModel;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -64,6 +67,10 @@ public class GUIController {
 
     public void displayMessage(String message) {
         fileSearchInterface.showMessage(message);
+    }
+
+    public void populatePeerTable(Set<Node> nodeArrayList){
+        fileSearchInterface.populatePeerTable(nodeArrayList);
     }
 
 
