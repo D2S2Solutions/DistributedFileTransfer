@@ -8,9 +8,12 @@ import com.d2s2.message.tokenize.MessageTokenizerImpl;
 import com.d2s2.models.*;
 import com.d2s2.overlay.route.NeighbourTableImpl;
 import com.d2s2.overlay.route.PeerTableImpl;
+import com.d2s2.overlay.route.StatTableImpl;
 import com.d2s2.rmi.client.ServerConnector;
 import com.d2s2.socket.UDPConnectorImpl;
 import com.d2s2.socket.UdpConnector;
+import com.d2s2.ui.FileSearchInterface;
+import com.d2s2.ui.GUIController;
 
 
 import java.io.IOException;
@@ -83,7 +86,7 @@ public class HandlerImpl implements Handler {
         String message = messageBuilder.buildUnregisterRequestMessage(gracefulLeaveBootstrapServerRequestModel);
         try {
             udpConnector.send(message, InetAddress.getByName(ApplicationConstants.BootstrapServerIp), ApplicationConstants.BS_SERVER_PORT);
-
+            GUIController.getInstance().displayMessage("Successfully Un-Registered from the Bootstrap Server.");
         } catch (IOException e) {
             //e.printStackTrace();
             System.out.println("Connection refusing to bootstrap server when gracefulLeaving");
@@ -103,6 +106,10 @@ public class HandlerImpl implements Handler {
             }
 
         });
+
+        PeerTableImpl.getInstance().getPeerNodeList().forEach(node -> PeerTableImpl.getInstance().remove(node));
+        NeighbourTableImpl.getInstance().getNeighbourNodeList().forEach(node -> NeighbourTableImpl.getInstance().remove(node));
+        StatTableImpl.getStatTable().clear();
     }
 
     @Override
