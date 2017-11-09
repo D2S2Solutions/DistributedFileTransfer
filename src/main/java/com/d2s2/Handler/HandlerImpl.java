@@ -15,6 +15,9 @@ import com.d2s2.ui.GUIController;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
