@@ -2,7 +2,6 @@ package com.d2s2.heartbeater;
 
 import com.d2s2.constants.ApplicationConstants;
 import com.d2s2.models.Node;
-import com.d2s2.overlay.route.NeighbourTableImpl;
 import com.d2s2.overlay.route.PeerTableImpl;
 import com.d2s2.overlay.route.StatTableImpl;
 import com.d2s2.ui.GUIController;
@@ -52,8 +51,15 @@ public class HeartBeaterImpl {
     }
 
     public void handleBeat() {
+<<<<<<< HEAD
         boolean isPeerTableUpdated = false;
         boolean isStatTableUpdated = false;
+=======
+
+        boolean isPeerTableUpdated = false;
+        boolean isStatTableUpdated = false;
+
+>>>>>>> origin/RMI-HeartBeat
         //if there are no beats in HEART_BEAT_RECEIVE_THRESHOLD time
         if (!beatedNodes.isEmpty() && !PeerTableImpl.getInstance().getPeerNodeList().isEmpty()) {
             Iterator<Node> nodeIterator = PeerTableImpl.getInstance().getPeerNodeList().iterator();
@@ -84,13 +90,17 @@ public class HeartBeaterImpl {
                     System.out.println("Removing node in HBeat failure " + peerNode.getNodeIp() + " " + peerNode.getPort());
                     //remove node from peer(up) list
                     Boolean isPeerRemoved = PeerTableImpl.getInstance().remove(peerNode);
+<<<<<<< HEAD
                     if (isPeerRemoved) {
                         isPeerTableUpdated = true;
                     }
+=======
+>>>>>>> origin/RMI-HeartBeat
                     System.out.println("Removing peer " + isPeerRemoved);
                     //remove from stat table
                     Boolean isStatRemoved = StatTableImpl.getInstance().remove(peerNode);
                     System.out.println("Removing stat " + isStatRemoved);
+<<<<<<< HEAD
                     if(isStatRemoved){
                         isPeerTableUpdated=true;
                     }
@@ -98,6 +108,11 @@ public class HeartBeaterImpl {
                 no_hbeat_garanty_count = 0;
             }
             else{
+=======
+                }
+            }
+            else {
+>>>>>>> origin/RMI-HeartBeat
                 no_hbeat_garanty_count++;
             }
         } else if (!beatedNodes.isEmpty() && PeerTableImpl.getInstance().getPeerNodeList().isEmpty()) {
@@ -108,6 +123,7 @@ public class HeartBeaterImpl {
         clearBeatedNodes();
 
         if (isPeerTableUpdated) {
+<<<<<<< HEAD
             GUIController.getInstance().populatePeerTable(PeerTableImpl.getInstance().getPeerNodeList());
         }
 
@@ -116,5 +132,25 @@ public class HeartBeaterImpl {
         }
         System.out.println("Peer Nodes at beating");
         System.out.println(PeerTableImpl.getInstance().getPeerNodeList());
+=======
+            //GUIController.getInstance().populatePeerTable(PeerTableImpl.getInstance().getPeerNodeList());
+        }
+
+        if(isStatTableUpdated){
+            //GUIController.getInstance().populateStatTable(StatTableImpl.getInstance().get());
+        }
+
+        if ("Linux".equals(System.getProperty("os.name"))) {
+            System.out.println(ApplicationConstants.ANSI_CYAN + "Peer Nodes at live heart-beating " + ApplicationConstants.ANSI_RESET);
+            PeerTableImpl.getInstance().getPeerNodeList().forEach(node -> System.out.println(ApplicationConstants.ANSI_YELLOW +
+                    node.getNodeIp() + "\t\t" + node.getPort() + ApplicationConstants.ANSI_RESET
+            ));
+        } else {
+            System.out.println("Peer Nodes at live heart-beating ");
+            PeerTableImpl.getInstance().getPeerNodeList().forEach(node -> System.out.println(node.getNodeIp() + "\t\t" + node.getPort()
+            ));
+        }
+
+>>>>>>> origin/RMI-HeartBeat
     }
 }

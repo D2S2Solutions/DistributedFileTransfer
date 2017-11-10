@@ -8,9 +8,12 @@ import com.d2s2.message.tokenize.MessageTokenizerImpl;
 import com.d2s2.models.*;
 import com.d2s2.overlay.route.NeighbourTableImpl;
 import com.d2s2.overlay.route.PeerTableImpl;
+import com.d2s2.overlay.route.StatTableImpl;
 import com.d2s2.rmi.client.ServerConnector;
 import com.d2s2.socket.UDPConnectorImpl;
 import com.d2s2.socket.UdpConnector;
+import com.d2s2.ui.FileSearchInterface;
+import com.d2s2.ui.GUIController;
 
 
 import java.io.IOException;
@@ -20,7 +23,11 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
+<<<<<<< HEAD
 import java.util.concurrent.Future;
+=======
+import java.util.logging.Logger;
+>>>>>>> origin/RMI-HeartBeat
 
 /**
  * Created by Heshan Sandamal on 10/24/2017.
@@ -61,11 +68,17 @@ public class HandlerImpl implements Handler {
 
             for (Node neighbour : neighbourNodes) {
                 try {
+<<<<<<< HEAD
                     System.out.println("Sending HBEAT to " + neighbour.getNodeIp() + " " + neighbour.getPort() + "by" + ApplicationConstants.IP + " " + String.valueOf(ApplicationConstants.PORT) + " " + ApplicationConstants.USER_NAME);
+=======
+                    System.out.println("Sending HBEAT to "+neighbour.getNodeIp()+" "+ neighbour.getPort() +" by " + ApplicationConstants.IP + " " + String.valueOf(ApplicationConstants.PORT) + " " + ApplicationConstants.USER_NAME);
+
+>>>>>>> origin/RMI-HeartBeat
                     final ServerConnector serverConnector = ServerConnector.getServerConnector(neighbour.getNodeIp(), neighbour.getPort());
                     serverConnector.callRemoteHeartbeatSignalHandle(ApplicationConstants.IP, ApplicationConstants.PORT, ApplicationConstants.USER_NAME);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
+                    System.out.println("Connection refusing when Heart Beating");
                 }
             }
         }
@@ -80,17 +93,34 @@ public class HandlerImpl implements Handler {
         String message = messageBuilder.buildUnregisterRequestMessage(gracefulLeaveBootstrapServerRequestModel);
         try {
             udpConnector.send(message, InetAddress.getByName(ApplicationConstants.BootstrapServerIp), ApplicationConstants.BS_SERVER_PORT);
+<<<<<<< HEAD
+=======
+            GUIController.getInstance().displayMessage("Successfully Un-Registered from the Bootstrap Server.");
+>>>>>>> origin/RMI-HeartBeat
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            System.out.println("Connection refusing to bootstrap server when gracefulLeaving");
         }
 
         new Thread(() -> {
             System.out.println(">>>>>>>>>> WAITING FOR Leave Response <<<<<<<<<<<<\n");
             Future<String> stringFuture = null;
             try {
+<<<<<<< HEAD
                 stringFuture = udpConnector.receive();
             } catch (IOException e) {
                 e.printStackTrace();
+=======
+                final ServerConnector serverConnector = ServerConnector.getServerConnector(node.getNodeIp(), node.getPort());
+                if(serverConnector!=null){
+                    serverConnector.callRemoteGracefulLeaveRequestHandle(ApplicationConstants.IP,ApplicationConstants.PORT);
+                } else {
+                    System.out.println("server connector is null");
+                }
+            } catch (RemoteException | NotBoundException | MalformedURLException e) {
+                //e.printStackTrace();
+                System.out.println("Connection refusing when gracefulLeaving");
+>>>>>>> origin/RMI-HeartBeat
             }
 //            initRMIRegistry();
         }
@@ -99,6 +129,14 @@ public class HandlerImpl implements Handler {
 
         //Next, Notify Neighbours of our departure
 
+<<<<<<< HEAD
+=======
+        });
+
+        PeerTableImpl.getInstance().getPeerNodeList().forEach(node -> PeerTableImpl.getInstance().remove(node));
+        NeighbourTableImpl.getInstance().getNeighbourNodeList().forEach(node -> NeighbourTableImpl.getInstance().remove(node));
+        StatTableImpl.getStatTable().clear();
+>>>>>>> origin/RMI-HeartBeat
     }
 
     @Override

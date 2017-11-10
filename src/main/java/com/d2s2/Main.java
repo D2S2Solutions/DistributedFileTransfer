@@ -119,6 +119,7 @@ public class Main {
         Thread heartBeatHandlerThread = new Thread(runnableHeartBeatHandler);
         heartBeatHandlerThread.start();
 
+<<<<<<< HEAD
         /* For heart beated node clearing*/
         Runnable runnableHeartBeatDeleter = () -> {
             HeartBeaterImpl heartBeater = HeartBeaterImpl.getInstance();
@@ -138,6 +139,9 @@ public class Main {
         };
         Thread heartBeatDeleterThread = new Thread(runnableHeartBeatDeleter);
         heartBeatDeleterThread.start();
+=======
+
+>>>>>>> origin/RMI-HeartBeat
     }
 
 

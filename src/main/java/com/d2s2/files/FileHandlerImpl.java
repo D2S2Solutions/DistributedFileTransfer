@@ -33,8 +33,12 @@ public class FileHandlerImpl implements FileHandler {
     }
 
     public List<String> searchLocalFileList(String searchText) {
+        String regex = ".*?\\b" + searchText.toLowerCase() + "\\b.*?";
+        return localFileList.stream().filter(s -> {
+            String sl = s.toLowerCase().replace("@"," " );
+            return sl.matches(regex);
 
-        return localFileList.stream().filter(s -> s.toLowerCase().contains(searchText.toLowerCase())).collect(Collectors.toList());
+        }).collect(Collectors.toList());
     }
 
 }
