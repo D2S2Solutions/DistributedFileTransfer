@@ -43,7 +43,9 @@ public class GracefulLeaveBootstrapServerResponseModel extends AbstractRequestRe
         GUIController guiController = GUIController.getInstance();
         if (this.status == 0) {
             System.out.println("Successfully unregistered");
+            guiController.handleUnRegistration();
             guiController.displayMessage("Successfully Unregistered from Bootstrap server");
+
         } else {
             System.out.println("Error while unregistering");
             guiController.displayMessage("Error while unregistering");
