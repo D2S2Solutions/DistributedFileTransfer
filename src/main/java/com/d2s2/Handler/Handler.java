@@ -28,4 +28,5 @@ public interface Handler {
 
     void sendLeaveOkToSource(GracefulLeaveResponseModel node) throws IOException, NotBoundException;
 
+    void notifyNeighbourLeave(String message, Node node) throws IOException;
 }

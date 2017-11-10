@@ -2,11 +2,15 @@ package com.d2s2.ui;
 
 import com.d2s2.Handler.Handler;
 import com.d2s2.Handler.HandlerImpl;
+import com.d2s2.models.Node;
 import com.d2s2.models.SearchResponseModel;
 
 import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -68,5 +72,18 @@ public class GUIController {
         fileSearchInterface.showMessage(message);
     }
 
+    public void populatePeerTable(Set<Node> nodeArrayList){
+        fileSearchInterface.populatePeerTable(nodeArrayList);
+    }
+
+    public void populateStatTable(ConcurrentHashMap<String, ConcurrentLinkedQueue<Node>> statTable){
+        fileSearchInterface.populateStatTable(statTable);
+    }
+    public void handleRegisteration(){
+        fileSearchInterface.handleRegistration();
+    }
+    public void handleUnRegistration(){
+        fileSearchInterface.handleUnRegistration();
+    }
 
 }

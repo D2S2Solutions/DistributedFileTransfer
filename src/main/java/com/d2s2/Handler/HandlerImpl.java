@@ -73,7 +73,6 @@ public class HandlerImpl implements Handler {
     @Override
     public void gracefulLeaveRequest() throws RemoteException {
         NeighbourTableImpl neighbourTable = NeighbourTableImpl.getInstance();
-        Set<Node> neighbourNodeList = neighbourTable.getNeighbourNodeList();
 
         //First Unreg from the Bootstrap server
         GracefulLeaveBootstrapServerRequestModel gracefulLeaveBootstrapServerRequestModel = new GracefulLeaveBootstrapServerRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT, ApplicationConstants.USER_NAME);
@@ -85,19 +84,7 @@ public class HandlerImpl implements Handler {
             e.printStackTrace();
         }
         //Next, Notify Neighbours of our departure
-        neighbourNodeList.forEach(node -> {
-            try {
-                final ServerConnector serverConnector = ServerConnector.getServerConnector(node.getNodeIp(), node.getPort());
-                if(serverConnector!=null){
-                    serverConnector.callRemoteGracefulLeaveRequestHandle(ApplicationConstants.IP,ApplicationConstants.PORT);
-                } else {
-                    System.out.println("server connector is null");
-                }
-            } catch (RemoteException | NotBoundException | MalformedURLException e) {
-                e.printStackTrace();
-            }
 
-        });
     }
 
     @Override
@@ -193,12 +180,15 @@ public class HandlerImpl implements Handler {
 
     public void notifyNeighbours(String ip, int port) throws IOException, NotBoundException {
         final ServerConnector serverConnector = ServerConnector.getServerConnector(ip, port);
-        if(serverConnector!=null){
-            serverConnector.callRemoteNotifyNeighbourRequestHandle(ApplicationConstants.IP,ApplicationConstants.PORT);
-        }else{
+        if (serverConnector != null) {
+            serverConnector.callRemoteNotifyNeighbourRequestHandle(ApplicationConstants.IP, ApplicationConstants.PORT);
+        } else {
             System.out.println("server connector is null");
         }
+    }
 
+    public void notifyNeighbourLeave(String message, Node node) throws IOException {
+        udpConnector.send(message, InetAddress.getByName(node.getNodeIp()), node.getPort());
     }
 
 

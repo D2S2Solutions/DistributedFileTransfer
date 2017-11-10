@@ -2,6 +2,7 @@ package com.d2s2.models;
 
 import com.d2s2.Handler.Handler;
 import com.d2s2.Handler.HandlerImpl;
+import com.d2s2.constants.ApplicationConstants;
 import com.d2s2.overlay.route.PeerTableImpl;
 import com.d2s2.ui.GUIController;
 
@@ -27,9 +28,9 @@ public class RegistrationResponseModel extends UnicastRemoteObject implements Ab
 
     @Override
     public void handle() {
+        PeerTableImpl peerTable = PeerTableImpl.getInstance();
         nodeset.forEach((node) -> {
-            PeerTableImpl instance = PeerTableImpl.getInstance();
-            instance.insert(node);
+            peerTable.insert(node);
             try {
                 handler.notifyNeighbours(node.getNodeIp(), node.getPort());
             } catch (IOException | NotBoundException io) {
@@ -37,6 +38,9 @@ public class RegistrationResponseModel extends UnicastRemoteObject implements Ab
             }
         });
         GUIController guiController = GUIController.getInstance();
+        guiController.populatePeerTable(peerTable.getPeerNodeList());
         guiController.displayMessage("Successfully registered");
+        ApplicationConstants.isRegisterd = true;
+        guiController.handleRegisteration();
     }
 }

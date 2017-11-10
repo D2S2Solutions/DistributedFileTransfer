@@ -2,6 +2,7 @@ package com.d2s2.overlay.route;
 
 import com.d2s2.models.Node;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -50,13 +51,18 @@ public class StatTableImpl {
 
     public Boolean remove(Node node) {
         Boolean isElementRemoved = false;
-        for (Iterator<ConcurrentLinkedQueue<Node>> iterator = statTable.values().iterator(); iterator.hasNext();) {
+        Collection<ConcurrentLinkedQueue<Node>> values = statTable.values();
+        for (Iterator<ConcurrentLinkedQueue<Node>> iterator = values.iterator(); iterator.hasNext();) {
             ConcurrentLinkedQueue<Node> next = iterator.next();
             boolean nowRemoved = next.remove(node);
             if (!isElementRemoved && nowRemoved) {
                 isElementRemoved = true;
             }
+            if (next.size() == 0){
+                iterator.remove();
+            }
         }
+
         return isElementRemoved;
     }
 

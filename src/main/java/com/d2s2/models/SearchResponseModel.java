@@ -1,10 +1,14 @@
 package com.d2s2.models;
 
+import com.d2s2.Handler.Handler;
+import com.d2s2.Handler.HandlerImpl;
 import com.d2s2.constants.ApplicationConstants;
 import com.d2s2.overlay.route.PeerTableImpl;
 import com.d2s2.overlay.route.StatTableImpl;
 import com.d2s2.ui.GUIController;
 
+import java.io.IOException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashSet;
@@ -20,6 +24,7 @@ public class SearchResponseModel extends UnicastRemoteObject implements  Abstrac
     private int hops;
     private int noOfFiles;
     private HashSet<String> fileList;
+    private static Handler handler = new HandlerImpl();
 
     public SearchResponseModel(String ip, int port, int hops, int noOfFiles, HashSet<String> fileList) throws RemoteException {
         this.ip = ip;
@@ -50,7 +55,7 @@ public class SearchResponseModel extends UnicastRemoteObject implements  Abstrac
     }
 
     @Override
-    public void handle() {
+    public void handle() throws NotBoundException {
         final StatTableImpl statTable = StatTableImpl.getInstance();
         final PeerTableImpl peerTable = PeerTableImpl.getInstance();
 
@@ -67,6 +72,7 @@ public class SearchResponseModel extends UnicastRemoteObject implements  Abstrac
             guiController.displaySearchResults(this);
 
             Node node = new Node(this.ip, this.port);
+            final boolean[] isStatTableUpdated = {false};
             fileList.forEach((fileName) -> {
                 ConcurrentLinkedQueue<Node> concurrentLinkedQueue = statTable.get(fileName);
                 if (concurrentLinkedQueue == null) {
@@ -75,14 +81,25 @@ public class SearchResponseModel extends UnicastRemoteObject implements  Abstrac
                 }
                 if (!concurrentLinkedQueue.contains(node)) {
                     concurrentLinkedQueue.add(node);
+                    isStatTableUpdated[0] =true;
                 }
             });
+
+            if(isStatTableUpdated[0]){
+                guiController.populateStatTable(statTable.get());
+            }
 
             System.out.println("Stat Table ");
             System.out.println(statTable.getStatTable());
 
             if (!peerTable.getPeerNodeList().contains(node)) {
                 peerTable.insert(node);
+                try {
+                    handler.notifyNeighbours(node.getNodeIp(), node.getPort());
+                } catch (IOException io) {
+                    io.printStackTrace();
+                }
+                guiController.populatePeerTable(peerTable.getPeerNodeList());
             }
         }
     }

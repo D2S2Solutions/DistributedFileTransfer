@@ -3,6 +3,7 @@ package com.d2s2.models;
 import com.d2s2.Handler.Handler;
 import com.d2s2.Handler.HandlerImpl;
 import com.d2s2.constants.ApplicationConstants;
+import com.d2s2.overlay.route.NeighbourTableImpl;
 import com.d2s2.overlay.route.PeerTableImpl;
 import com.d2s2.overlay.route.StatTableImpl;
 import com.d2s2.socket.UDPConnectorImpl;
@@ -23,15 +24,27 @@ public class GracefulLeaveRequestModel extends AbstractRequestModel {
 
     @Override
     public void handle() throws NotBoundException {
-        PeerTableImpl peerTable = PeerTableImpl.getInstance();
+        final PeerTableImpl peerTable = PeerTableImpl.getInstance();
+        final StatTableImpl statTable = StatTableImpl.getInstance();
+        NeighbourTableImpl neighbourTable = NeighbourTableImpl.getInstance();
         boolean peerTableRemoved = peerTable.remove(node);
-        Boolean statTableRemoved = StatTableImpl.getInstance().remove(node);
-        if (statTableRemoved || peerTableRemoved) {
+        Boolean statTableRemoved = statTable.remove(node);
+        boolean neighbourTableRemoved=neighbourTable.remove(node);
+
+        if (statTableRemoved || peerTableRemoved || neighbourTableRemoved) {
             try {
-                handler.sendLeaveOkToSource(new GracefulLeaveResponseModel(ip,port,0));
+                handler.sendLeaveOkToSource(new GracefulLeaveResponseModel(ip, port, 0));
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+
+        if (peerTableRemoved) {
+            GUIController.getInstance().populatePeerTable(peerTable.getPeerNodeList());
+        }
+
+        if (statTableRemoved) {
+            GUIController.getInstance().populateStatTable(statTable.get());
         }
     }
 
