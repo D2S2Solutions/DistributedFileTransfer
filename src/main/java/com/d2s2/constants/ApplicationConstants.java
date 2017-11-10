@@ -24,5 +24,5 @@ public class ApplicationConstants {
         int range = (max - min) + 1;
         return (int) (Math.random() * range) + min;
     }
-    public static volatile Boolean IsOkTosendHeartBeat = false;
+    public static volatile Boolean isRegisterd = false;
 }

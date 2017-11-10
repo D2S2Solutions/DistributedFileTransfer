@@ -14,7 +14,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import static com.d2s2.constants.ApplicationConstants.IsOkTosendHeartBeat;
 
 public class GracefulLeaveBootstrapServerResponseModel extends AbstractRequestResponseModel {
     private int status;
@@ -27,7 +26,7 @@ public class GracefulLeaveBootstrapServerResponseModel extends AbstractRequestRe
     @Override
     public void handle() {
         Set<Node> neighbourNodeList = NeighbourTableImpl.getInstance().getNeighbourNodeList();
-        IsOkTosendHeartBeat = false;
+        ApplicationConstants.isRegisterd = false;
         neighbourNodeList.forEach(node -> {
             GracefulLeaveRequestModel gracefulLeaveRequestModel = new GracefulLeaveRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT);
             String neighbourLeaveMessage = new MessageBuilderImpl().buildLeaveMessage(gracefulLeaveRequestModel);

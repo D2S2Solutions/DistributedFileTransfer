@@ -37,7 +37,7 @@ public class RegistrationResponseModel extends AbstractRequestResponseModel {
         GUIController guiController = GUIController.getInstance();
         guiController.populatePeerTable(peerTable.getPeerNodeList());
         guiController.displayMessage("Successfully registered");
-        ApplicationConstants.IsOkTosendHeartBeat = true;
+        ApplicationConstants.isRegisterd = true;
         guiController.handleRegisteration();
     }
 }

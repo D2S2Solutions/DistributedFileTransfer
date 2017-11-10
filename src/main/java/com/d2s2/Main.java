@@ -77,8 +77,8 @@ public class Main {
                 @Override
                 public void run() {
                     try {
-                        System.out.println("Sending Hbeat");
-                        if (IsOkTosendHeartBeat) {
+                        if (isRegisterd) {
+                            System.out.println("Sending Hbeat");
                             handler.sendHeartBeatSignal();
                         }
                     } catch (Exception e) {
