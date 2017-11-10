@@ -101,11 +101,7 @@ public class HandlerImpl implements Handler {
 
         ).start();
 
-        //Next, Notify Neighbours of our departure
-
-        PeerTableImpl.getInstance().getPeerNodeList().forEach(node -> PeerTableImpl.getInstance().remove(node));
-        NeighbourTableImpl.getInstance().getNeighbourNodeList().forEach(node -> NeighbourTableImpl.getInstance().remove(node));
-        StatTableImpl.getStatTable().clear();
+        //Next, Notify Neighbours of our departur
 
     }
 

@@ -97,7 +97,7 @@ public class Main {
             }, HEART_BEAT_SEND_THRESHOLD * 1000, HEART_BEAT_SEND_THRESHOLD * 1000);
         };
         Thread heartBeatSenderThread = new Thread(runnableHeartBeatSender);
-//        heartBeatSenderThread.start();
+        heartBeatSenderThread.start();
 
         /* For heart beating handling*/
         Runnable runnableHeartBeatHandler = () -> {
@@ -117,7 +117,7 @@ public class Main {
             }, HEART_BEAT_RECEIVE_THRESHOLD * 1000, HEART_BEAT_RECEIVE_THRESHOLD * 1000);
         };
         Thread heartBeatHandlerThread = new Thread(runnableHeartBeatHandler);
-//        heartBeatHandlerThread.start();
+        heartBeatHandlerThread.start();
 
         /* For heart beated node clearing*/
         Runnable runnableHeartBeatDeleter = () -> {
@@ -137,7 +137,7 @@ public class Main {
             }, HEART_BEAT_CLEAR_THRESHOLD * 1000, HEART_BEAT_CLEAR_THRESHOLD * 1000);
         };
         Thread heartBeatDeleterThread = new Thread(runnableHeartBeatDeleter);
-//        heartBeatDeleterThread.start();
+        heartBeatDeleterThread.start();
     }
 
 

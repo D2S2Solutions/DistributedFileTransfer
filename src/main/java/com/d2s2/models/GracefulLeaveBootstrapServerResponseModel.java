@@ -38,7 +38,7 @@ public class GracefulLeaveBootstrapServerResponseModel extends UnicastRemoteObje
         ConcurrentHashMap<String, ConcurrentLinkedQueue<Node>> statTable = StatTableImpl.getStatTable();
 
         peerTable.forEach(node -> peerTable.remove(node));
-        NeighbourTableImpl.getInstance().getNeighbourNodeList().forEach(node -> NeighbourTableImpl.getInstance().remove(node));
+//        NeighbourTableImpl.getInstance().getNeighbourNodeList().forEach(node -> NeighbourTableImpl.getInstance().remove(node));
         statTable.clear();
 
         GUIController guiController = GUIController.getInstance();
