@@ -167,8 +167,17 @@ public class HandlerImpl implements Handler {
 
     }
 
-    public void notifyNeighbourLeave(String message, Node node) throws IOException {
-        udpConnector.send(message, InetAddress.getByName(node.getNodeIp()), node.getPort());
+    public void notifyNeighbourLeave(Set<Node> nodes) throws IOException {
+        nodes.forEach(node -> {
+            GracefulLeaveRequestModel gracefulLeaveRequestModel = new GracefulLeaveRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT);
+            String neighbourLeaveMessage = new MessageBuilderImpl().buildLeaveMessage(gracefulLeaveRequestModel);
+            try {
+                udpConnector.send(neighbourLeaveMessage, InetAddress.getByName(node.getNodeIp()), node.getPort());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
     }
 
 

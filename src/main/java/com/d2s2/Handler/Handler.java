@@ -5,6 +5,7 @@ import com.d2s2.models.*;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public interface Handler {
@@ -26,5 +27,5 @@ public interface Handler {
 
     void sendLeaveOkToSource(GracefulLeaveResponseModel gracefulLeaveResponseModel) throws IOException;
 
-    void notifyNeighbourLeave(String message, Node node) throws IOException;
+    void notifyNeighbourLeave(Set<Node> nodes) throws IOException;
 }

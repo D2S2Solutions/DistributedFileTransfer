@@ -27,16 +27,11 @@ public class GracefulLeaveBootstrapServerResponseModel extends AbstractRequestRe
     public void handle() {
         Set<Node> neighbourNodeList = NeighbourTableImpl.getInstance().getNeighbourNodeList();
         ApplicationConstants.isRegisterd = false;
-        neighbourNodeList.forEach(node -> {
-            GracefulLeaveRequestModel gracefulLeaveRequestModel = new GracefulLeaveRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT);
-            String neighbourLeaveMessage = new MessageBuilderImpl().buildLeaveMessage(gracefulLeaveRequestModel);
-            try {
-                handler.notifyNeighbourLeave(neighbourLeaveMessage,node);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        try {
+            handler.notifyNeighbourLeave(neighbourNodeList);
+        } catch (IOException e) {
 
+        }
         Set<Node> peerTable = PeerTableImpl.getInstance().getPeerNodeList();
         ConcurrentHashMap<String, ConcurrentLinkedQueue<Node>> statTable = StatTableImpl.getStatTable();
 
