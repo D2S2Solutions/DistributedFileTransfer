@@ -4,6 +4,7 @@ import com.d2s2.constants.ApplicationConstants;
 import com.d2s2.models.Node;
 import com.d2s2.overlay.route.PeerTableImpl;
 import com.d2s2.overlay.route.StatTableImpl;
+import com.d2s2.ui.GUIController;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -50,6 +51,10 @@ public class HeartBeaterImpl {
     }
 
     public void handleBeat() {
+
+        boolean isPeerTableUpdated = false;
+        boolean isStatTableUpdated = false;
+
         //if there are no beats in HEART_BEAT_RECEIVE_THRESHOLD time
         if (!beatedNodes.isEmpty() && !PeerTableImpl.getInstance().getPeerNodeList().isEmpty()) {
             Iterator<Node> nodeIterator = PeerTableImpl.getInstance().getPeerNodeList().iterator();
@@ -59,9 +64,15 @@ public class HeartBeaterImpl {
                     System.out.println("Removing node in HBeat failure " + peerNode.getNodeIp() + " " + peerNode.getPort());
                     //remove node from peer(up) list
                     Boolean isPeerRemoved = PeerTableImpl.getInstance().remove(peerNode);
+                    if (isPeerRemoved) {
+                        isPeerTableUpdated = true;
+                    }
                     System.out.println("Removing peer " + isPeerRemoved);
                     //remove from stat table
                     Boolean isStatRemoved = StatTableImpl.getInstance().remove(peerNode);
+                    if(isStatRemoved){
+                        isStatTableUpdated=true;
+                    }
                     System.out.println("Removing stat " + isStatRemoved);
                 }
             }
@@ -89,6 +100,15 @@ public class HeartBeaterImpl {
             System.out.println("Both empty");
         }
         clearBeatedNodes();
+
+        if (isPeerTableUpdated) {
+            //GUIController.getInstance().populatePeerTable(PeerTableImpl.getInstance().getPeerNodeList());
+        }
+
+        if(isStatTableUpdated){
+            //GUIController.getInstance().populateStatTable(StatTableImpl.getInstance().get());
+        }
+
         if ("Linux".equals(System.getProperty("os.name"))) {
             System.out.println(ApplicationConstants.ANSI_CYAN + "Peer Nodes at live heart-beating " + ApplicationConstants.ANSI_RESET);
             PeerTableImpl.getInstance().getPeerNodeList().forEach(node -> System.out.println(ApplicationConstants.ANSI_YELLOW +
