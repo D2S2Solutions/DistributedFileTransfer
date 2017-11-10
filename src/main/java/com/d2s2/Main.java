@@ -117,25 +117,6 @@ public class Main {
         Thread heartBeatHandlerThread = new Thread(runnableHeartBeatHandler);
         heartBeatHandlerThread.start();
 
-        /* For heart beated node clearing*/
-        Runnable runnableHeartBeatDeleter = () -> {
-            HeartBeaterImpl heartBeater = HeartBeaterImpl.getInstance();
-            Timer timer = new Timer();
-
-            timer.scheduleAtFixedRate(new TimerTask() {
-                @Override
-                public void run() {
-                    try {
-                        System.out.println("Clearing Hbeated nodes");
-                        heartBeater.clearBeatedNodes();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, HEART_BEAT_CLEAR_THRESHOLD *1000, HEART_BEAT_CLEAR_THRESHOLD*1000);
-        };
-        Thread heartBeatDeleterThread = new Thread(runnableHeartBeatDeleter);
-        heartBeatDeleterThread.start();
 
     }
 
