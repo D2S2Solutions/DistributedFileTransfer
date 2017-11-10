@@ -27,18 +27,13 @@ public class HeartBeatSignalModel extends UnicastRemoteObject implements Abstrac
     public void handle() {
         Node beatedNode = new Node(this.ip, this.port);
         HeartBeaterImpl.getInstance().saveBeatedNodes(beatedNode);
-<<<<<<< HEAD
+
         PeerTableImpl peerTable = PeerTableImpl.getInstance();
         if(!peerTable.getPeerNodeList().contains(beatedNode) && ApplicationConstants.isRegisterd){
             peerTable.insert(beatedNode);
         }
         GUIController.getInstance().populatePeerTable(peerTable.getPeerNodeList());
-=======
-        PeerTableImpl.getInstance().insert(beatedNode);
-        //update GUI
 
-        //GUIController.getInstance().populatePeerTable(PeerTableImpl.getInstance().getPeerNodeList());
->>>>>>> origin/RMI-HeartBeat
     }
 
     public String getIp() {

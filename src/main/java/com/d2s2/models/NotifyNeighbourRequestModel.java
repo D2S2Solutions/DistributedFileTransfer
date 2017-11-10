@@ -29,6 +29,7 @@ public class NotifyNeighbourRequestModel extends AbstractRequestModel {
         NeighbourTableImpl neighbourTable = NeighbourTableImpl.getInstance();
         Node node = new Node(this.ip, this.port);
         neighbourTable.insert(node);
+        System.out.println("Neighbour table"+neighbourTable.getNeighbourNodeList());
         PeerTableImpl peerTable = PeerTableImpl.getInstance();
         if (peerTable.getPeerNodeList().size() < 10) {
             if (!peerTable.getPeerNodeList().contains(node)) {

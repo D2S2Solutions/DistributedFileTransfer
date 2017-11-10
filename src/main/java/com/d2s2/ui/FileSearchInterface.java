@@ -49,18 +49,6 @@ public class FileSearchInterface extends javax.swing.JFrame {
                     e.printStackTrace();
                 }
 
-<<<<<<< HEAD
-=======
-        this.searchTextField.addActionListener(new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                dtmForSearchResultTable.setRowCount(0);
-                try {
-                    guiController.searchFile(searchTextField.getText());
-                } catch (RemoteException | NotBoundException e) {
-                    e.printStackTrace();
-                }
->>>>>>> origin/RMI-HeartBeat
             }
         });
 
@@ -111,11 +99,7 @@ public class FileSearchInterface extends javax.swing.JFrame {
         for (String fileName : fileList) {
             fileNames.append(fileName.replace("@", " ")).append(" , ");
         }
-<<<<<<< HEAD
         fileNames.delete(fileNames.length() - 2, fileNames.length() - 1);
-=======
-        fileNames.delete(fileNames.length()-2,fileNames.length()-1);
->>>>>>> origin/RMI-HeartBeat
         int noOfHops = ApplicationConstants.HOPS - 1 - ttl;
         if (!this.isValueExistsAtTable(nodeIp, port)) {
             this.dtmForSearchResultTable.addRow(new Object[]{nodeIp, port, fileCount, fileNames.toString(), noOfHops});
