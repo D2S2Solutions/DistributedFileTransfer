@@ -11,6 +11,8 @@ import com.d2s2.ui.GUIController;
 
 import java.io.IOException;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static com.d2s2.constants.ApplicationConstants.IsOkTosendHeartBeat;
 
@@ -36,11 +38,17 @@ public class GracefulLeaveBootstrapServerResponseModel extends AbstractRequestRe
             }
         });
 
-        PeerTableImpl.getInstance().getPeerNodeList().forEach(node -> PeerTableImpl.getInstance().remove(node));
+        Set<Node> peerTable = PeerTableImpl.getInstance().getPeerNodeList();
+        ConcurrentHashMap<String, ConcurrentLinkedQueue<Node>> statTable = StatTableImpl.getStatTable();
+
+        peerTable.forEach(node -> peerTable.remove(node));
         NeighbourTableImpl.getInstance().getNeighbourNodeList().forEach(node -> NeighbourTableImpl.getInstance().remove(node));
-        StatTableImpl.getStatTable().clear();
+        statTable.clear();
 
         GUIController guiController = GUIController.getInstance();
+        guiController.populatePeerTable(peerTable);
+        guiController.populateStatTable(statTable);
+
         if (this.status == 0) {
             System.out.println("Successfully unregistered");
             guiController.displayMessage("Successfully Unregistered from Bootstrap server");

@@ -58,7 +58,7 @@ public class StatTableImpl {
             if (!isElementRemoved && nowRemoved) {
                 isElementRemoved = true;
             }
-            if (values.size() == 0){
+            if (next.size() == 0){
                 iterator.remove();
             }
         }
