@@ -8,14 +8,20 @@ import com.d2s2.message.tokenize.MessageTokenizerImpl;
 import com.d2s2.models.*;
 import com.d2s2.overlay.route.NeighbourTableImpl;
 import com.d2s2.overlay.route.PeerTableImpl;
+import com.d2s2.overlay.route.StatTableImpl;
 import com.d2s2.socket.UDPConnectorImpl;
 import com.d2s2.socket.UdpConnector;
+import com.d2s2.ui.GUIController;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
 import java.net.UnknownHostException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
 
 /**
  * Created by Heshan Sandamal on 10/24/2017.
@@ -69,27 +75,18 @@ public class HandlerImpl implements Handler {
     @Override
     public void gracefulLeaveRequest() {
         NeighbourTableImpl neighbourTable = NeighbourTableImpl.getInstance();
-        Set<Node> neighbourNodeList = neighbourTable.getNeighbourNodeList();
 
         //First Unreg from the Bootstrap server
         GracefulLeaveBootstrapServerRequestModel gracefulLeaveBootstrapServerRequestModel = new GracefulLeaveBootstrapServerRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT, ApplicationConstants.USER_NAME);
         String message = messageBuilder.buildUnregisterRequestMessage(gracefulLeaveBootstrapServerRequestModel);
         try {
             udpConnector.send(message, InetAddress.getByName(ApplicationConstants.BootstrapServerIp), ApplicationConstants.BS_SERVER_PORT);
-
+            GUIController.getInstance().displayMessage("Successfully Un-Registered from the Bootstrap Server.");
         } catch (IOException e) {
             e.printStackTrace();
         }
         //Next, Notify Neighbours of our departure
-        neighbourNodeList.forEach(node -> {
-            GracefulLeaveRequestModel gracefulLeaveRequestModel = new GracefulLeaveRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT);
-            String neighbourLeaveMessage = messageBuilder.buildLeaveMessage(gracefulLeaveRequestModel);
-            try {
-                udpConnector.send(neighbourLeaveMessage, InetAddress.getByName(node.getNodeIp()), node.getPort());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+
     }
 
     @Override
@@ -168,6 +165,10 @@ public class HandlerImpl implements Handler {
         String message = messageBuilder.buildNeighbourJoinMessage(notifyNeighbourRequestModel);
         udpConnector.send(message, InetAddress.getByName(ip), port);
 
+    }
+
+    public void notifyNeighbourLeave(String message, Node node) throws IOException {
+        udpConnector.send(message, InetAddress.getByName(node.getNodeIp()), node.getPort());
     }
 
 

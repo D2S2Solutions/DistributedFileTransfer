@@ -10,6 +10,7 @@ import com.d2s2.models.Node;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,6 +34,14 @@ public class FileSearchInterface extends javax.swing.JFrame {
         this.ipTextField.setText(ApplicationConstants.IP);
         this.portTextField.setText(String.valueOf(ApplicationConstants.PORT));
 
+        this.searchTextField.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                dtmForSearchResultTable.setRowCount(0);
+                guiController.searchFile(searchTextField.getText());
+
+            }
+        });
 
         this.searchButton.addActionListener(evt -> {
             dtmForSearchResultTable.setRowCount(0);
@@ -73,6 +82,7 @@ public class FileSearchInterface extends javax.swing.JFrame {
         for (String fileName : fileList) {
             fileNames.append(fileName.replace("@", " ")).append(" , ");
         }
+        fileNames.delete(fileNames.length()-2,fileNames.length()-1);
         int noOfHops = ApplicationConstants.HOPS - 1 - ttl;
         if (!this.isValueExistsAtTable(nodeIp, port)) {
             this.dtmForSearchResultTable.addRow(new Object[]{nodeIp, port, fileCount, fileNames.toString(), noOfHops});

@@ -25,4 +25,6 @@ public interface Handler {
     void gracefulLeaveRequest();
 
     void sendLeaveOkToSource(GracefulLeaveResponseModel gracefulLeaveResponseModel) throws IOException;
+
+    void notifyNeighbourLeave(String message, Node node) throws IOException;
 }
