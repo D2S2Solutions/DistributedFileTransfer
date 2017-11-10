@@ -101,22 +101,34 @@ public class FileSearchInterface extends javax.swing.JFrame {
         }
         fileNames.delete(fileNames.length() - 2, fileNames.length() - 1);
         int noOfHops = ApplicationConstants.HOPS - 1 - ttl;
-        if (!this.isValueExistsAtTable(nodeIp, port)) {
+
+        int row = this.isValueExistsAtTable(nodeIp, port, noOfHops);
+        if (row==-1) {
             this.dtmForSearchResultTable.addRow(new Object[]{nodeIp, port, fileCount, fileNames.toString(), noOfHops});
+        }else if(row!=-2){
+            try{
+                this.dtmForSearchResultTable.removeRow(row);
+                this.dtmForSearchResultTable.insertRow(row,new Object[]{nodeIp, port, fileCount, fileNames.toString(), noOfHops});
+            }catch (ArrayIndexOutOfBoundsException e){}
+
         }
     }
 
-    private boolean isValueExistsAtTable(String ip, int port) {
+    private int isValueExistsAtTable(String ip, int port, int noOfHops) {
         int rowCount = this.dtmForSearchResultTable.getRowCount();
         for (int i = 0; i < rowCount; i++) {
-            String nodeIp = String.valueOf(dtmForSearchResultTable.getValueAt(i, 0));
+            String nodeIp = dtmForSearchResultTable.getValueAt(i, 0).toString();
             int nodePort = Integer.parseInt(dtmForSearchResultTable.getValueAt(i, 1).toString());
+            int noOfHopsExisting = Integer.parseInt(dtmForSearchResultTable.getValueAt(i, 4).toString());
 
             if (nodeIp.equals(ip) && nodePort == port) {
-                return true;
+                if(noOfHops<noOfHopsExisting){
+                    return i;
+                }
+                return -2;
             }
         }
-        return false;
+        return -1;
     }
 
     public void showMessage(String message) {
@@ -266,7 +278,7 @@ public class FileSearchInterface extends javax.swing.JFrame {
                         {null, null, null, null, null}
                 },
                 new String[]{
-                        "Node Ip", "Port", "File Count", "Files", "TTL"
+                        "Node Ip", "Port", "File Count", "Files", "HOPS"
                 }
         ));
         jScrollPane1.setViewportView(searchResultsTable);
