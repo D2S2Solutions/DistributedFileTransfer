@@ -77,7 +77,7 @@ public class HeartBeaterImpl {
             }
         } else if (beatedNodes.isEmpty() && !PeerTableImpl.getInstance().getPeerNodeList().isEmpty()) {
             System.out.println("Hbeat handling empty BeatedNodes");
-            if(no_hbeat_garanty_count==4) {
+            if(no_hbeat_garanty_count==3) {
                 Iterator<Node> nodeIterator = PeerTableImpl.getInstance().getPeerNodeList().iterator();
                 while (nodeIterator.hasNext()) {
                     Node peerNode = nodeIterator.next();
@@ -105,6 +105,7 @@ public class HeartBeaterImpl {
         } else {
             System.out.println("Both empty");
         }
+        clearBeatedNodes();
 
         if (isPeerTableUpdated) {
             GUIController.getInstance().populatePeerTable(PeerTableImpl.getInstance().getPeerNodeList());

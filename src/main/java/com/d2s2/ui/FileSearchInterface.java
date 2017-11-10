@@ -33,7 +33,7 @@ public class FileSearchInterface extends javax.swing.JFrame {
         this.userNameTextField.setText(ApplicationConstants.USER_NAME);
         this.ipTextField.setText(ApplicationConstants.IP);
         this.portTextField.setText(String.valueOf(ApplicationConstants.PORT));
-
+        this.unregisterButton.setEnabled(false);
         this.searchTextField.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent evt) {
@@ -135,6 +135,15 @@ public class FileSearchInterface extends javax.swing.JFrame {
         }
 
     }
+    public void handleRegistration(){
+        registerButton.setEnabled(false);
+        unregisterButton.setEnabled(true);
+    }
+    public void handleUnRegistration(){
+        registerButton.setEnabled(true);
+        unregisterButton.setEnabled(false);
+    }
+
 
     public FileSearchInterface() {
         initComponents();

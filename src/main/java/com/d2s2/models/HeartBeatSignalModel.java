@@ -2,6 +2,7 @@ package com.d2s2.models;
 
 import com.d2s2.heartbeater.HeartBeaterImpl;
 import com.d2s2.overlay.route.PeerTableImpl;
+import com.d2s2.ui.GUIController;
 
 /**
  * Created by Tharindu Diluksha on 10/25/2017.
@@ -23,6 +24,7 @@ public class HeartBeatSignalModel extends AbstractRequestResponseModel {
         Node beatedNode = new Node(this.ip, this.port);
         HeartBeaterImpl.getInstance().saveBeatedNodes(beatedNode);
         PeerTableImpl.getInstance().insert(beatedNode);
+        GUIController.getInstance().populatePeerTable(PeerTableImpl.getInstance().getPeerNodeList());
     }
 
     public String getIp() {
