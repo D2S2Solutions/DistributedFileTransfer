@@ -53,6 +53,7 @@ public class HeartBeaterImpl {
 
     public void handleBeat() {
         boolean isPeerTableUpdated = false;
+        boolean isStatTableUpdated = false;
         //if there are no beats in HEART_BEAT_RECEIVE_THRESHOLD time
         if (!beatedNodes.isEmpty() && !PeerTableImpl.getInstance().getPeerNodeList().isEmpty()) {
             Iterator<Node> nodeIterator = PeerTableImpl.getInstance().getPeerNodeList().iterator();
@@ -68,6 +69,9 @@ public class HeartBeaterImpl {
                     System.out.println("Removing peer " + isPeerRemoved);
                     //remove from stat table
                     Boolean isStatRemoved = StatTableImpl.getInstance().remove(peerNode);
+                    if(isStatRemoved){
+                        isStatTableUpdated=true;
+                    }
                     System.out.println("Removing stat " + isStatRemoved);
                 }
             }
@@ -85,6 +89,9 @@ public class HeartBeaterImpl {
                 System.out.println("Removing peer " + isPeerRemoved);
                 //remove from stat table
                 Boolean isStatRemoved = StatTableImpl.getInstance().remove(peerNode);
+                if(isStatRemoved){
+                    isPeerTableUpdated=true;
+                }
                 System.out.println("Removing stat " + isStatRemoved);
             }
         } else if (!beatedNodes.isEmpty() && PeerTableImpl.getInstance().getPeerNodeList().isEmpty()) {
@@ -95,6 +102,10 @@ public class HeartBeaterImpl {
 
         if (isPeerTableUpdated) {
             GUIController.getInstance().populatePeerTable(PeerTableImpl.getInstance().getPeerNodeList());
+        }
+
+        if(isStatTableUpdated){
+            GUIController.getInstance().populateStatTable(StatTableImpl.getInstance().get());
         }
         System.out.println("Peer Nodes at beating");
         System.out.println(PeerTableImpl.getInstance().getPeerNodeList());

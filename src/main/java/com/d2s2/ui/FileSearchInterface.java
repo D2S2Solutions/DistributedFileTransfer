@@ -11,9 +11,9 @@ import com.d2s2.models.Node;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * @author Heshan Sandamal
@@ -104,9 +104,26 @@ public class FileSearchInterface extends javax.swing.JFrame {
 
     public void populatePeerTable(Set<Node> peerList) {
         dtmForPeerTable.setRowCount(0);
-        for (Node node : peerList) {
+        final Iterator<Node> iterator = peerList.iterator();
+        while(iterator.hasNext()) {
+            Node node = iterator.next();
             dtmForPeerTable.addRow(new Object[]{node.getNodeIp(), node.getPort()});
         }
+    }
+
+    public void populateStatTable(ConcurrentHashMap<String, ConcurrentLinkedQueue<Node>> statTable){
+        dtmForstatTable.setRowCount(0);
+        Enumeration<String> keys = statTable.keys();
+        while(keys.hasMoreElements()){
+            String fileName = keys.nextElement();
+            final ConcurrentLinkedQueue<Node> concurrentLinkedQueue = statTable.get(fileName);
+            String nodesList="";
+            for (Node node:concurrentLinkedQueue) {
+                nodesList += node.getNodeIp()+ ":" +node.getPort() + " , ";
+            }
+            dtmForstatTable.addRow(new Object[]{fileName.replace("@", " "),nodesList});
+        }
+
     }
 
     public FileSearchInterface() {
