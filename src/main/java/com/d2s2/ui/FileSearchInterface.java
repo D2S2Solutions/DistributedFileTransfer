@@ -248,7 +248,7 @@ public class FileSearchInterface extends javax.swing.JFrame {
                         {null, null, null, null, null}
                 },
                 new String[]{
-                        "Node Ip", "Port", "File Count", "Files", "TTL"
+                        "Node Ip", "Port", "File Count", "Files", "HOPS"
                 }
         ));
         jScrollPane1.setViewportView(searchResultsTable);
