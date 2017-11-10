@@ -10,7 +10,7 @@ public interface Table {
 
     void insert(Node node);
 
-    void remove(Node node);
+    boolean remove(Node node);
 
     void search(String query);
 

@@ -3,6 +3,7 @@ package com.d2s2.models;
 import com.d2s2.Handler.Handler;
 import com.d2s2.Handler.HandlerImpl;
 import com.d2s2.constants.ApplicationConstants;
+import com.d2s2.overlay.route.NeighbourTableImpl;
 import com.d2s2.overlay.route.PeerTableImpl;
 import com.d2s2.overlay.route.StatTableImpl;
 import com.d2s2.socket.UDPConnectorImpl;
@@ -24,9 +25,12 @@ public class GracefulLeaveRequestModel extends AbstractRequestModel {
     public void handle() {
         final PeerTableImpl peerTable = PeerTableImpl.getInstance();
         final StatTableImpl statTable = StatTableImpl.getInstance();
+        NeighbourTableImpl neighbourTable = NeighbourTableImpl.getInstance();
         boolean peerTableRemoved = peerTable.remove(node);
         Boolean statTableRemoved = statTable.remove(node);
-        if (statTableRemoved || peerTableRemoved) {
+        boolean neighbourTableRemoved=neighbourTable.remove(node);
+
+        if (statTableRemoved || peerTableRemoved || neighbourTableRemoved) {
             try {
                 handler.sendLeaveOkToSource(new GracefulLeaveResponseModel(ip, port, 0));
             } catch (IOException e) {

@@ -41,8 +41,8 @@ public class NeighbourTableImpl implements Table {
     }
 
     @Override
-    public void remove(Node node) {
-        neighbourNodeList.remove(node);
+    public boolean remove(Node node) {
+        return neighbourNodeList.remove(node);
     }
 
     @Override
