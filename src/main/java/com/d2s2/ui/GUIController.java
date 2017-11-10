@@ -78,5 +78,11 @@ public class GUIController {
     public void populateStatTable(ConcurrentHashMap<String, ConcurrentLinkedQueue<Node>> statTable){
         fileSearchInterface.populateStatTable(statTable);
     }
+    public void handleRegisteration(){
+        fileSearchInterface.handleRegistration();
+    }
+    public void handleUnRegistration(){
+        fileSearchInterface.handleUnRegistration();
+    }
 
 }

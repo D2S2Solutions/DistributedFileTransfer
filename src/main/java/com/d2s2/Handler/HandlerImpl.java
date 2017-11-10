@@ -81,7 +81,7 @@ public class HandlerImpl implements Handler {
         String message = messageBuilder.buildUnregisterRequestMessage(gracefulLeaveBootstrapServerRequestModel);
         try {
             udpConnector.send(message, InetAddress.getByName(ApplicationConstants.BootstrapServerIp), ApplicationConstants.BS_SERVER_PORT);
-            GUIController.getInstance().displayMessage("Successfully Un-Registered from the Bootstrap Server.");
+//            GUIController.getInstance().displayMessage("Successfully Un-Registered from the Bootstrap Server.");
         } catch (IOException e) {
             e.printStackTrace();
         }
