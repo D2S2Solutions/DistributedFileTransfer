@@ -20,6 +20,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Future;
 
 /**
  * Created by Heshan Sandamal on 10/24/2017.
@@ -60,7 +61,7 @@ public class HandlerImpl implements Handler {
 
             for (Node neighbour : neighbourNodes) {
                 try {
-                    System.out.println("Sending HBEAT to "+neighbour.getNodeIp()+" "+ neighbour.getPort() +"by" + ApplicationConstants.IP + " " + String.valueOf(ApplicationConstants.PORT) + " " + ApplicationConstants.USER_NAME);
+                    System.out.println("Sending HBEAT to " + neighbour.getNodeIp() + " " + neighbour.getPort() + "by" + ApplicationConstants.IP + " " + String.valueOf(ApplicationConstants.PORT) + " " + ApplicationConstants.USER_NAME);
                     final ServerConnector serverConnector = ServerConnector.getServerConnector(neighbour.getNodeIp(), neighbour.getPort());
                     serverConnector.callRemoteHeartbeatSignalHandle(ApplicationConstants.IP, ApplicationConstants.PORT, ApplicationConstants.USER_NAME);
                 } catch (IOException e) {
@@ -79,10 +80,23 @@ public class HandlerImpl implements Handler {
         String message = messageBuilder.buildUnregisterRequestMessage(gracefulLeaveBootstrapServerRequestModel);
         try {
             udpConnector.send(message, InetAddress.getByName(ApplicationConstants.BootstrapServerIp), ApplicationConstants.BS_SERVER_PORT);
-
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        new Thread(() -> {
+            System.out.println(">>>>>>>>>> WAITING FOR Leave Response <<<<<<<<<<<<\n");
+            Future<String> stringFuture = null;
+            try {
+                stringFuture = udpConnector.receive();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+//            initRMIRegistry();
+        }
+
+        ).start();
+
         //Next, Notify Neighbours of our departure
 
     }
@@ -90,8 +104,8 @@ public class HandlerImpl implements Handler {
     @Override
     public void sendLeaveOkToSource(GracefulLeaveResponseModel gracefulLeaveResponseModel) throws IOException, NotBoundException {
         final ServerConnector serverConnector = ServerConnector.getServerConnector(gracefulLeaveResponseModel.getIp(), gracefulLeaveResponseModel.getPort());
-        if(serverConnector!=null){
-            serverConnector.callRemoteGracefulLeaveResponseHandle(ApplicationConstants.IP,ApplicationConstants.PORT,gracefulLeaveResponseModel.getStatus());
+        if (serverConnector != null) {
+            serverConnector.callRemoteGracefulLeaveResponseHandle(ApplicationConstants.IP, ApplicationConstants.PORT, gracefulLeaveResponseModel.getStatus());
         }
 
     }
@@ -164,11 +178,11 @@ public class HandlerImpl implements Handler {
     @Override
     public void sendLocalSearchToSource(SearchResponseModel searchResponseModel, List<String> list) throws IOException, NotBoundException {
         final ServerConnector serverConnector = ServerConnector.getServerConnector(searchResponseModel.getIp(), searchResponseModel.getPort());
-        if(serverConnector!=null) {
+        if (serverConnector != null) {
             serverConnector.callRemoteSearchResponseHadle(
                     ApplicationConstants.IP, ApplicationConstants.PORT,
                     searchResponseModel.getHops(), searchResponseModel.getNoOfFiles(), new HashSet<>(list));
-        }else{
+        } else {
             System.out.println("server connector is null");
         }
     }
@@ -187,8 +201,13 @@ public class HandlerImpl implements Handler {
         }
     }
 
-    public void notifyNeighbourLeave(String message, Node node) throws IOException {
-        udpConnector.send(message, InetAddress.getByName(node.getNodeIp()), node.getPort());
+    public void notifyNeighbourLeave(Set<Node> nodes) throws IOException, NotBoundException {
+        Iterator<Node> nodeIterator = nodes.iterator();
+        while (nodeIterator.hasNext()) {
+            Node node = nodeIterator.next();
+            final ServerConnector serverConnector = ServerConnector.getServerConnector(node.getNodeIp(), node.getPort());
+            serverConnector.callRemoteGracefulLeaveRequestHandle(ApplicationConstants.IP,ApplicationConstants.PORT);
+        }
     }
 
 

@@ -7,6 +7,7 @@ import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public interface Handler {
@@ -28,5 +29,5 @@ public interface Handler {
 
     void sendLeaveOkToSource(GracefulLeaveResponseModel node) throws IOException, NotBoundException;
 
-    void notifyNeighbourLeave(String message, Node node) throws IOException;
+    void notifyNeighbourLeave(Set<Node> nodes) throws IOException, NotBoundException;
 }

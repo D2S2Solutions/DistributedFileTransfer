@@ -10,6 +10,7 @@ import com.d2s2.overlay.route.StatTableImpl;
 import com.d2s2.ui.GUIController;
 
 import java.io.IOException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Set;
@@ -25,23 +26,14 @@ public class GracefulLeaveBootstrapServerResponseModel extends UnicastRemoteObje
     }
 
     @Override
-    public void handle() {
+    public void handle() throws NotBoundException {
         Set<Node> neighbourNodeList = NeighbourTableImpl.getInstance().getNeighbourNodeList();
         ApplicationConstants.isRegisterd = false;
-        neighbourNodeList.forEach(node -> {
-            GracefulLeaveRequestModel gracefulLeaveRequestModel = null;
-            try {
-                gracefulLeaveRequestModel = new GracefulLeaveRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT);
-            } catch (RemoteException e) {
-            }
-            String neighbourLeaveMessage = new MessageBuilderImpl().buildLeaveMessage(gracefulLeaveRequestModel);
-            try {
-                handler.notifyNeighbourLeave(neighbourLeaveMessage,node);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        try {
+            handler.notifyNeighbourLeave(neighbourNodeList);
+        } catch (IOException e) {
 
+        }
         Set<Node> peerTable = PeerTableImpl.getInstance().getPeerNodeList();
         ConcurrentHashMap<String, ConcurrentLinkedQueue<Node>> statTable = StatTableImpl.getStatTable();
 

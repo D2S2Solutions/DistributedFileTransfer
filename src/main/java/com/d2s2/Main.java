@@ -86,13 +86,15 @@ public class Main {
                 @Override
                 public void run() {
                     try {
-                        System.out.println("Sending Hbeat");
-                        handler.sendHeartBeatSignal();
+                        if (isRegisterd) {
+                            System.out.println("Sending Hbeat");
+                            handler.sendHeartBeatSignal();
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-            }, HEART_BEAT_SEND_THRESHOLD*1000, HEART_BEAT_SEND_THRESHOLD*1000);
+            }, HEART_BEAT_SEND_THRESHOLD * 1000, HEART_BEAT_SEND_THRESHOLD * 1000);
         };
         Thread heartBeatSenderThread = new Thread(runnableHeartBeatSender);
         heartBeatSenderThread.start();
@@ -112,7 +114,7 @@ public class Main {
                         e.printStackTrace();
                     }
                 }
-            }, HEART_BEAT_RECEIVE_THRESHOLD*1000, HEART_BEAT_RECEIVE_THRESHOLD*1000);
+            }, HEART_BEAT_RECEIVE_THRESHOLD * 1000, HEART_BEAT_RECEIVE_THRESHOLD * 1000);
         };
         Thread heartBeatHandlerThread = new Thread(runnableHeartBeatHandler);
         heartBeatHandlerThread.start();
@@ -132,11 +134,10 @@ public class Main {
                         e.printStackTrace();
                     }
                 }
-            }, HEART_BEAT_CLEAR_THRESHOLD *1000, HEART_BEAT_CLEAR_THRESHOLD*1000);
+            }, HEART_BEAT_CLEAR_THRESHOLD * 1000, HEART_BEAT_CLEAR_THRESHOLD * 1000);
         };
         Thread heartBeatDeleterThread = new Thread(runnableHeartBeatDeleter);
         heartBeatDeleterThread.start();
-
     }
 
 
@@ -180,10 +181,10 @@ public class Main {
         for (int i = 0; i < randomWithRange(3, 5); i++) {
             int random = randomWithRange(0, length - 1);
             boolean contains = randomList.contains(random);
-            if (contains){
+            if (contains) {
                 --i;
                 continue;
-            }else {
+            } else {
                 randomList.add(random);
             }
             String s = fullLocalFileArray[random];
