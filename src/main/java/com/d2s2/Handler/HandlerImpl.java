@@ -16,6 +16,7 @@ import com.d2s2.ui.GUIController;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.UnknownHostException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.*;
@@ -74,7 +75,6 @@ public class HandlerImpl implements Handler {
     @Override
     public void gracefulLeaveRequest() {
         NeighbourTableImpl neighbourTable = NeighbourTableImpl.getInstance();
-        Set<Node> neighbourNodeList = neighbourTable.getNeighbourNodeList();
 
         //First Unreg from the Bootstrap server
         GracefulLeaveBootstrapServerRequestModel gracefulLeaveBootstrapServerRequestModel = new GracefulLeaveBootstrapServerRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT, ApplicationConstants.USER_NAME);
@@ -86,19 +86,7 @@ public class HandlerImpl implements Handler {
             e.printStackTrace();
         }
         //Next, Notify Neighbours of our departure
-        neighbourNodeList.forEach(node -> {
-            GracefulLeaveRequestModel gracefulLeaveRequestModel = new GracefulLeaveRequestModel(ApplicationConstants.IP, ApplicationConstants.PORT);
-            String neighbourLeaveMessage = messageBuilder.buildLeaveMessage(gracefulLeaveRequestModel);
-            try {
-                udpConnector.send(neighbourLeaveMessage, InetAddress.getByName(node.getNodeIp()), node.getPort());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
 
-        PeerTableImpl.getInstance().getPeerNodeList().forEach(node -> PeerTableImpl.getInstance().remove(node));
-        NeighbourTableImpl.getInstance().getNeighbourNodeList().forEach(node -> NeighbourTableImpl.getInstance().remove(node));
-        StatTableImpl.getStatTable().clear();
     }
 
     @Override
@@ -177,6 +165,10 @@ public class HandlerImpl implements Handler {
         String message = messageBuilder.buildNeighbourJoinMessage(notifyNeighbourRequestModel);
         udpConnector.send(message, InetAddress.getByName(ip), port);
 
+    }
+
+    public void notifyNeighbourLeave(String message, Node node) throws IOException {
+        udpConnector.send(message, InetAddress.getByName(node.getNodeIp()), node.getPort());
     }
 
 
