@@ -4,6 +4,7 @@ import com.d2s2.Handler.Handler;
 import com.d2s2.Handler.HandlerImpl;
 import com.d2s2.constants.ApplicationConstants;
 import com.d2s2.files.FileHandlerImpl;
+import com.d2s2.overlay.route.NeighbourTableImpl;
 import com.d2s2.overlay.route.StatTableImpl;
 
 import java.io.IOException;

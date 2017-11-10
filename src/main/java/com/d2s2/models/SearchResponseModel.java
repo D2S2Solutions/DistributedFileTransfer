@@ -1,10 +1,13 @@
 package com.d2s2.models;
 
+import com.d2s2.Handler.Handler;
+import com.d2s2.Handler.HandlerImpl;
 import com.d2s2.constants.ApplicationConstants;
 import com.d2s2.overlay.route.PeerTableImpl;
 import com.d2s2.overlay.route.StatTableImpl;
 import com.d2s2.ui.GUIController;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -18,6 +21,7 @@ public class SearchResponseModel extends AbstractRequestResponseModel {
     private int hops;
     private int noOfFiles;
     private HashSet<String> fileList;
+    private static Handler handler = new HandlerImpl();
 
     public SearchResponseModel(String ip, int port, int hops, int noOfFiles, HashSet<String> fileList) {
         this.ip = ip;
@@ -65,6 +69,7 @@ public class SearchResponseModel extends AbstractRequestResponseModel {
             guiController.displaySearchResults(this);
 
             Node node = new Node(this.ip, this.port);
+            final boolean[] isStatTableUpdated = {false};
             fileList.forEach((fileName) -> {
                 ConcurrentLinkedQueue<Node> concurrentLinkedQueue = statTable.get(fileName);
                 if (concurrentLinkedQueue == null) {
@@ -73,14 +78,24 @@ public class SearchResponseModel extends AbstractRequestResponseModel {
                 }
                 if (!concurrentLinkedQueue.contains(node)) {
                     concurrentLinkedQueue.add(node);
+                    isStatTableUpdated[0] =true;
                 }
             });
+
+            if(isStatTableUpdated[0]){
+                guiController.populateStatTable(statTable.get());
+            }
 
             System.out.println("Stat Table ");
             System.out.println(statTable.getStatTable());
 
             if (!peerTable.getPeerNodeList().contains(node)) {
                 peerTable.insert(node);
+                try {
+                    handler.notifyNeighbours(node.getNodeIp(), node.getPort());
+                } catch (IOException io) {
+                    io.printStackTrace();
+                }
                 guiController.populatePeerTable(peerTable.getPeerNodeList());
             }
         }

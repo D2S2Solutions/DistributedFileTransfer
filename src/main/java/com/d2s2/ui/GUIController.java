@@ -8,6 +8,8 @@ import com.d2s2.models.SearchResponseModel;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -73,5 +75,8 @@ public class GUIController {
         fileSearchInterface.populatePeerTable(nodeArrayList);
     }
 
+    public void populateStatTable(ConcurrentHashMap<String, ConcurrentLinkedQueue<Node>> statTable){
+        fileSearchInterface.populateStatTable(statTable);
+    }
 
 }

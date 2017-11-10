@@ -14,6 +14,7 @@ public class GracefulLeaveRequestModel extends AbstractRequestModel {
 
     private static Handler handler = new HandlerImpl();
     private Node node;
+
     public GracefulLeaveRequestModel(String ip, int port) {
         super(ip, port);
         node = new Node(this.ip, this.port);
@@ -21,18 +22,25 @@ public class GracefulLeaveRequestModel extends AbstractRequestModel {
 
     @Override
     public void handle() {
-        PeerTableImpl peerTable = PeerTableImpl.getInstance();
+        final PeerTableImpl peerTable = PeerTableImpl.getInstance();
+        final StatTableImpl statTable = StatTableImpl.getInstance();
         boolean peerTableRemoved = peerTable.remove(node);
-        Boolean statTableRemoved = StatTableImpl.getInstance().remove(node);
+        Boolean statTableRemoved = statTable.remove(node);
         if (statTableRemoved || peerTableRemoved) {
             try {
-                handler.sendLeaveOkToSource(new GracefulLeaveResponseModel(ip,port,0));
+                handler.sendLeaveOkToSource(new GracefulLeaveResponseModel(ip, port, 0));
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
-        GUIController.getInstance().populatePeerTable(peerTable.getPeerNodeList());
+        if (peerTableRemoved) {
+            GUIController.getInstance().populatePeerTable(peerTable.getPeerNodeList());
+        }
+
+        if (statTableRemoved) {
+            GUIController.getInstance().populateStatTable(statTable.get());
+        }
     }
 
     public Node getNode() {
