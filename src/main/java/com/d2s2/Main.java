@@ -5,7 +5,6 @@ import com.d2s2.Handler.HandlerImpl;
 import com.d2s2.constants.ApplicationConstants;
 import com.d2s2.files.FileHandler;
 import com.d2s2.files.FileHandlerImpl;
-import com.d2s2.heartbeater.HeartBeater;
 import com.d2s2.heartbeater.HeartBeaterImpl;
 import com.d2s2.socket.UDPConnectorImpl;
 import com.d2s2.socket.UdpConnector;
@@ -16,10 +15,12 @@ import me.tongfei.progressbar.ProgressBar;
 import java.io.IOException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 import static com.d2s2.constants.ApplicationConstants.*;
 
@@ -77,12 +78,14 @@ public class Main {
                 public void run() {
                     try {
                         System.out.println("Sending Hbeat");
-                        handler.sendHeartBeatSignal();
+                        if (IsOkTosendHeartBeat) {
+                            handler.sendHeartBeatSignal();
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-            }, HEART_BEAT_SEND_THRESHOLD*1000, HEART_BEAT_SEND_THRESHOLD*1000);
+            }, HEART_BEAT_SEND_THRESHOLD * 1000, HEART_BEAT_SEND_THRESHOLD * 1000);
         };
         Thread heartBeatSenderThread = new Thread(runnableHeartBeatSender);
 //        heartBeatSenderThread.start();
@@ -102,7 +105,7 @@ public class Main {
                         e.printStackTrace();
                     }
                 }
-            }, HEART_BEAT_RECEIVE_THRESHOLD*1000, HEART_BEAT_RECEIVE_THRESHOLD*1000);
+            }, HEART_BEAT_RECEIVE_THRESHOLD * 1000, HEART_BEAT_RECEIVE_THRESHOLD * 1000);
         };
         Thread heartBeatHandlerThread = new Thread(runnableHeartBeatHandler);
 //        heartBeatHandlerThread.start();
@@ -122,7 +125,7 @@ public class Main {
                         e.printStackTrace();
                     }
                 }
-            }, HEART_BEAT_CLEAR_THRESHOLD *1000, HEART_BEAT_CLEAR_THRESHOLD*1000);
+            }, HEART_BEAT_CLEAR_THRESHOLD * 1000, HEART_BEAT_CLEAR_THRESHOLD * 1000);
         };
         Thread heartBeatDeleterThread = new Thread(runnableHeartBeatDeleter);
 //        heartBeatDeleterThread.start();
@@ -169,10 +172,10 @@ public class Main {
         for (int i = 0; i < randomWithRange(3, 5); i++) {
             int random = randomWithRange(0, length - 1);
             boolean contains = randomList.contains(random);
-            if (contains){
+            if (contains) {
                 --i;
                 continue;
-            }else {
+            } else {
                 randomList.add(random);
             }
             String s = fullLocalFileArray[random];
