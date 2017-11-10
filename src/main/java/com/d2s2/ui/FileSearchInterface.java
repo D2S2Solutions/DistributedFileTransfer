@@ -38,11 +38,8 @@ public class FileSearchInterface extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 dtmForSearchResultTable.setRowCount(0);
-                try {
-                    guiController.searchFile(searchTextField.getText());
-                } catch (RemoteException | NotBoundException e) {
-                    e.printStackTrace();
-                }
+                guiController.searchFile(searchTextField.getText());
+
             }
         });
 
