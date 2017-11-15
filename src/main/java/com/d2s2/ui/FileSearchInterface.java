@@ -91,7 +91,7 @@ public class FileSearchInterface extends javax.swing.JFrame {
         fileNames.delete(fileNames.length() - 2, fileNames.length() - 1);
         int noOfHops = ApplicationConstants.HOPS - 1 - ttl;
         if (!this.isValueExistsAtTable(nodeIp, port)) {
-            this.dtmForSearchResultTable.addRow(new Object[]{nodeIp, port, fileCount, diff, noOfHops});
+            this.dtmForSearchResultTable.addRow(new Object[]{nodeIp, port, diff, fileNames.toString(), noOfHops});
         }
     }
 
