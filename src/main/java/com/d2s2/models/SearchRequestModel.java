@@ -68,12 +68,6 @@ public class SearchRequestModel extends AbstractRequestModel {
                 this.getLastHops().add(node);
             }
 
-            try {
-                handler.sendSearchRequest(this, statTablePeers);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
             FileHandlerImpl instance = FileHandlerImpl.getInstance();
             List<String> fileList = instance.searchLocalFileList(this.fileName);
 
@@ -84,6 +78,12 @@ public class SearchRequestModel extends AbstractRequestModel {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
+
+            try {
+                handler.sendSearchRequest(this, statTablePeers);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }

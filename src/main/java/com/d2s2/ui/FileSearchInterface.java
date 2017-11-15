@@ -79,17 +79,20 @@ public class FileSearchInterface extends javax.swing.JFrame {
     }
 
     public synchronized void addToTable(String nodeIp, int port, int fileCount, HashSet<String> fileList, int ttl) {
+        long timeMillis = System.currentTimeMillis();
+        long starttime = Long.valueOf(jLabel2.getText());
+        long diff = timeMillis - starttime;
+
         System.out.println("Calling interface " + nodeIp + port);
         StringBuilder fileNames = new StringBuilder();
         for (String fileName : fileList) {
             fileNames.append(fileName.replace("@", " ")).append(" , ");
         }
-        fileNames.delete(fileNames.length()-2,fileNames.length()-1);
+        fileNames.delete(fileNames.length() - 2, fileNames.length() - 1);
         int noOfHops = ApplicationConstants.HOPS - 1 - ttl;
-//        if (!this.isValueExistsAtTable(nodeIp, port)) {
-        long timeMillis = System.currentTimeMillis();
-        this.dtmForSearchResultTable.addRow(new Object[]{nodeIp, port, fileCount, timeMillis, noOfHops});
-//        }
+        if (!this.isValueExistsAtTable(nodeIp, port)) {
+            this.dtmForSearchResultTable.addRow(new Object[]{nodeIp, port, fileCount, diff, noOfHops});
+        }
     }
 
     private boolean isValueExistsAtTable(String ip, int port) {
@@ -118,31 +121,33 @@ public class FileSearchInterface extends javax.swing.JFrame {
     public void populatePeerTable(Set<Node> peerList) {
         dtmForPeerTable.setRowCount(0);
         final Iterator<Node> iterator = peerList.iterator();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             Node node = iterator.next();
             dtmForPeerTable.addRow(new Object[]{node.getNodeIp(), node.getPort()});
         }
     }
 
-    public void populateStatTable(ConcurrentHashMap<String, ConcurrentLinkedQueue<Node>> statTable){
+    public void populateStatTable(ConcurrentHashMap<String, ConcurrentLinkedQueue<Node>> statTable) {
         dtmForstatTable.setRowCount(0);
         Enumeration<String> keys = statTable.keys();
-        while(keys.hasMoreElements()){
+        while (keys.hasMoreElements()) {
             String fileName = keys.nextElement();
             final ConcurrentLinkedQueue<Node> concurrentLinkedQueue = statTable.get(fileName);
-            String nodesList="";
-            for (Node node:concurrentLinkedQueue) {
-                nodesList += node.getNodeIp()+ ":" +node.getPort() + " , ";
+            String nodesList = "";
+            for (Node node : concurrentLinkedQueue) {
+                nodesList += node.getNodeIp() + ":" + node.getPort() + " , ";
             }
-            dtmForstatTable.addRow(new Object[]{fileName.replace("@", " "),nodesList});
+            dtmForstatTable.addRow(new Object[]{fileName.replace("@", " "), nodesList});
         }
 
     }
-    public void handleRegistration(){
+
+    public void handleRegistration() {
         registerButton.setEnabled(false);
         unregisterButton.setEnabled(true);
     }
-    public void handleUnRegistration(){
+
+    public void handleUnRegistration() {
         registerButton.setEnabled(true);
         unregisterButton.setEnabled(false);
     }
