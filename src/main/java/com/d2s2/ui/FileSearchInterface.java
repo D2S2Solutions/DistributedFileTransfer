@@ -79,6 +79,9 @@ public class FileSearchInterface extends javax.swing.JFrame {
     }
 
     public synchronized void addToTable(String nodeIp, int port, int fileCount, HashSet<String> fileList, int ttl) {
+        long timeMillis = System.currentTimeMillis();
+        long starttime = Long.valueOf(jLabel2.getText());
+        long diff = timeMillis - starttime;
         System.out.println("Calling interface " + nodeIp + port);
         StringBuilder fileNames = new StringBuilder();
         for (String fileName : fileList) {
@@ -88,7 +91,7 @@ public class FileSearchInterface extends javax.swing.JFrame {
         int noOfHops = ApplicationConstants.HOPS - 1 - ttl;
 //        if (!this.isValueExistsAtTable(nodeIp, port)) {
         final long time = System.currentTimeMillis();
-        this.dtmForSearchResultTable.addRow(new Object[]{nodeIp, port, fileCount,time, noOfHops});
+        this.dtmForSearchResultTable.addRow(new Object[]{nodeIp, port, diff,fileNames, noOfHops});
 //        }
     }
 
