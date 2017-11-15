@@ -37,6 +37,7 @@ public class FileSearchInterface extends javax.swing.JFrame {
         this.searchTextField.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent evt) {
+                jLabel2.setText(String.valueOf(System.currentTimeMillis()));
                 dtmForSearchResultTable.setRowCount(0);
                 guiController.searchFile(searchTextField.getText());
 
@@ -44,6 +45,7 @@ public class FileSearchInterface extends javax.swing.JFrame {
         });
 
         this.searchButton.addActionListener(evt -> {
+            jLabel2.setText(String.valueOf(System.currentTimeMillis()));
             dtmForSearchResultTable.setRowCount(0);
             guiController.searchFile(this.searchTextField.getText());
         });
@@ -84,9 +86,10 @@ public class FileSearchInterface extends javax.swing.JFrame {
         }
         fileNames.delete(fileNames.length()-2,fileNames.length()-1);
         int noOfHops = ApplicationConstants.HOPS - 1 - ttl;
-        if (!this.isValueExistsAtTable(nodeIp, port)) {
-            this.dtmForSearchResultTable.addRow(new Object[]{nodeIp, port, fileCount, fileNames.toString(), noOfHops});
-        }
+//        if (!this.isValueExistsAtTable(nodeIp, port)) {
+        final long time = System.currentTimeMillis();
+        this.dtmForSearchResultTable.addRow(new Object[]{nodeIp, port, fileCount,time, noOfHops});
+//        }
     }
 
     private boolean isValueExistsAtTable(String ip, int port) {
