@@ -37,7 +37,7 @@ public class NotifyNeighbourRequestModel extends AbstractRequestModel {
                 try {
                     handler.notifyNeighbours(node.getNodeIp(), node.getPort());
                 } catch (IOException io) {
-                    io.printStackTrace();
+//                    io.printStackTrace();
                 }
                 GUIController guiController = GUIController.getInstance();
                 guiController.populatePeerTable(peerTable.getPeerNodeList());

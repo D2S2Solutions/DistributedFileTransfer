@@ -32,7 +32,7 @@ public class GracefulLeaveBootstrapServerResponseModel extends UnicastRemoteObje
         try {
             handler.notifyNeighbourLeave(neighbourNodeList);
         } catch (IOException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
         Set<Node> peerTable = PeerTableImpl.getInstance().getPeerNodeList();
         ConcurrentHashMap<String, ConcurrentLinkedQueue<Node>> statTable = StatTableImpl.getStatTable();

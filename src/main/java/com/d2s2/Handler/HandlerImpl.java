@@ -86,7 +86,7 @@ public class HandlerImpl implements Handler {
         try {
             udpConnector.send(message, InetAddress.getByName(ApplicationConstants.BootstrapServerIp), ApplicationConstants.BS_SERVER_PORT);
         } catch (IOException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
 
         new Thread(() -> {
