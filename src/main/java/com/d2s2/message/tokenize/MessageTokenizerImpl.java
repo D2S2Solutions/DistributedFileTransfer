@@ -1,6 +1,5 @@
 package com.d2s2.message.tokenize;
 
-import com.d2s2.constants.ApplicationConstants;
 import com.d2s2.message.MessageConstants;
 import com.d2s2.models.*;
 
@@ -8,10 +7,14 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.StringTokenizer;
 
+import static com.d2s2.constants.ApplicationConstants.HOPS;
+import static com.d2s2.constants.ApplicationConstants.searchReceivedStat;
+
 /**
  * Created by Heshan Sandamal on 10/6/2017.
  */
 public class MessageTokenizerImpl implements MessageTokenizer {
+
     @Override
     public AbstractRequestResponseModel tokenizeMessage(String message) {
         message = message.substring(0, Integer.parseInt(message.substring(0, 4)));
@@ -59,7 +62,7 @@ public class MessageTokenizerImpl implements MessageTokenizer {
         String ip = stringTokenizer.nextToken();
         int port = Integer.valueOf(stringTokenizer.nextToken());
         String status = stringTokenizer.nextToken();
-        GracefulLeaveResponseModel gracefulLeaveResponseModel = new GracefulLeaveResponseModel(ip,port,Integer.parseInt(status));
+        GracefulLeaveResponseModel gracefulLeaveResponseModel = new GracefulLeaveResponseModel(ip, port, Integer.parseInt(status));
         return gracefulLeaveResponseModel;
     }
 
@@ -91,12 +94,17 @@ public class MessageTokenizerImpl implements MessageTokenizer {
         int hops = Integer.parseInt(stringTokenizer.nextToken());
         ArrayList<Node> nodes = new ArrayList<>();
 
-        for (int x = 0; x < (ApplicationConstants.HOPS - hops); x++) {
+        for (int x = 0; x < (HOPS - hops); x++) {
             String hopIp = stringTokenizer.nextToken();
             int hopPort = Integer.parseInt(stringTokenizer.nextToken());
             nodes.add(new Node(hopIp, hopPort));
         }
-
+        if (searchReceivedStat.containsKey(fileName)) {
+            Integer currentSearchCount = searchReceivedStat.get(fileName);
+            searchReceivedStat.replace(fileName, ++currentSearchCount);
+        }
+        searchReceivedStat.putIfAbsent(fileName, 1);
+        System.out.println(searchReceivedStat.toString());
         SearchRequestModel searchRequestModel = new SearchRequestModel(ip, port, fileName, hops, nodes);
         return searchRequestModel;
     }

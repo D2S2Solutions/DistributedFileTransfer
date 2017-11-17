@@ -8,10 +8,7 @@ import com.d2s2.overlay.route.NeighbourTableImpl;
 import com.d2s2.overlay.route.StatTableImpl;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -67,10 +64,8 @@ public class SearchRequestModel extends AbstractRequestModel {
             if (!this.getLastHops().contains(node)) {
                 this.getLastHops().add(node);
             }
-
             FileHandlerImpl instance = FileHandlerImpl.getInstance();
             List<String> fileList = instance.searchLocalFileList(this.fileName);
-
             if (fileList.size() > 0) {
                 SearchResponseModel searchResponseModel = new SearchResponseModel(this.ip, this.port, this.hops, fileList.size(), new HashSet<>(fileList));
                 try {

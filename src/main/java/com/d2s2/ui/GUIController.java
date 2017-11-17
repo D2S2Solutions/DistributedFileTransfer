@@ -40,6 +40,7 @@ public class GUIController {
     }
 
     public void searchFile(String fileName) {
+//        fileName.replaceAll(" ","@")
         handler.searchFile(fileName);
     }
 

@@ -1,7 +1,6 @@
 package com.d2s2.files;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -33,11 +32,17 @@ public class FileHandlerImpl implements FileHandler {
     }
 
     public List<String> searchLocalFileList(String searchText) {
-        String regex = ".*?\\b" + searchText.toLowerCase() + "\\b.*?";
+        String[] split = searchText.toLowerCase().split("\\s");
+        Set<String> strings = new HashSet<>(Arrays.asList(split));
         return localFileList.stream().filter(s -> {
-            String sl = s.toLowerCase().replace("@"," " );
-            return sl.matches(regex);
-
+            s = s.toLowerCase().replace("@", " ");
+            Set<String> set = new HashSet<>(Arrays.asList(s.split("\\s")));
+            for (String s1 : set) {
+                if (strings.contains(s1)){
+                    return true;
+                }
+            }
+            return false;
         }).collect(Collectors.toList());
     }
 

@@ -108,8 +108,8 @@ public class HandlerImpl implements Handler {
     public void sendSearchRequest(SearchRequestModel model, ConcurrentLinkedQueue<Node> statTablePeers) throws IOException {
         String searchRequestMessage = messageBuilder.buildSearchRequestMessage(model);
 
-        System.out.println("Found stat table entries");
-        System.out.println(statTablePeers);
+//        System.out.println("Found stat table entries");
+//        System.out.println(statTablePeers);
 
         Iterator<Node> nodeIterator = statTablePeers.iterator();
         while (nodeIterator.hasNext()) {

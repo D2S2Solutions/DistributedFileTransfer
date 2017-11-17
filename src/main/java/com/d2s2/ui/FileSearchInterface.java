@@ -89,10 +89,10 @@ public class FileSearchInterface extends javax.swing.JFrame {
         }
         fileNames.delete(fileNames.length()-2,fileNames.length()-1);
         int noOfHops = ApplicationConstants.HOPS - 1 - ttl;
-//        if (!this.isValueExistsAtTable(nodeIp, port)) {
-        final long time = System.currentTimeMillis();
+        if (!this.isValueExistsAtTable(nodeIp, port)) {
+//        final long time = System.currentTimeMillis();
         this.dtmForSearchResultTable.addRow(new Object[]{nodeIp, port, diff,fileNames, noOfHops});
-//        }
+        }
     }
 
     private boolean isValueExistsAtTable(String ip, int port) {

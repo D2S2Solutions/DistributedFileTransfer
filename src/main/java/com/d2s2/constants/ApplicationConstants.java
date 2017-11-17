@@ -1,5 +1,7 @@
 package com.d2s2.constants;
 
+import java.util.HashMap;
+
 /**
  * Created by Heshan Sandamal on 10/24/2017.
  */
@@ -25,4 +27,6 @@ public class ApplicationConstants {
         return (int) (Math.random() * range) + min;
     }
     public static volatile Boolean isRegisterd = false;
+
+    public static HashMap<String,Integer> searchReceivedStat = new HashMap<>();
 }
