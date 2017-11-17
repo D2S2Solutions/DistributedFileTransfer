@@ -250,12 +250,12 @@ public class FileSearchInterface extends javax.swing.JFrame {
 
 
     public void populatePeerTable(Set<Node> peerList) {
-//        dtmForPeerTable.setRowCount(0);
-//        final Iterator<Node> iterator = peerList.iterator();
-//        while (iterator.hasNext()) {
-//            Node node = iterator.next();
-//            dtmForPeerTable.addRow(new Object[]{node.getNodeIp(), node.getPort()});
-//        }
+        dtmForPeerTable.setRowCount(0);
+        final Iterator<Node> iterator = peerList.iterator();
+        while (iterator.hasNext()) {
+            Node node = iterator.next();
+            dtmForPeerTable.addRow(new Object[]{node.getNodeIp(), node.getPort()});
+        }
     }
 
     public void populateStatTable(ConcurrentHashMap<String, ConcurrentLinkedQueue<Node>> statTable) {
