@@ -6,6 +6,7 @@ import com.d2s2.constants.ApplicationConstants;
 import com.d2s2.files.FileHandlerImpl;
 import com.d2s2.overlay.route.NeighbourTableImpl;
 import com.d2s2.overlay.route.StatTableImpl;
+import com.d2s2.ui.GUIController;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -60,24 +61,29 @@ public class SearchRequestModel extends AbstractRequestModel {
     public void handle() {
         //search from stat table    List<String,NOde>
         //create searchRequestModels
+        GUIController guiController = GUIController.getInstance();
+        guiController.updateQueryMessageReceived();
+
+
+        FileHandlerImpl instance = FileHandlerImpl.getInstance();
+        List<String> fileList = instance.searchLocalFileList(this.fileName);
+
+        if (fileList.size() > 0) {
+            SearchResponseModel searchResponseModel = new SearchResponseModel(this.ip, this.port, this.hops, fileList.size(), new HashSet<>(fileList));
+            try {
+                handler.sendLocalSearchToSource(searchResponseModel, fileList);
+                guiController.updateQueryMessageAnswered();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         --this.hops;
         if (this.hops > 0) {
             ConcurrentLinkedQueue statTablePeers = StatTableImpl.getInstance().search(this.fileName);
             Node node = new Node(ApplicationConstants.IP, ApplicationConstants.PORT);
             if (!this.getLastHops().contains(node)) {
                 this.getLastHops().add(node);
-            }
-
-            FileHandlerImpl instance = FileHandlerImpl.getInstance();
-            List<String> fileList = instance.searchLocalFileList(this.fileName);
-
-            if (fileList.size() > 0) {
-                SearchResponseModel searchResponseModel = new SearchResponseModel(this.ip, this.port, this.hops, fileList.size(), new HashSet<>(fileList));
-                try {
-                    handler.sendLocalSearchToSource(searchResponseModel, fileList);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             }
 
             try {

@@ -34,12 +34,18 @@ public class FileSearchInterface extends javax.swing.JFrame {
         this.ipTextField.setText(ApplicationConstants.IP);
         this.portTextField.setText(String.valueOf(ApplicationConstants.PORT));
         this.unregisterButton.setEnabled(false);
+
+        jLabel3.setText(String.valueOf(0));
+        jLabel4.setText(String.valueOf(0));
+        jLabel5.setText(String.valueOf(0));
+        jLabel1.setText(String.valueOf(0));
         this.searchTextField.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 jLabel2.setText(String.valueOf(System.currentTimeMillis()));
                 dtmForSearchResultTable.setRowCount(0);
                 guiController.searchFile(searchTextField.getText());
+                jLabel3.setText(String.valueOf(0));
 
             }
         });
@@ -48,7 +54,9 @@ public class FileSearchInterface extends javax.swing.JFrame {
             jLabel2.setText(String.valueOf(System.currentTimeMillis()));
             dtmForSearchResultTable.setRowCount(0);
             guiController.searchFile(this.searchTextField.getText());
+            jLabel3.setText(String.valueOf(0));
         });
+
 
         this.registerButton.addActionListener(evt -> {
             try {
@@ -82,7 +90,7 @@ public class FileSearchInterface extends javax.swing.JFrame {
         long timeMillis = System.currentTimeMillis();
         long starttime = Long.valueOf(jLabel2.getText());
         long diff = timeMillis - starttime;
-
+        jLabel3.setText(String.valueOf(Integer.parseInt(jLabel3.getText())+1));
         System.out.println("Calling interface " + nodeIp + port);
         StringBuilder fileNames = new StringBuilder();
         for (String fileName : fileList) {
@@ -152,6 +160,18 @@ public class FileSearchInterface extends javax.swing.JFrame {
         unregisterButton.setEnabled(false);
     }
 
+    public synchronized void updateQueryMessageReceived(){
+        this.jLabel4.setText(String.valueOf(Integer.parseInt(this.jLabel4.getText())+1));
+    }
+
+
+    public synchronized void updateQueryMessageForwarded(){
+        this.jLabel5.setText(String.valueOf(Integer.parseInt(this.jLabel5.getText())+1));
+    }
+
+    public synchronized void updateQueryMessageAnswered(){
+        this.jLabel1.setText(String.valueOf(Integer.parseInt(this.jLabel1.getText())+1));
+    }
 
     public FileSearchInterface() {
         initComponents();
