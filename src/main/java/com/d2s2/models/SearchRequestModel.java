@@ -62,41 +62,51 @@ public class SearchRequestModel extends AbstractRequestModel {
     public void handle() throws RemoteException, NotBoundException {
         //search from stat table    List<String,NOde>
         //create searchRequestModels
+
         GUIController guiController = GUIController.getInstance();
         guiController.updateQueryMessageReceived();
 
-        ConcurrentLinkedQueue statTablePeers = StatTableImpl.getInstance().search(this.fileName);
+        FileHandlerImpl instance = FileHandlerImpl.getInstance();
+        List<String> fileList = instance.searchLocalFileList(this.fileName);
 
-        Node node = new Node(ApplicationConstants.IP, ApplicationConstants.PORT);
-        if (!this.getLastHops().contains(node)) {
-            this.getLastHops().add(node);
+        if (fileList.size() > 0) {
+
+            new Thread(() -> {
+                SearchResponseModel searchResponseModel = null;
+                try {
+                    searchResponseModel = new SearchResponseModel(this.ip, this.port, this.hops, fileList.size(), new HashSet<>(fileList));
+                    try {
+                        handler.sendLocalSearchToSource(searchResponseModel, fileList);
+                        guiController.updateQueryMessageAnswered();
+                    } catch (IOException | NotBoundException e) {
+//                        e.printStackTrace();
+                    }
+                } catch (RemoteException e) {
+//                    e.printStackTrace();
+                }
+
+            }).start();
+
+
         }
 
-        new Thread(() -> {
+        --this.hops;
+        if (this.hops > 0) {
+
+            ConcurrentLinkedQueue statTablePeers = StatTableImpl.getInstance().search(this.fileName);
+
+            Node node = new Node(ApplicationConstants.IP, ApplicationConstants.PORT);
+            if (!this.getLastHops().contains(node)) {
+                this.getLastHops().add(node);
+            }
+
             try {
                 handler.sendSearchRequest(this, statTablePeers);
             } catch (NotBoundException | IOException e) {
                 e.printStackTrace();
             }
-        }).start();
-
-        --this.hops;
-        if (this.hops > 0) {
 
 
-
-            FileHandlerImpl instance = FileHandlerImpl.getInstance();
-            List<String> fileList = instance.searchLocalFileList(this.fileName);
-
-            if (fileList.size() > 0) {
-                SearchResponseModel searchResponseModel = new SearchResponseModel(this.ip, this.port, this.hops, fileList.size(), new HashSet<>(fileList));
-                try {
-                    handler.sendLocalSearchToSource(searchResponseModel, fileList);
-                    guiController.updateQueryMessageAnswered();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 

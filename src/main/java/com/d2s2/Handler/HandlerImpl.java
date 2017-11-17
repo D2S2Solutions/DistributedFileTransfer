@@ -134,11 +134,17 @@ public class HandlerImpl implements Handler {
         Iterator<Node> nodeIterator = statTablePeers.iterator();
         while (nodeIterator.hasNext()) {
             Node node = nodeIterator.next();
-            if (!model.getLastHops().contains(node)) {
-                ServerConnector.getServerConnector(node.getNodeIp(), node.getPort())
-                        .callRemoteSearchRequestHadle(model.getIp(), model.getPort(), model.getFileName(), model.getHops(), model.getLastHops());
+            if (!model.getLastHops().contains(node))
+                new Thread(() -> {
+                    try {
+                        ServerConnector.getServerConnector(node.getNodeIp(), node.getPort())
+                                .callRemoteSearchRequestHadle(model.getIp(), model.getPort(), model.getFileName(), model.getHops(), model.getLastHops());
+                    } catch (RemoteException | NotBoundException | MalformedURLException e) {
+//                        e.printStackTrace();
+                    }
+                    guiController.updateQueryMessageForwarded();
+                }).start();
 
-                guiController.updateQueryMessageForwarded();
             }
 
             System.out.println("send to stat table entries " + node.getPort());
@@ -146,7 +152,8 @@ public class HandlerImpl implements Handler {
 
         final Set<Node> peerNodeList = PeerTableImpl.getInstance().getPeerNodeList();
 
-        final ArrayList<Node> peerNodeListToSend = new ArrayList<>();
+//        final ArrayList<Node> peerNodeListToSend = new ArrayList<>();
+        final List<Node> peerNodeListToSend = Collections.synchronizedList(new ArrayList<>());
 
         peerNodeList.forEach((node) -> {
             if (!model.getLastHops().contains(node) && !statTablePeers.contains(node)) {
@@ -160,12 +167,20 @@ public class HandlerImpl implements Handler {
         if (size > 0) {
             final int item1 = random.nextInt(size);
             ServerConnector serverConnector = ServerConnector.getServerConnector(peerNodeListToSend.get(item1).getNodeIp(), peerNodeListToSend.get(item1).getPort());
+            peerNodeListToSend.remove(item1);
 
             if (serverConnector != null) {
-                serverConnector.callRemoteSearchRequestHadle(model.getIp(), model.getPort(), model.getFileName(), model.getHops(), model.getLastHops());
-                System.out.println("Sending to peer node " + peerNodeListToSend.get(item1).getPort());
-                peerNodeListToSend.remove(item1);
-                guiController.updateQueryMessageForwarded();
+                new Thread(() -> {
+                    try {
+                        serverConnector.callRemoteSearchRequestHadle(model.getIp(), model.getPort(), model.getFileName(), model.getHops(), model.getLastHops());
+                        System.out.println("Sending to peer node " + peerNodeListToSend.get(item1).getPort());
+                        guiController.updateQueryMessageForwarded();
+                    } catch (RemoteException | NotBoundException e) {
+//                        e.printStackTrace();
+                    }
+
+                }).start();
+
             } else {
                 System.out.println("server connector is null");
             }
@@ -176,9 +191,17 @@ public class HandlerImpl implements Handler {
             final int item2 = random.nextInt(size);
             ServerConnector serverConnector = ServerConnector.getServerConnector(peerNodeListToSend.get(item2).getNodeIp(), peerNodeListToSend.get(item2).getPort());
             if (serverConnector != null) {
-                serverConnector.callRemoteSearchRequestHadle(model.getIp(), model.getPort(), model.getFileName(), model.getHops(), model.getLastHops());
-                System.out.println("Sending to peer node " + peerNodeListToSend.get(item2).getPort());
-                guiController.updateQueryMessageForwarded();
+                new Thread(()->{
+                    try {
+                        serverConnector.callRemoteSearchRequestHadle(model.getIp(), model.getPort(), model.getFileName(), model.getHops(), model.getLastHops());
+                        System.out.println("Sending to peer node " + peerNodeListToSend.get(item2).getPort());
+                        guiController.updateQueryMessageForwarded();
+                    } catch (RemoteException | NotBoundException e) {
+//                        e.printStackTrace();
+                    }
+
+                }).start();
+
             } else {
                 System.out.println("server connector is null");
             }
