@@ -96,12 +96,12 @@ public class FileSearchInterface extends javax.swing.JFrame {
     public FileSearchInterface(GUIController guiController, ArrayList<String> fileList) {
         initComponents();
         this.selfFilesTable.getTableHeader().setVisible(false);
-        this.userNameTextField.setText(ApplicationConstants.USER_NAME);
+//        this.userNameTextField.setText(ApplicationConstants.USER_NAME);
         this.ipTextField.setText(ApplicationConstants.IP);
         this.portTextField.setText(String.valueOf(ApplicationConstants.PORT));
         this.unregisterButton.setEnabled(false);
         jLabel3.setText(String.valueOf(0));
-        jLabel4.setText(String.valueOf(0));
+        userNameTextField.setText(String.valueOf(0));
         jLabel5.setText(String.valueOf(0));
         jLabel1.setText(String.valueOf(0));
 
@@ -284,7 +284,7 @@ public class FileSearchInterface extends javax.swing.JFrame {
     }
 
     public synchronized void updateQueryMessageReceived(){
-        this.jLabel4.setText(String.valueOf(Integer.parseInt(this.jLabel4.getText())+1));
+        this.userNameTextField.setText(String.valueOf(Integer.parseInt(this.userNameTextField.getText())+1));
     }
 
 

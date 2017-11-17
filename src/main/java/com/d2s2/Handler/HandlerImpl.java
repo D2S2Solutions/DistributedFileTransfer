@@ -173,7 +173,7 @@ public class HandlerImpl implements Handler {
                 new Thread(() -> {
                     try {
                         serverConnector.callRemoteSearchRequestHadle(model.getIp(), model.getPort(), model.getFileName(), model.getHops(), model.getLastHops());
-                        System.out.println("Sending to peer node " + peerNodeListToSend.get(item1).getPort());
+//                        System.out.println("Sending to peer node " + peerNodeListToSend.get(item1).getPort());
                         guiController.updateQueryMessageForwarded();
                     } catch (RemoteException | NotBoundException e) {
 //                        e.printStackTrace();
@@ -194,7 +194,7 @@ public class HandlerImpl implements Handler {
                 new Thread(()->{
                     try {
                         serverConnector.callRemoteSearchRequestHadle(model.getIp(), model.getPort(), model.getFileName(), model.getHops(), model.getLastHops());
-                        System.out.println("Sending to peer node " + peerNodeListToSend.get(item2).getPort());
+//                        System.out.println("Sending to peer node " + peerNodeListToSend.get(item2).getPort());
                         guiController.updateQueryMessageForwarded();
                     } catch (RemoteException | NotBoundException e) {
 //                        e.printStackTrace();
