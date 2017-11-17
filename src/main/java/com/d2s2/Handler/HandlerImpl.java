@@ -134,7 +134,7 @@ public class HandlerImpl implements Handler {
         Iterator<Node> nodeIterator = statTablePeers.iterator();
         while (nodeIterator.hasNext()) {
             Node node = nodeIterator.next();
-            if (!model.getLastHops().contains(node))
+            if (!model.getLastHops().contains(node)) {
                 new Thread(() -> {
                     try {
                         ServerConnector.getServerConnector(node.getNodeIp(), node.getPort())
