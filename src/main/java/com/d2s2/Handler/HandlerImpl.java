@@ -128,6 +128,8 @@ public class HandlerImpl implements Handler {
 
         System.out.println("Found stat table entries");
         System.out.println(statTablePeers);
+        GUIController guiController = GUIController.getInstance();
+
 
         Iterator<Node> nodeIterator = statTablePeers.iterator();
         while (nodeIterator.hasNext()) {
@@ -136,7 +138,9 @@ public class HandlerImpl implements Handler {
                 ServerConnector.getServerConnector(node.getNodeIp(), node.getPort())
                         .callRemoteSearchRequestHadle(model.getIp(), model.getPort(), model.getFileName(), model.getHops(), model.getLastHops());
 
+                guiController.updateQueryMessageForwarded();
             }
+
             System.out.println("send to stat table entries " + node.getPort());
         }
 
@@ -161,6 +165,7 @@ public class HandlerImpl implements Handler {
                 serverConnector.callRemoteSearchRequestHadle(model.getIp(), model.getPort(), model.getFileName(), model.getHops(), model.getLastHops());
                 System.out.println("Sending to peer node " + peerNodeListToSend.get(item1).getPort());
                 peerNodeListToSend.remove(item1);
+                guiController.updateQueryMessageForwarded();
             } else {
                 System.out.println("server connector is null");
             }
@@ -173,6 +178,7 @@ public class HandlerImpl implements Handler {
             if (serverConnector != null) {
                 serverConnector.callRemoteSearchRequestHadle(model.getIp(), model.getPort(), model.getFileName(), model.getHops(), model.getLastHops());
                 System.out.println("Sending to peer node " + peerNodeListToSend.get(item2).getPort());
+                guiController.updateQueryMessageForwarded();
             } else {
                 System.out.println("server connector is null");
             }
@@ -211,9 +217,9 @@ public class HandlerImpl implements Handler {
 
         while (nodeIterator.hasNext()) {
             Node node = nodeIterator.next();
-            System.out.println("sending unregister to "+node.getPort());
+            System.out.println("sending unregister to " + node.getPort());
             final ServerConnector serverConnector = ServerConnector.getServerConnector(node.getNodeIp(), node.getPort());
-            serverConnector.callRemoteGracefulLeaveRequestHandle(ApplicationConstants.IP,ApplicationConstants.PORT);
+            serverConnector.callRemoteGracefulLeaveRequestHandle(ApplicationConstants.IP, ApplicationConstants.PORT);
         }
     }
 

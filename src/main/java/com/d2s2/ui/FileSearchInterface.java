@@ -41,6 +41,7 @@ public class FileSearchInterface extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 dtmForSearchResultTable.setRowCount(0);
+                jLabel3.setText(String.valueOf(System.currentTimeMillis()));
                 try {
                     guiController.searchFile(searchTextField.getText());
                 } catch (RemoteException e) {
@@ -54,6 +55,7 @@ public class FileSearchInterface extends javax.swing.JFrame {
 
         this.searchButton.addActionListener(evt -> {
             dtmForSearchResultTable.setRowCount(0);
+            jLabel3.setText(String.valueOf(System.currentTimeMillis()));
             try {
                 guiController.searchFile(this.searchTextField.getText());
             } catch (RemoteException | NotBoundException e) {
@@ -94,6 +96,11 @@ public class FileSearchInterface extends javax.swing.JFrame {
     }
 
     public synchronized void addToTable(String nodeIp, int port, int fileCount, HashSet<String> fileList, int ttl) {
+        long timeMillis = System.currentTimeMillis();
+        long starttime = Long.valueOf(jLabel2.getText());
+        long diff = timeMillis - starttime;
+        jLabel3.setText(String.valueOf(Integer.parseInt(jLabel3.getText())+1));
+
         System.out.println("Calling interface " + nodeIp + port);
         StringBuilder fileNames = new StringBuilder();
         for (String fileName : fileList) {
@@ -108,7 +115,7 @@ public class FileSearchInterface extends javax.swing.JFrame {
         }else if(row!=-2){
             try{
                 this.dtmForSearchResultTable.removeRow(row);
-                this.dtmForSearchResultTable.insertRow(row,new Object[]{nodeIp, port, fileCount, fileNames.toString(), noOfHops});
+                this.dtmForSearchResultTable.insertRow(row,new Object[]{nodeIp, port, diff, fileNames.toString(), noOfHops});
             }catch (ArrayIndexOutOfBoundsException e){}
 
         }
@@ -173,6 +180,19 @@ public class FileSearchInterface extends javax.swing.JFrame {
     public void handleUnRegistration() {
         registerButton.setEnabled(true);
         unregisterButton.setEnabled(false);
+    }
+
+    public synchronized void updateQueryMessageReceived(){
+        this.jLabel4.setText(String.valueOf(Integer.parseInt(this.jLabel4.getText())+1));
+    }
+
+
+    public synchronized void updateQueryMessageForwarded(){
+        this.jLabel5.setText(String.valueOf(Integer.parseInt(this.jLabel5.getText())+1));
+    }
+
+    public synchronized void updateQueryMessageAnswered(){
+        this.jLabel1.setText(String.valueOf(Integer.parseInt(this.jLabel1.getText())+1));
     }
 
     public FileSearchInterface() {

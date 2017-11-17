@@ -5,6 +5,7 @@ import com.d2s2.Handler.HandlerImpl;
 import com.d2s2.constants.ApplicationConstants;
 import com.d2s2.files.FileHandlerImpl;
 import com.d2s2.overlay.route.StatTableImpl;
+import com.d2s2.ui.GUIController;
 
 import java.io.IOException;
 import java.rmi.NotBoundException;
@@ -61,9 +62,21 @@ public class SearchRequestModel extends AbstractRequestModel {
     public void handle() throws RemoteException, NotBoundException {
         //search from stat table    List<String,NOde>
         //create searchRequestModels
+        GUIController guiController = GUIController.getInstance();
+        guiController.updateQueryMessageReceived();
+
+        ConcurrentLinkedQueue statTablePeers = StatTableImpl.getInstance().search(this.fileName);
+        new Thread(() -> {
+            try {
+                handler.sendSearchRequest(this, statTablePeers);
+            } catch (NotBoundException | IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+
         --this.hops;
         if (this.hops > 0) {
-            ConcurrentLinkedQueue statTablePeers = StatTableImpl.getInstance().search(this.fileName);
+
             Node node = new Node(ApplicationConstants.IP, ApplicationConstants.PORT);
             if (!this.getLastHops().contains(node)) {
                 this.getLastHops().add(node);
@@ -76,19 +89,11 @@ public class SearchRequestModel extends AbstractRequestModel {
                 SearchResponseModel searchResponseModel = new SearchResponseModel(this.ip, this.port, this.hops, fileList.size(), new HashSet<>(fileList));
                 try {
                     handler.sendLocalSearchToSource(searchResponseModel, fileList);
+                    guiController.updateQueryMessageAnswered();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-
-            new Thread(() -> {
-                try {
-                    handler.sendSearchRequest(this, statTablePeers);
-                } catch (NotBoundException | IOException e) {
-                    e.printStackTrace();
-                }
-            }).start();
-
         }
     }
 
