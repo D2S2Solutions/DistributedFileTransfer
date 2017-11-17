@@ -11,7 +11,10 @@ import com.d2s2.models.Node;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -26,26 +29,109 @@ public class FileSearchInterface extends javax.swing.JFrame {
     private DefaultTableModel dtmForPeerTable;
     private DefaultTableModel dtmForstatTable;
 
+    PrintWriter pw;
+    StringBuilder sb = new StringBuilder();
+
+    String[] queryList={"Twilight",
+            "Jack",
+            "American Idol",
+            "Happy Feet",
+            "Twilight saga",
+            "Happy Feet",
+            "Happy Feet",
+            "Feet",
+            "Happy Feet",
+            "Twilight",
+            "Windows",
+            "Happy Feet",
+            "Mission Impossible",
+            "Twilight",
+            "Windows 8",
+            "The",
+            "Happy",
+            "Windows 8",
+            "Happy Feet",
+            "Super Mario",
+            "Jack and Jill",
+            "Happy Feet",
+            "Twilight saga",
+            "Happy Feet",
+            "Super Mario",
+            "American Pickers",
+            "Microsoft Office 2010",
+            "Twilight",
+            "Modern Family",
+            "Jack and Jill",
+            "Jill",
+            "Glee",
+            "The Vampire Diarie",
+            "King Arthur",
+            "Jack and Jill",
+            "King Arthur",
+            "Windows XP",
+            "Harry Potter",
+            "Feet",
+            "Kung Fu Panda",
+            "Lady Gaga",
+            "Gaga",
+            "Happy Feet",
+            "Twilight",
+            "Hacking",
+            "King",
+            "Impossible",
+            "Happy Feet",
+            "Turn Up The Music",
+            "Adventures of Tintin",
+    };
+
+    private static final String COMMA_DELIMITER = ",";
+
+    private static final String NEW_LINE_SEPARATOR = "\n";
+
 
     public FileSearchInterface(GUIController guiController, ArrayList<String> fileList) {
         initComponents();
         this.selfFilesTable.getTableHeader().setVisible(false);
-        this.userNameTextField.setText(ApplicationConstants.USER_NAME);
+//        this.userNameTextField.setText(ApplicationConstants.USER_NAME);
         this.ipTextField.setText(ApplicationConstants.IP);
         this.portTextField.setText(String.valueOf(ApplicationConstants.PORT));
         this.unregisterButton.setEnabled(false);
 
         jLabel3.setText(String.valueOf(0));
-        jLabel4.setText(String.valueOf(0));
+        userNameTextField.setText(String.valueOf(0));
         jLabel5.setText(String.valueOf(0));
         jLabel1.setText(String.valueOf(0));
+
+        try {
+            pw= new PrintWriter(new File("RMI-result.csv"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
         this.searchTextField.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                jLabel2.setText(String.valueOf(System.currentTimeMillis()));
-                dtmForSearchResultTable.setRowCount(0);
-                guiController.searchFile(searchTextField.getText());
-                jLabel3.setText(String.valueOf(0));
+
+
+                for(String query:queryList){
+                    try {
+                        guiController.searchFile(query);
+                        System.out.println("Searching by "+query);
+                        dtmForSearchResultTable.setRowCount(0);
+                        jLabel2.setText(String.valueOf(System.currentTimeMillis()));
+//                        jLabel3.setText(String.valueOf(0));
+                        pw.append(query);
+                        pw.append(NEW_LINE_SEPARATOR);
+
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                pw.flush();
+                pw.close();
+
+
 
             }
         });
@@ -94,13 +180,31 @@ public class FileSearchInterface extends javax.swing.JFrame {
         System.out.println("Calling interface " + nodeIp + port);
         StringBuilder fileNames = new StringBuilder();
         for (String fileName : fileList) {
-            fileNames.append(fileName.replace("@", " ")).append(" , ");
+            fileNames.append(fileName.replace("@", " ")).append(" : ");
         }
         fileNames.delete(fileNames.length() - 2, fileNames.length() - 1);
-        int noOfHops = ApplicationConstants.HOPS - 1 - ttl;
-        if (!this.isValueExistsAtTable(nodeIp, port)) {
-            this.dtmForSearchResultTable.addRow(new Object[]{nodeIp, port, diff, fileNames.toString(), noOfHops});
-        }
+        int noOfHops = ApplicationConstants.HOPS - ttl;
+
+//        int row = this.isValueExistsAtTable(nodeIp, port, noOfHops);
+
+
+        pw.append(fileNames);
+        pw.append(COMMA_DELIMITER);
+        pw.append(String.valueOf(noOfHops));
+        pw.append(COMMA_DELIMITER);
+        pw.append(String.valueOf(diff));
+        pw.append(NEW_LINE_SEPARATOR);
+
+
+//        if (row==-1) {
+//            this.dtmForSearchResultTable.addRow(new Object[]{nodeIp, port, fileCount, fileNames.toString(), noOfHops});
+//        }else if(row!=-2){
+//            try{
+//                this.dtmForSearchResultTable.removeRow(row);
+//                this.dtmForSearchResultTable.insertRow(row,new Object[]{nodeIp, port, diff, fileNames.toString(), noOfHops});
+//            }catch (ArrayIndexOutOfBoundsException e){}
+//
+//        }
     }
 
     private boolean isValueExistsAtTable(String ip, int port) {
@@ -136,17 +240,17 @@ public class FileSearchInterface extends javax.swing.JFrame {
     }
 
     public void populateStatTable(ConcurrentHashMap<String, ConcurrentLinkedQueue<Node>> statTable) {
-        dtmForstatTable.setRowCount(0);
-        Enumeration<String> keys = statTable.keys();
-        while (keys.hasMoreElements()) {
-            String fileName = keys.nextElement();
-            final ConcurrentLinkedQueue<Node> concurrentLinkedQueue = statTable.get(fileName);
-            String nodesList = "";
-            for (Node node : concurrentLinkedQueue) {
-                nodesList += node.getNodeIp() + ":" + node.getPort() + " , ";
-            }
-            dtmForstatTable.addRow(new Object[]{fileName.replace("@", " "), nodesList});
-        }
+//        dtmForstatTable.setRowCount(0);
+//        Enumeration<String> keys = statTable.keys();
+//        while (keys.hasMoreElements()) {
+//            String fileName = keys.nextElement();
+//            final ConcurrentLinkedQueue<Node> concurrentLinkedQueue = statTable.get(fileName);
+//            String nodesList = "";
+//            for (Node node : concurrentLinkedQueue) {
+//                nodesList += node.getNodeIp() + ":" + node.getPort() + " , ";
+//            }
+//            dtmForstatTable.addRow(new Object[]{fileName.replace("@", " "), nodesList});
+//        }
 
     }
 
@@ -161,7 +265,7 @@ public class FileSearchInterface extends javax.swing.JFrame {
     }
 
     public synchronized void updateQueryMessageReceived(){
-        this.jLabel4.setText(String.valueOf(Integer.parseInt(this.jLabel4.getText())+1));
+        this.userNameTextField.setText(String.valueOf(Integer.parseInt(this.userNameTextField.getText())+1));
     }
 
 
