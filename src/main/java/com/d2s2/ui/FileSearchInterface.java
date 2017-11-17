@@ -37,11 +37,16 @@ public class FileSearchInterface extends javax.swing.JFrame {
         this.ipTextField.setText(ApplicationConstants.IP);
         this.portTextField.setText(String.valueOf(ApplicationConstants.PORT));
         this.unregisterButton.setEnabled(false);
+        jLabel3.setText(String.valueOf(0));
+        jLabel4.setText(String.valueOf(0));
+        jLabel5.setText(String.valueOf(0));
+        jLabel1.setText(String.valueOf(0));
         this.searchTextField.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 dtmForSearchResultTable.setRowCount(0);
-                jLabel3.setText(String.valueOf(System.currentTimeMillis()));
+                jLabel2.setText(String.valueOf(System.currentTimeMillis()));
+                jLabel3.setText(String.valueOf(0));
                 try {
                     guiController.searchFile(searchTextField.getText());
                 } catch (RemoteException e) {
@@ -55,7 +60,8 @@ public class FileSearchInterface extends javax.swing.JFrame {
 
         this.searchButton.addActionListener(evt -> {
             dtmForSearchResultTable.setRowCount(0);
-            jLabel3.setText(String.valueOf(System.currentTimeMillis()));
+            jLabel3.setText(String.valueOf(0));
+            jLabel2.setText(String.valueOf(System.currentTimeMillis()));
             try {
                 guiController.searchFile(this.searchTextField.getText());
             } catch (RemoteException | NotBoundException e) {

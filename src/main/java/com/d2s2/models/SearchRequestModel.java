@@ -66,6 +66,12 @@ public class SearchRequestModel extends AbstractRequestModel {
         guiController.updateQueryMessageReceived();
 
         ConcurrentLinkedQueue statTablePeers = StatTableImpl.getInstance().search(this.fileName);
+
+        Node node = new Node(ApplicationConstants.IP, ApplicationConstants.PORT);
+        if (!this.getLastHops().contains(node)) {
+            this.getLastHops().add(node);
+        }
+
         new Thread(() -> {
             try {
                 handler.sendSearchRequest(this, statTablePeers);
@@ -77,10 +83,7 @@ public class SearchRequestModel extends AbstractRequestModel {
         --this.hops;
         if (this.hops > 0) {
 
-            Node node = new Node(ApplicationConstants.IP, ApplicationConstants.PORT);
-            if (!this.getLastHops().contains(node)) {
-                this.getLastHops().add(node);
-            }
+
 
             FileHandlerImpl instance = FileHandlerImpl.getInstance();
             List<String> fileList = instance.searchLocalFileList(this.fileName);
