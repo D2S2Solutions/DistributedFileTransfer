@@ -81,12 +81,14 @@ public class SearchRequestModel extends AbstractRequestModel {
                 }
             }
 
+            new Thread(() -> {
+                try {
+                    handler.sendSearchRequest(this, statTablePeers);
+                } catch (NotBoundException | IOException e) {
+                    e.printStackTrace();
+                }
+            }).start();
 
-            try {
-                handler.sendSearchRequest(this, statTablePeers);
-            } catch (IOException  e) {
-                e.printStackTrace();
-            }
         }
     }
 
