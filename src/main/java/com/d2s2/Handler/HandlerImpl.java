@@ -111,14 +111,11 @@ public class HandlerImpl implements Handler {
         System.out.println("Found stat table entries");
         System.out.println(statTablePeers);
 
-        GUIController guiController = GUIController.getInstance();
-
         Iterator<Node> nodeIterator = statTablePeers.iterator();
         while (nodeIterator.hasNext()) {
             Node node = nodeIterator.next();
             if (!model.getLastHops().contains(node)) {
                 udpConnector.send(searchRequestMessage, InetAddress.getByName(node.getNodeIp()), node.getPort());
-                guiController.updateQueryMessageForwarded();
             }
             System.out.println("send to stat table entries " + node.getPort());
         }
@@ -140,17 +137,15 @@ public class HandlerImpl implements Handler {
             final int item1 = random.nextInt(size);
             Node node = peerNodeListToSend.get(item1);
             udpConnector.send(searchRequestMessage, InetAddress.getByName(node.getNodeIp()), node.getPort());
-//            System.out.println("Sending to peer node " + peerNodeListToSend.get(item1).getPort());
+            System.out.println("Sending to peer node " + peerNodeListToSend.get(item1).getPort());
             peerNodeListToSend.remove(item1);
-            guiController.updateQueryMessageForwarded();
         }
         size = peerNodeListToSend.size();
         if (size > 0) {
             final int item2 = random.nextInt(size);
             Node node = peerNodeListToSend.get(item2);
             udpConnector.send(searchRequestMessage, InetAddress.getByName(node.getNodeIp()), node.getPort());
-//            System.out.println("Sending to peer node " + peerNodeListToSend.get(item2).getPort());
-            guiController.updateQueryMessageForwarded();
+            System.out.println("Sending to peer node " + peerNodeListToSend.get(item2).getPort());
         }
     }
 

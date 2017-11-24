@@ -39,13 +39,7 @@ public class Main {
         System.out.println("This node operates in " + ApplicationConstants.IP + " and the port is " + ApplicationConstants.PORT);
         initLocalFileStorage();
         UdpConnector udpConnector = new UDPConnectorImpl();
-//
-//        Handler handler = new HandlerImpl();
-//        try {
-//            handler.registerInBS(BsServerIp);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+
 
         new Thread(() -> {
             while (true) {
@@ -57,16 +51,13 @@ public class Main {
                     e.printStackTrace();
                 }
                 while (!stringFuture.isDone()) {
-//                    System.out.println(++i);
                 }
-//                    handler.sendHeartBeatSignal();
 
             }
         }
         ).start();
         Thread.sleep(1000); // Wait until the system acknowledges the node
-//        handler.searchFile("American");
-//        handler.gracefulLeaveRequest();
+
 
         /* For heart beating sending*/
         Runnable runnableHeartBeatSender = () -> {
@@ -88,7 +79,7 @@ public class Main {
             }, HEART_BEAT_SEND_THRESHOLD * 1000, HEART_BEAT_SEND_THRESHOLD * 1000);
         };
         Thread heartBeatSenderThread = new Thread(runnableHeartBeatSender);
-//        heartBeatSenderThread.start();
+        heartBeatSenderThread.start();
 
         /* For heart beating handling*/
         Runnable runnableHeartBeatHandler = () -> {
@@ -108,37 +99,8 @@ public class Main {
             }, HEART_BEAT_RECEIVE_THRESHOLD * 1000, HEART_BEAT_RECEIVE_THRESHOLD * 1000);
         };
         Thread heartBeatHandlerThread = new Thread(runnableHeartBeatHandler);
-//        heartBeatHandlerThread.start();
+        heartBeatHandlerThread.start();
 
-        /* For heart beated node clearing*/
-        Runnable runnableHeartBeatDeleter = () -> {
-            HeartBeaterImpl heartBeater = HeartBeaterImpl.getInstance();
-            Timer timer = new Timer();
-
-            timer.scheduleAtFixedRate(new TimerTask() {
-                @Override
-                public void run() {
-                    try {
-                        System.out.println("Clearing Hbeated nodes");
-                        heartBeater.clearBeatedNodes();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, HEART_BEAT_CLEAR_THRESHOLD * 1000, HEART_BEAT_CLEAR_THRESHOLD * 1000);
-        };
-        Thread heartBeatDeleterThread = new Thread(runnableHeartBeatDeleter);
-//        heartBeatDeleterThread.start();
-    }
-
-
-    private static void search(String query) {
-        FileHandler fileHandler = FileHandlerImpl.getInstance();
-        List<String> documents = fileHandler.searchLocalFileList(query);
-        for (String s :
-                documents) {
-            System.out.println(s);
-        }
     }
 
     private static void initLocalFileStorage() {

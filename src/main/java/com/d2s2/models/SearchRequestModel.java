@@ -61,9 +61,6 @@ public class SearchRequestModel extends AbstractRequestModel {
     public void handle() {
         //search from stat table    List<String,NOde>
         //create searchRequestModels
-        GUIController guiController = GUIController.getInstance();
-        guiController.updateQueryMessageReceived();
-
 
         FileHandlerImpl instance = FileHandlerImpl.getInstance();
         List<String> fileList = instance.searchLocalFileList(this.fileName);
@@ -72,7 +69,6 @@ public class SearchRequestModel extends AbstractRequestModel {
             SearchResponseModel searchResponseModel = new SearchResponseModel(this.ip, this.port, this.hops, fileList.size(), new HashSet<>(fileList));
             try {
                 handler.sendLocalSearchToSource(searchResponseModel, fileList);
-                guiController.updateQueryMessageAnswered();
             } catch (IOException e) {
                 e.printStackTrace();
             }
