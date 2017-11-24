@@ -187,39 +187,24 @@ public class FileSearchInterface extends javax.swing.JFrame {
     }
 
     public synchronized void addToTable(String nodeIp, int port, int fileCount, HashSet<String> fileList, int ttl) {
-        long timeMillis = System.currentTimeMillis();
-        long starttime = Long.valueOf(jLabel2.getText());
-        long diff = timeMillis - starttime;
-        jLabel3.setText(String.valueOf(Integer.parseInt(jLabel3.getText())+1));
-
         System.out.println("Calling interface " + nodeIp + port);
         StringBuilder fileNames = new StringBuilder();
         for (String fileName : fileList) {
-            fileNames.append(fileName.replace("@", " ")).append(" : ");
+            fileNames.append(fileName.replace("@", " ")).append(" , ");
         }
         fileNames.delete(fileNames.length() - 2, fileNames.length() - 1);
         int noOfHops = ApplicationConstants.HOPS - ttl;
 
         int row = this.isValueExistsAtTable(nodeIp, port, noOfHops);
+        if (row==-1) {
+            this.dtmForSearchResultTable.addRow(new Object[]{nodeIp, port, fileCount, fileNames.toString(), noOfHops});
+        }else if(row!=-2){
+            try{
+                this.dtmForSearchResultTable.removeRow(row);
+                this.dtmForSearchResultTable.insertRow(row,new Object[]{nodeIp, port, diff, fileNames.toString(), noOfHops});
+            }catch (ArrayIndexOutOfBoundsException e){}
 
-
-        pw.append(fileNames);
-        pw.append(COMMA_DELIMITER);
-        pw.append(String.valueOf(noOfHops));
-        pw.append(COMMA_DELIMITER);
-        pw.append(String.valueOf(diff));
-        pw.append(NEW_LINE_SEPARATOR);
-
-
-//        if (row==-1) {
-//            this.dtmForSearchResultTable.addRow(new Object[]{nodeIp, port, fileCount, fileNames.toString(), noOfHops});
-//        }else if(row!=-2){
-//            try{
-//                this.dtmForSearchResultTable.removeRow(row);
-//                this.dtmForSearchResultTable.insertRow(row,new Object[]{nodeIp, port, diff, fileNames.toString(), noOfHops});
-//            }catch (ArrayIndexOutOfBoundsException e){}
-//
-//        }
+        }
     }
 
     private int isValueExistsAtTable(String ip, int port, int noOfHops) {
@@ -259,17 +244,17 @@ public class FileSearchInterface extends javax.swing.JFrame {
     }
 
     public void populateStatTable(ConcurrentHashMap<String, ConcurrentLinkedQueue<Node>> statTable) {
-//        dtmForstatTable.setRowCount(0);
-//        Enumeration<String> keys = statTable.keys();
-//        while (keys.hasMoreElements()) {
-//            String fileName = keys.nextElement();
-//            final ConcurrentLinkedQueue<Node> concurrentLinkedQueue = statTable.get(fileName);
-//            String nodesList = "";
-//            for (Node node : concurrentLinkedQueue) {
-//                nodesList += node.getNodeIp() + ":" + node.getPort() + " , ";
-//            }
-//            dtmForstatTable.addRow(new Object[]{fileName.replace("@", " "), nodesList});
-//        }
+        dtmForstatTable.setRowCount(0);
+        Enumeration<String> keys = statTable.keys();
+        while (keys.hasMoreElements()) {
+            String fileName = keys.nextElement();
+            final ConcurrentLinkedQueue<Node> concurrentLinkedQueue = statTable.get(fileName);
+            String nodesList = "";
+            for (Node node : concurrentLinkedQueue) {
+                nodesList += node.getNodeIp() + ":" + node.getPort() + " , ";
+            }
+            dtmForstatTable.addRow(new Object[]{fileName.replace("@", " "), nodesList});
+        }
 
     }
 
@@ -281,19 +266,6 @@ public class FileSearchInterface extends javax.swing.JFrame {
     public void handleUnRegistration() {
         registerButton.setEnabled(true);
         unregisterButton.setEnabled(false);
-    }
-
-    public synchronized void updateQueryMessageReceived(){
-        this.userNameTextField.setText(String.valueOf(Integer.parseInt(this.userNameTextField.getText())+1));
-    }
-
-
-    public synchronized void updateQueryMessageForwarded(){
-        this.jLabel5.setText(String.valueOf(Integer.parseInt(this.jLabel5.getText())+1));
-    }
-
-    public synchronized void updateQueryMessageAnswered(){
-        this.jLabel1.setText(String.valueOf(Integer.parseInt(this.jLabel1.getText())+1));
     }
 
     public FileSearchInterface() {
