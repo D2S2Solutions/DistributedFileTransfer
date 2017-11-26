@@ -68,12 +68,14 @@ public class SearchRequestModel extends AbstractRequestModel {
         FileHandlerImpl instance = FileHandlerImpl.getInstance();
         List<String> fileList = instance.searchLocalFileList(this.fileName);
 
+        int hops=this.hops;
+
         if (fileList.size() > 0) {
 
             new Thread(() -> {
                 SearchResponseModel searchResponseModel = null;
                 try {
-                    searchResponseModel = new SearchResponseModel(this.ip, this.port, this.hops, fileList.size(), new HashSet<>(fileList));
+                    searchResponseModel = new SearchResponseModel(this.ip, this.port, hops, fileList.size(), new HashSet<>(fileList));
                     try {
                         handler.sendLocalSearchToSource(searchResponseModel, fileList);
                     } catch (IOException | NotBoundException e) {
