@@ -86,15 +86,4 @@ public class GUIController {
         fileSearchInterface.handleUnRegistration();
     }
 
-    public void updateQueryMessageReceived(){
-        fileSearchInterface.updateQueryMessageReceived();
-    }
-    public void updateQueryMessageForwarded(){
-        fileSearchInterface.updateQueryMessageForwarded();
-    }
-
-    public void updateQueryMessageAnswered(){
-        fileSearchInterface.updateQueryMessageAnswered();
-    }
-
 }

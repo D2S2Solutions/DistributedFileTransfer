@@ -11,15 +11,11 @@ package com.d2s2.ui;
 
 import com.d2s2.constants.ApplicationConstants;
 import com.d2s2.models.Node;
-import com.sun.org.apache.bcel.internal.generic.NEW;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.*;
@@ -34,119 +30,30 @@ public class FileSearchInterface extends javax.swing.JFrame {
     private DefaultTableModel dtmForPeerTable;
     private DefaultTableModel dtmForstatTable;
 
-    PrintWriter pw;
-    StringBuilder sb = new StringBuilder();
-
-    String[] queryList={"Twilight",
-            "Jack",
-            "American Idol",
-            "Happy Feet",
-            "Twilight saga",
-            "Happy Feet",
-            "Happy Feet",
-            "Feet",
-            "Happy Feet",
-            "Twilight",
-            "Windows",
-            "Happy Feet",
-            "Mission Impossible",
-            "Twilight",
-            "Windows 8",
-            "The",
-            "Happy",
-            "Windows 8",
-            "Happy Feet",
-            "Super Mario",
-            "Jack and Jill",
-            "Happy Feet",
-            "Twilight saga",
-            "Happy Feet",
-            "Super Mario",
-            "American Pickers",
-            "Microsoft Office 2010",
-            "Twilight",
-            "Modern Family",
-            "Jack and Jill",
-            "Jill",
-            "Glee",
-            "The Vampire Diarie",
-            "King Arthur",
-            "Jack and Jill",
-            "King Arthur",
-            "Windows XP",
-            "Harry Potter",
-            "Feet",
-            "Kung Fu Panda",
-            "Lady Gaga",
-            "Gaga",
-            "Happy Feet",
-            "Twilight",
-            "Hacking",
-            "King",
-            "Impossible",
-            "Happy Feet",
-            "Turn Up The Music",
-            "Adventures of Tintin",
-    };
-    private static final String COMMA_DELIMITER = ",";
-
-    private static final String NEW_LINE_SEPARATOR = "\n";
-
-
     public FileSearchInterface(GUIController guiController, ArrayList<String> fileList) {
         initComponents();
         this.selfFilesTable.getTableHeader().setVisible(false);
-//        this.userNameTextField.setText(ApplicationConstants.USER_NAME);
+        this.userNameTextField.setText(ApplicationConstants.USER_NAME);
         this.ipTextField.setText(ApplicationConstants.IP);
         this.portTextField.setText(String.valueOf(ApplicationConstants.PORT));
         this.unregisterButton.setEnabled(false);
-        jLabel3.setText(String.valueOf(0));
-        userNameTextField.setText(String.valueOf(0));
-        jLabel5.setText(String.valueOf(0));
-        jLabel1.setText(String.valueOf(0));
-
-        try {
-            pw= new PrintWriter(new File("RMI-result.csv"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
         this.searchTextField.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-
-
-                for(String query:queryList){
-                    try {
-                        guiController.searchFile(query);
-                        System.out.println("Searching by "+query);
-                        dtmForSearchResultTable.setRowCount(0);
-                        jLabel2.setText(String.valueOf(System.currentTimeMillis()));
-//                        jLabel3.setText(String.valueOf(0));
-                        pw.append(query);
-                        pw.append(NEW_LINE_SEPARATOR);
-
-                        Thread.sleep(3000);
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
-                    } catch (NotBoundException e) {
-                        e.printStackTrace();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                dtmForSearchResultTable.setRowCount(0);
+                try {
+                    guiController.searchFile(searchTextField.getText());
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                } catch (NotBoundException e) {
+                    e.printStackTrace();
                 }
-                pw.flush();
-                pw.close();
-
-
 
             }
         });
 
         this.searchButton.addActionListener(evt -> {
             dtmForSearchResultTable.setRowCount(0);
-            jLabel3.setText(String.valueOf(0));
-            jLabel2.setText(String.valueOf(System.currentTimeMillis()));
             try {
                 guiController.searchFile(this.searchTextField.getText());
             } catch (RemoteException | NotBoundException e) {
@@ -201,7 +108,7 @@ public class FileSearchInterface extends javax.swing.JFrame {
         }else if(row!=-2){
             try{
                 this.dtmForSearchResultTable.removeRow(row);
-                this.dtmForSearchResultTable.insertRow(row,new Object[]{nodeIp, port, diff, fileNames.toString(), noOfHops});
+                this.dtmForSearchResultTable.insertRow(row,new Object[]{nodeIp, port, fileCount, fileNames.toString(), noOfHops});
             }catch (ArrayIndexOutOfBoundsException e){}
 
         }

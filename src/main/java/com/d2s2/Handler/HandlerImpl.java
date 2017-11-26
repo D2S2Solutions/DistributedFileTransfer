@@ -142,7 +142,6 @@ public class HandlerImpl implements Handler {
                     } catch (RemoteException | NotBoundException | MalformedURLException e) {
 //                        e.printStackTrace();
                     }
-                    guiController.updateQueryMessageForwarded();
                 }).start();
 
             }
@@ -173,10 +172,7 @@ public class HandlerImpl implements Handler {
                 new Thread(() -> {
                     try {
                         serverConnector.callRemoteSearchRequestHadle(model.getIp(), model.getPort(), model.getFileName(), model.getHops(), model.getLastHops());
-//                        System.out.println("Sending to peer node " + peerNodeListToSend.get(item1).getPort());
-                        guiController.updateQueryMessageForwarded();
                     } catch (RemoteException | NotBoundException e) {
-//                        e.printStackTrace();
                     }
 
                 }).start();
@@ -194,10 +190,7 @@ public class HandlerImpl implements Handler {
                 new Thread(()->{
                     try {
                         serverConnector.callRemoteSearchRequestHadle(model.getIp(), model.getPort(), model.getFileName(), model.getHops(), model.getLastHops());
-//                        System.out.println("Sending to peer node " + peerNodeListToSend.get(item2).getPort());
-                        guiController.updateQueryMessageForwarded();
                     } catch (RemoteException | NotBoundException e) {
-//                        e.printStackTrace();
                     }
 
                 }).start();
